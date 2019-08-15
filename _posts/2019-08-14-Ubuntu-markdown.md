@@ -1,11 +1,11 @@
-```
+---
 title: 安装Ubuntu操作系统
-tags:Ubuntu Markdown
+tags: Ubuntu markdown
 categories: linux
-```
+---
 
-
-
+* TOC
+{:toc}
 # 安装Ubuntu操作系统
 
 - 下载ubuntu的ISO文件
@@ -13,7 +13,6 @@ categories: linux
   到ubuntu的官方网站，去下载到ubuntu 16.04的iso文件。
 
 - 下载ultraiso工具
-
 
 ​		 ultraiso工具可以用来制作U盘启动盘，打开ultraiso软件，在菜单栏【文件】-【打开】，选择下载的ISO文件。然后菜单栏里【启动】-【写入硬盘映像】，选择了写入硬盘映像后，弹出窗口。在窗口中的硬盘驱动器选择你插入的U盘，点击【写入】开始制作U盘的启动盘，U盘里面以前的东西都会被格式化了。需要经过几分钟，进度条到100%，那就是启动盘制作成功了。
 
