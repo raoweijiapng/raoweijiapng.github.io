@@ -6,6 +6,8 @@ categories: linux
 
 * TOC
 {:toc}
+​		主流的Linux发行版　Ubuntu， DebianGNU/Linux ，Fedora，Gentoo，MandrivaLinux ，PCLinuxOS，SlackwareLinux ，openSUSE，ArchLinux，Puppylinux，Mint,CentOS,Red Hat等Ubuntu是一个以桌面应用为主的Linux操作系统。
+
 # 安装Ubuntu操作系统
 
 - 下载ubuntu的ISO文件
