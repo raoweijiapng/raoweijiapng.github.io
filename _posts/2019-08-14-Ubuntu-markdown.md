@@ -130,11 +130,11 @@ categories: linux
 - 添加图片形式和链接相似，只需要在链接的基础上前方加一个 **！**号。
 
   示例md代码:
-
-​	![GitHub set up](http://zh.mweb.im/asset/img/set-up-git.gif)
-​	格式: ![Alt Text](url)
-
-
+  
+  ```
+  ![blockchain](https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/
+  u=702257389,1274025419&fm=27&gp=0.jpg "区块链")
+  ```
 
 # 安装typora		
 
