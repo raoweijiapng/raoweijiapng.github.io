@@ -38,3 +38,8 @@
     font-size: 10px;
     font-size: 0.875rem;
 }
+
+#headpicture {
+    margin-top: 2px;
+    margin-left: -100px;
+}
