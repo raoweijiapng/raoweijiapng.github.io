@@ -20,7 +20,7 @@ categories: linux
 
 - 装系统
 
-​        把制作好的U盘启动盘插入需要安装操作系统的那台电脑上面之后，重新启动或者开机。在电脑重新开启或关机时，按F12或者F2键进入BIOS系统设置启动项目为USB。装完之后$sudo apt-get update。
+​        把制作好的U盘启动盘插入需要安装操作系统的那台电脑上面之后，重新启动或者开机。在电脑重新开启或关机时，按F12或者F2键进入BIOS系统设置启动项目为USB。装完之后$sudo apt-get update。如果网卡不好使，就重启网卡，sudo ifconfig eth0 down（关闭）、sudo ifconfig eth0 up。
 
 # 了解Makdown语言
 
