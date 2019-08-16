@@ -27,13 +27,15 @@ categories: linux
 - 使用**=** 和 **-**，标记**一级**和**二级** 标题。
 
   示例md代码:
-
-```
-一级标题
-=
-二级标题
--
-```
+  
+  ```
+  一级标题
+  =
+  二级标题
+  -
+  ```
+  
+  
 
 ​		示例效果：
 
@@ -129,10 +131,8 @@ categories: linux
 
   示例md代码:
 
-```
-![GitHub set up](http://zh.mweb.im/asset/img/set-up-git.gif)
-格式: ![Alt Text](url)
-```
+​	![GitHub set up](http://zh.mweb.im/asset/img/set-up-git.gif)
+​	格式: ![Alt Text](url)
 
 
 

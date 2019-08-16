@@ -10,9 +10,11 @@ categories: blog
 ​		首先install Git ，注册GitHub账号，创建公共库，然后进入jekyll官网下载个人博客的主题，最后使用git指令在终端上传到github，这时可以登陆raoweijiapng.github.io进入个人博客。
 - 终端安装Git指令
 
-~~~git
- sudo apt-get install git
-~~~
+```
+sudo apt-get install git
+```
+
+
 
 - 注册一个github
 
