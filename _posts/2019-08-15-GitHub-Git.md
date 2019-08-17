@@ -93,7 +93,7 @@ sudo apt-get install git
 
 - 创建本地库
 
-  ​	第一种方法:在本地某个文件中增加后缀为.github.io的文件夹。
+  ​	第一种方法:在本地某个文件中增加后缀为.github.io的文件夹 然后在此文件中执行git init。
 
   ​	第二种方法：克隆github的空白库到指定的位置。
 
