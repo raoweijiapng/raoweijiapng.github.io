@@ -21,6 +21,8 @@ $ git reset –-hard bae168
 $ git push origin :master  
 // 重新创建远程仓库master分支  
 git push origin master
+强制提交
+git push -f -u origin master
 最后，要求所有成员删除本地仓库master分支，重新抓取避免执行 git push 后，又将远程版本更新。
 ```
  	
@@ -30,10 +32,15 @@ git push origin master
 
 # 使用SSH方式连接远程仓库
     1. 生成SSH公钥
-    ssh-keygen -t rsa -C "raoweijiapng"
-    2. 进入公钥的保存路径，找到id_rsa.pub公钥文件，用记事本打开，将里面的内容全部复制到github中。
-    登录后一次点击settings->SSH and GPG keys->New SSH key，然后将填写key的名称，将id_rsa.pub文件的内容全部复制到填写公钥的输入框中即可。
-    3. 添加别名，别名绑定的远程仓库地址是SSH方式的地址
+    ssh-keygen -t rsa -C "raoweijiapng" 
+    2. 输入密码，如果为空代表以后提交信息到仓库的时候，不用再次输入密码，那当然为空最好。
+    验证是否设置成功：
+    ssh -T git@github.com
+    3. 将id_rsa.pub数据复制到github设置SSH设置中，登录后一次点击settings->SSH and GPG keys->New SSHkey，然后将填写key的名称，将id_rsa.pub文件的内容全部复制到填写公钥的输入框中即可。
+    4. 设置全局的user.name user.email 
+    $ git config user.name "dadi" 
+    $ git config user.email "123123123@qq.com"
+    5. 添加别名，别名绑定的远程仓库地址是SSH方式的地址
     如果别名已经存在，我们要先删除,再重新添加。
     git remote rm mystore
     git remote add mystore "git@github.com:18357136930/chenycstore.git"
