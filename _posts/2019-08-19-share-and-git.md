@@ -39,7 +39,7 @@ git push origin master
     git remote add mystore "git@github.com:18357136930/chenycstore.git"
     最后就可以使用git命令和远程仓库进行交互。
 
-# 测试
+# markdown语法测试
 ```
  # fewfew   一级标题
 
