@@ -79,4 +79,9 @@ categories: git
   git checkout --（file）
   git checkout HEAD（file）用master的树替换工作区和缓存区。
 ```
+[相关的命令博客](https://blog.csdn.net/shimazhuge/article/details/52759429)
+
 ![git命令速查表](https://raoweijiapng.github.io/static/img/git.png)
+
+# Python与人工智能
+  人工智能包含常用机器学习和深度学习两个很重要的模块，而右图中python拥有matplotlib、Numpy、sklearn、keras等大量的库，像pandas、sklearn、matplotlib这些库都是做数据处理、数据分析、数据建模和绘图的库，基本上机器学习中对数据的爬取（scrapy）、对数据的处理和分析（pandas）、对数据的绘图（matplotlib）和对数据的建模（sklearn）在python中全都能找到对应的库来进行处理。
