@@ -1,3 +1,11 @@
+---
+title: git测试与协议
+tags: git
+categories: git
+---
+
+* TOC
+{:toc}
 
 # 和别人协同合作项目
   1. 首先fork你要的项目
@@ -67,5 +75,8 @@
   git push （主机名）（标签名）  提交标签到远程库
   git remote rm （主机名）  删除远程库地址
   git push （主机名）（本地分支）：（远程分支） 把某个本地分支提交到远程分支。
+  git reset HEAD (file)  不想提交的缓存文件，用上一次提交的树替换缓存区。
+  git checkout --（file）
+  git checkout HEAD（file）用master的树替换工作区和缓存区。
 ```
 ![git命令速查表](https://raoweijiapng.github.io/static/img/git.png)
