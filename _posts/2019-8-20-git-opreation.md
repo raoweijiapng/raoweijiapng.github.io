@@ -13,7 +13,7 @@ categories: git
     
     2. 与上一个命令相同的操作,不过在本地创建的仓库名字变为mylibgit。
     $ git clone https://github.com/libgit2/libgit2 mylibgit
-
+    
     3. 获取指定分支的代码。
     $ git clone -b 分支名称 --single-branch git仓库的地址
 
@@ -99,13 +99,11 @@ categories: git
 ```
 
 # git branch
-    ```
     查看当前有哪些分支:
     $ git branch
     master
     * wchar_support
     上面显示结果中，当前有两个分支：master和wchar_support，当前在wchar_support分支上，它前面有个星号（*）
-    ```
     1. git branch dev2
     下面命令将创建一个分支：dev2。
     2. git checkout dev2
@@ -205,9 +203,9 @@ categories: git
 ```
     2. git pull origin next:master
     要取回origin主机的next分支，与本地的master分支合并。
-
+    
     在某些场合，Git会自动在本地分支与远程分支之间，建立一种追踪关系(tracking)。比如，在git clone的时候，所有本地分支默认与远程主机的同名分支，建立追踪关系，也就是说，本地的master分支自动”追踪”origin/master分支。
-
+    
     3. git branch --set-upstream master origin/next
     上面命令指定master分支追踪origin/next分支。
     4. git pull origin
