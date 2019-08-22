@@ -1,6 +1,6 @@
 ---
-title: git测试与协议
-tags: git
+title: git测试与协议以及今日分享
+tags: git python
 categories: git
 ---
 
@@ -20,8 +20,7 @@ categories: git
   可以看到我们有两个仓库一个origin，咱们自己的github仓库；一个upstream，原作者的远程仓库。当然也可以不用upstream这个名字。
   
   4. 新建分支，在分支上修改 
-    git checkout -b test
-  
+    git checkout -b test  
    然后就可以添加我们的修改了。
   
   5. 同步别人的项目仓库
@@ -30,7 +29,7 @@ categories: git
   git diff tmp //将当前分支和tmp进行对比
   git merge origin/master //合并tmp分支到当前分支
 ```
-​         git add和git commit 一下
+​     git add和git commit 一下
   6. 将修改push到我们的github上
     git push origin test:test
   7. pull request
@@ -68,6 +67,149 @@ categories: git
   缺点：1.缺乏授权机制，一旦放开推送操作，意味着网络上的任何人都能向你的项目推送代码；2.架设难。
 
 # git测试
+  考试内容：
+```
+raoweijia@raoweijia-ThinkPad-E580:~$ mkdir xiongdihui
+raoweijia@raoweijia-ThinkPad-E580:~$ cd xiongdihui/
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git init
+已初始化空的 Git 仓库于 /home/raoweijia/xiongdihui/.git/
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ touch 2019-08-21-git.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ vim 2019-08-21-git.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git add 2019-08-21-git.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git commit -m"diyicitijiao"
+[master（根提交） 8622081] diyicitijiao
+ 1 file changed, 1 insertion(+)
+ create mode 100644 2019-08-21-git.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git remote add xiongdihui git@github.com:raoweijiapng/github.git
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git branch test
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git checkout test
+切换到分支 'test'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git mv 2019-08-21-git.md 2019-08-21-git-test.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push -u xiongdihui test
+枚举对象: 3, 完成.
+对象计数中: 100% (3/3), 完成.
+写入对象中: 100% (3/3), 230 bytes | 230.00 KiB/s, 完成.
+总共 3 （差异 0），复用 0 （差异 0）
+To github.com:raoweijiapng/github.git
+ * [new branch]      test -> test
+分支 'test' 设置为跟踪来自 'xiongdihui' 的远程分支 'test'。
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git checkout master
+A 2019-08-21-git-test.md
+D 2019-08-21-git.md
+切换到分支 'master'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git fetch xiongdihui test
+来自 github.com:raoweijiapng/github
+ * branch            test       -> FETCH_HEAD
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git diff xiongdiui/test
+fatal: 有歧义的参数 'xiongdiui/test'：未知的版本或路径不存在于工作区中。
+使用 '--' 来分隔版本和路径，例如：
+'git <命令> [<版本>...] -- [<文件>...]'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git diff xiongdihui/test
+diff --git a/2019-08-21-git.md b/2019-08-21-git-test.md
+similarity index 100%
+rename from 2019-08-21-git.md
+rename to 2019-08-21-git-test.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git merge xiongdihui/test
+已经是最新的。
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui
+fatal: 当前分支 master 没有对应的上游分支。
+为推送当前分支并建立与远程上游的跟踪，使用
+
+    git push --set-upstream xiongdihui master
+
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui master
+总共 0 （差异 0），复用 0 （差异 0）
+remote: 
+remote: Create a pull request for 'master' on GitHub by visiting:
+remote:      https://github.com/raoweijiapng/github/pull/new/master
+remote: 
+To github.com:raoweijiapng/github.git
+ * [new branch]      master -> master
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git tag -a v1.0
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui v1.0
+枚举对象: 1, 完成.
+对象计数中: 100% (1/1), 完成.
+写入对象中: 100% (1/1), 157 bytes | 157.00 KiB/s, 完成.
+总共 1 （差异 0），复用 0 （差异 0）
+To github.com:raoweijiapng/github.git
+ * [new tag]         v1.0 -> v1.0
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git remote -v
+xiongdihui  git@github.com:raoweijiapng/github.git (fetch)
+xiongdihui  git@github.com:raoweijiapng/github.git (push)
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git checkout -b test2
+A 2019-08-21-git-test.md
+D 2019-08-21-git.md
+切换到一个新分支 'test2'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ vim 2019-08-21-git-test.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git tag -a v2.0 -m"dewd"
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui master
+Everything up-to-date
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui v2.0
+枚举对象: 1, 完成.
+对象计数中: 100% (1/1), 完成.
+写入对象中: 100% (1/1), 157 bytes | 157.00 KiB/s, 完成.
+总共 1 （差异 0），复用 0 （差异 0）
+To github.com:raoweijiapng/github.git
+ * [new tag]         v2.0 -> v2.0
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git checkout master
+A 2019-08-21-git-test.md
+D 2019-08-21-git.md
+切换到分支 'master'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ vim 2019-08-21-git-test.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui test3
+error: 源引用表达式 test3 没有匹配
+error: 推送一些引用到 'git@github.com:raoweijiapng/github.git' 失败
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push -f -u xiongdihui test3
+error: 源引用表达式 test3 没有匹配
+error: 推送一些引用到 'git@github.com:raoweijiapng/github.git' 失败
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui master:test3
+总共 0 （差异 0），复用 0 （差异 0）
+remote: 
+remote: Create a pull request for 'test3' on GitHub by visiting:
+remote:      https://github.com/raoweijiapng/github/pull/new/test3
+remote: 
+To github.com:raoweijiapng/github.git
+ * [new branch]      master -> test3
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git checkout test3
+A 2019-08-21-git-test.md
+D 2019-08-21-git.md
+分支 'test3' 设置为跟踪来自 'xiongdihui' 的远程分支 'test3'。
+切换到一个新分支 'test3'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ vim 2019-08-21-git-test.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git push xiongdihui test3
+Everything up-to-date
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git log
+commit 86220815cf1000aafaa913e2542dbb3d0332a228 (HEAD -> test3, tag: v2.0, tag: v1.0, xiongdihui/test3, xiongdihui/test, xiongdihui/master, test2, test, master)
+Author: raoweijia-png <raoweijia@outlook.com>
+Date:   Wed Aug 21 19:35:48 2019 +0800
+
+    diyicitijiao
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git reset --hard e580356   版本回退
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git checkout test2
+A 2019-08-21-git-test.md
+D 2019-08-21-git.md
+切换到分支 'test2'
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ touch test2.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ vim test2.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git add test2.md 
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git commit -m"abc"
+[test2 142c544] abc
+ 2 files changed, 1 insertion(+)
+ rename 2019-08-21-git.md => 2019-08-21-git-test.md (100%)
+ create mode 100644 test2.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git commit -amend
+error: 你的意思是 `--amend`（有两个短线？）
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git commit --amend
+[test2 e580356] abcdd
+ Date: Wed Aug 21 20:00:56 2019 +0800
+ 2 files changed, 1 insertion(+)
+ rename 2019-08-21-git.md => 2019-08-21-git-test.md (100%)
+ create mode 100644 test2.md
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git revert （e580356）   撤消指定的提交
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git remote rm xiongdihui
+raoweijia@raoweijia-ThinkPad-E580:~/xiongdihui$ git log
+
+```
   错误
 ```
   git revert （哈希值）   撤消指定的提交。
@@ -84,4 +226,4 @@ categories: git
 ![git命令速查表](https://raoweijiapng.github.io/static/img/git.png)
 
 # Python与人工智能
-  人工智能包含常用机器学习和深度学习两个很重要的模块，而右图中python拥有matplotlib、Numpy、sklearn、keras等大量的库，像pandas、sklearn、matplotlib这些库都是做数据处理、数据分析、数据建模和绘图的库，基本上机器学习中对数据的爬取（scrapy）、对数据的处理和分析（pandas）、对数据的绘图（matplotlib）和对数据的建模（sklearn）在python中全都能找到对应的库来进行处理。
+  人工智能包含常用机器学习和深度学习两个很重要的模块，而python拥有matplotlib、Numpy、sklearn、keras等大量的库，像pandas、sklearn、matplotlib这些库都是做数据处理、数据分析、数据建模和绘图的库，基本上机器学习中对数据的爬取（scrapy）、对数据的处理和分析（pandas）、对数据的绘图（matplotlib）和对数据的建模（sklearn）在python中全都能找到对应的库来进行处理。
