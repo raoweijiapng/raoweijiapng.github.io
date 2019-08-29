@@ -25,7 +25,8 @@ categories: tcp ip
 
 # tcp/ip协议
 TCP/IP传输协议，即传输控制/网络协议，也叫作网络通讯协议。  
-![图框含义](https://raoweijiapng.github.io/static/img/七层协议.png)
+![图框含义](https://raoweijiapng.github.io/static/img/七层协议.png)  
+
 TCP/IP协议是Internet最基本的协议,其中应用层的主要协议有Telnet、FTP、SMTP等，是用来接收来自传输层的数据或者按不同应用要求与方式将数据传输至传输层；传输层的主要协议有UDP、TCP，是使用者使用平台和计算机信息网内部数据结合的通道，可以实现数据传输与数据共享；网络层的主要协议有ICMP、IP、IGMP，主要负责网络中数据包的传送等；而网络访问层，也叫网路接口层或数据链路层，主要协议有ARP、RARP，主要功能是提供链路管理错误检测、对不同通信媒介有关信息细节问题进行有效处理等。
 
 ## tcp与udp
