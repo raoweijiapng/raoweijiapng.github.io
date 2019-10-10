@@ -1,5 +1,4 @@
 ---
-layout: post
 title: ECMAScript6
 tags: ECMAScript6
 categories: ECMAScript6
