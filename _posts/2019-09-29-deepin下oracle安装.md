@@ -1,4 +1,5 @@
 ---
+layout: post
 title: 利用docker安装oracle
 tags: docker oracle
 categories: oracle
