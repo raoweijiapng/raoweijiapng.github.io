@@ -24,25 +24,6 @@ categories: linux
 
 # 了解Makdown语言
 
-- 使用**=** 和 **-**，标记**一级**和**二级** 标题。
-
-  示例md代码:
-  
-  ```
-  一级标题
-  =
-  二级标题
-  -
-  ```
-  
-  
-
-​		示例效果：
-
-
-
-![img](https://upload-images.jianshu.io/upload_images/1293430-53ab03e9817c324b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/385/format/webp)
-
 - 使用 **#**,可以表示 **1-6级** 标题。
 
   示例md代码:
@@ -61,13 +42,14 @@ categories: linux
   ###### 第六级标题 `<h6>` 
   ```
 
-  示例效果：
+示例效果：
 
-  
-
-  ![img](https://upload-images.jianshu.io/upload_images/1293430-53e892b81b908d00.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/475/format/webp)
-
-  
+# 第一级标题   
+## 第二级标题   
+### 第三级标题  
+#### 第四级标题  
+##### 第五级标题   
+###### 第六级标题
 
 - 段落：段落的前后要有空行，所谓的空行是指没有文字内容。若想在段内强制换行的方式是使用两个以上空格加上回车。
 
@@ -82,13 +64,12 @@ categories: linux
   > > > > 四嵌套引用
   ```
 
-  示例效果：
+示例效果：
 
-  
-
-  ![img](https://upload-images.jianshu.io/upload_images/1293430-aa265ce53d458695.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/393/format/webp)
-
-  
+> 区块引用
+>> 嵌套引用
+>>> 三嵌套引用
+>>>> 四嵌套引用
 
 - 代码区块的建立是在每行加上4个空格或者一个制表符（如同写代码一样）。
 
@@ -107,25 +88,13 @@ categories: linux
   自动生成连接  <http://www.github.com/>
   ```
 
-  示例效果:
-
-  
-
-  ![img](https:////upload-images.jianshu.io/upload_images/1293430-aad2a0468efc03a1.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/669/format/webp)
-
-  参考试：
+  超链接：
 
   ```
   [GitHub][1]
   [1]:http://github.com
   自动生成连接  <http://www.github.com/>
   ```
-
-  示例效果:
-
-  
-
-  ![img](https:////upload-images.jianshu.io/upload_images/1293430-58c89b40f71f6079.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/684/format/webp)
 
 - 添加图片形式和链接相似，只需要在链接的基础上前方加一个 **！**号。
 
