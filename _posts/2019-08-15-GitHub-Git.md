@@ -86,7 +86,7 @@ sudo apt-get install git
 
   通过git指令把本地库的文件上传到GitHub的相应后缀为账户名.github.io的公共库中。
 
-  ```
+```
 ​	git init
 
   git config --global user.name "raoweijiapng"
@@ -102,7 +102,7 @@ sudo apt-get install git
   （如果第一次上传失败，在末尾的加-f参数是强制性上传，若GitHub上面没有文件与Linux上冲突，可以不要这个参数；若GitHub上面有文件与这个冲突，则加上这个参数。加上这个参数的作用：删掉GitHub上原有的文件，再上传Linux上的文件）。
 
   最后按提示输入GitHub的账号和密码。等待一会儿。
-  ```
+```
   那么现在就可以上GitHub查看自己刚上传的文件了。
 
   最后启动浏览器并转到https：// 账户名.github.io，就进入到自己的blog。
