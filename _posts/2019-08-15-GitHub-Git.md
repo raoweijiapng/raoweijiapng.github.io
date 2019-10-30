@@ -86,23 +86,23 @@ sudo apt-get install git
 
   通过git指令把本地库的文件上传到GitHub的相应后缀为账户名.github.io的公共库中。
 
-```
-​	git init
+  ```
+  ​	git init
 
-  git config --global user.name "raoweijiapng"
-​	git config --global user.email raoweijia@outlook.com
+    git config --global user.name "raoweijiapng"
+  ​	git config --global user.email raoweijia@outlook.com
 
-  git remote add origin https://github.com/Chenzhiyong47/pyflask.git（地址是自己的GitHub库的地址）
-		
-​	git add . （注意：git add 后面有一个小数点）
+    git remote add origin https://github.com/Chenzhiyong47/pyflask.git（地址是自己的GitHub库的地址）
+  		
+  ​	git add . （注意：git add 后面有一个小数点）
 
-  git commit -m "It's my first time to send documents to GitHub in Linux."  （双引号里内容必须要 写，但内容不限）。
-​			
-  git push origin master   
-  （如果第一次上传失败，在末尾的加-f参数是强制性上传，若GitHub上面没有文件与Linux上冲突，可以不要这个参数；若GitHub上面有文件与这个冲突，则加上这个参数。加上这个参数的作用：删掉GitHub上原有的文件，再上传Linux上的文件）。
+    git commit -m "It's my first time to send documents to GitHub in Linux."  （双引号里内容必须要 写，但内容不限）。
+  ​			
+    git push origin master   
+    （如果第一次上传失败，在末尾的加-f参数是强制性上传，若GitHub上面没有文件与Linux上冲突，可以不要这个参数；若GitHub上面有文件与这个冲突，则加上这个参数。加上这个参数的作用：删掉GitHub上原有的文件，再上传Linux上的文件）。
 
-  最后按提示输入GitHub的账号和密码。等待一会儿。
-```
+    最后按提示输入GitHub的账号和密码。等待一会儿。
+  ```
   那么现在就可以上GitHub查看自己刚上传的文件了。
 
   最后启动浏览器并转到https：// 账户名.github.io，就进入到自己的blog。
