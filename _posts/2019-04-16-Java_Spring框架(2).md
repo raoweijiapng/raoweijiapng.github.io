@@ -1,6 +1,6 @@
 ---
 title: Java_Spring框架(2)之DI的使用
-tags: java Spring DI
+tags: java Spring IOC DI
 categories: java
 ---
 
