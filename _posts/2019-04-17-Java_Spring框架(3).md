@@ -90,7 +90,7 @@ categories: java
  
 ## 和容器组件扫描相关的标注
 
-  @Scope("singleton|prototype")   控制组件的作用域(单例或多例,从容器中获取相同组件的地址和内容是否相同) 
+  @Scope("singleton\|prototype")   控制组件的作用域(单例或多例,从容器中获取相同组件的地址和内容是否相同) 
 
   ```
     import org.springframework.context.annotation.Scope;
