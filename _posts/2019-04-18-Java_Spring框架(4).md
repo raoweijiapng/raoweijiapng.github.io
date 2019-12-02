@@ -1,6 +1,6 @@
 ---
 title: Java_Spring框架(4)之采用不继承JdbcDaoSupport的方式完成对数据库的操作、Spring事务
-tags: java Spring AOP DAO
+tags: java Spring DAO
 categories: java
 ---
 

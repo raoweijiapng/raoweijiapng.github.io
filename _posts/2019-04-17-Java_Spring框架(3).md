@@ -1,6 +1,6 @@
 ---
 title: Java_Spring框架(3)之组件扫描和采用继承JdbcDaoSupport的方式完成对数据库的操作
-tags: java Spring AOP DAO
+tags: java Spring DAO
 categories: java
 ---
 

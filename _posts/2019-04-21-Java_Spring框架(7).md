@@ -195,6 +195,32 @@ categories: java
 		XdlBankAccount  account  = new XdlBankAccount(id, "test", "123", 1);
 		return  account;
 	}
+
+    /** 基于rest 做一个根据id  删除银行账户 */
+	@RequestMapping(value="/account/{id}",method=RequestMethod.DELETE)
+	@ResponseBody
+    public  boolean   accountRemoveById(@PathVariable("id") int  id) {
+    	if(id > 10) {
+    		return  false;
+    	}
+    	return true;
+    }	
+	
+	/** 基于rest 做一个根据id  增加银行账户 */
+	@RequestMapping(value="/account/{id}",method=RequestMethod.POST)
+	@ResponseBody
+    public  boolean   accountRemoveById(XdlBankAccount  account) {
+    	System.out.println(account);
+    	return  true;
+    }	
+	
+	/** 基于rest 做一个根据id  更新银行账户 */
+	@RequestMapping(value="/account/{id}",method=RequestMethod.PUT)
+	@ResponseBody
+    public  boolean   accountUpdate(@RequestBody XdlBankAccount  account) {
+    	System.out.println(account);
+    	return  true;
+    }	
   ```
 
   
