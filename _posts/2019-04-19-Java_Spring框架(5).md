@@ -53,42 +53,9 @@ categories: java
 
   - 编写Controller组件和JSP页面
 
-  > 不使用AOP
-
-  ```java
-    import javax.servlet.http.HttpServletRequest;
-    import javax.servlet.http.HttpServletResponse;
-    import org.springframework.web.servlet.ModelAndView;
-    import org.springframework.web.servlet.mvc.Controller;
-	public class XdlLoginController implements Controller {
-		@Override
-		public ModelAndView handleRequest(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
-			ModelAndView  mav  = new ModelAndView();
-			mav.setViewName("login");
-			return mav;
-		}
-	}
-  ```
-
-  > 使用AOP
-
-  ```java
-    import org.springframework.stereotype.Controller;
-    import org.springframework.web.bind.annotation.RequestMapping;
-
-	@Controller
-	public class XdlLoginController {
-	    @RequestMapping("/toLogin.do")
-		public String  toLogin() {
-			return  "login";
-		}
-	}
-  ```
-
   - 添加Spring配置文件applicationContext.xml,在applicationContext.xml配置Controller组件,HandlerMapping组件,ViewResolver组件
 
-  > 不使用AOP
+  > 方法一,直接bean标签表示Controller组件
 
   ```xml
     <!--  配置HandlerMapping的实现类   通过mappings 属性 建立请求和控制器的对应关系 -->	
@@ -111,7 +78,23 @@ categories: java
     </bean>
   ```
 
-  > 使用AOP
+  ```java
+    import javax.servlet.http.HttpServletRequest;
+    import javax.servlet.http.HttpServletResponse;
+    import org.springframework.web.servlet.ModelAndView;
+    import org.springframework.web.servlet.mvc.Controller;
+	public class XdlLoginController implements Controller {
+		@Override
+		public ModelAndView handleRequest(HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+			ModelAndView  mav  = new ModelAndView();
+			mav.setViewName("login");
+			return mav;
+		}
+	}
+  ```
+
+  > 方法二,使用组件扫描表示Controller组件
 
   ```xml
     <!-- 开启组件扫描 -->
@@ -126,6 +109,21 @@ categories: java
 		<property name="suffix" value=".jsp"></property>
 	</bean>
   ``` 
+
+  ```java
+    import org.springframework.stereotype.Controller;
+    import org.springframework.web.bind.annotation.RequestMapping;
+
+	@Controller
+	public class XdlLoginController {
+	    @RequestMapping("/toLogin.do")
+		public String  toLogin() {
+			return  "login";
+			//返回值为字符串时,寻找字符串,jsp文件,找到则跳转过去,为找到报错
+			//返回值为其它类型时,报错;除非转换json格式
+		}
+	}
+  ```
  
 ![springMVC注解配置](https://raoweijiapng.github.io/static/img/java/springMVC注解配置.png)
 

@@ -17,9 +17,8 @@ categories: java
     	@ModelAttribute("account") XdlBankAccount  account) {
     	//不能重定向jsp,只能通过RequestMapping跳转到jsp上
 		//return  "redirect:toLogin.do";
-		//转发,account能传递过去
-		return  "toLogin.do";
-		//默认为return  "forward:toLogin.do";
+		//转发,account能传递过去,同理只能寻找RequestMapping
+		return  "forward:toLogin.do";
     }
   ```
          
