@@ -41,7 +41,7 @@ categories: java
 
   6. 提供了自动配置机制，自动创建一些常用对象，例如JdbcTemplate、DataSource、DispatcherServlet等
   
-##MAVEN
+## MAVEN
 
   MAVEN是一个项目构建工具，可以对创建、编译、打包、生成文档等过程进行管理。maven工程都有一个pom.xml文件，通过在pom.xml追加定义，实现jar包和工具的导入。
 
@@ -51,7 +51,7 @@ categories: java
 
 ## SpringBoot程序结构
 
-  1. pom.xml导入boot启动器
+  - pom.xml导入boot启动器
 
     spring-boot-starter-parent //启动器父项，统一控制版本、jdk版本、编码等
 
@@ -85,7 +85,7 @@ categories: java
     </project>  
     ```
 
-  2. 在src/main/resources里添加application.properties或者application.yml
+  - 在src/main/resources里添加application.properties或者application.yml
 
     properties格式
 
@@ -98,7 +98,7 @@ categories: java
 
     提示：配置文件的key可以参考《SpringBoot2.x配置参数大全.docx》
 
-  3. 在src/main/java下创建cn.xdl目录,并向里添加启动类RunXxxx
+  - 在src/main/java下创建cn.xdl目录,并向里添加启动类RunXxxx
 
     ```java
       package cn.xdl;
@@ -113,7 +113,7 @@ categories: java
       }
     ```
 
-  4. 业务处理组件（Controller、Service、Dao等）
+  - 业务处理组件（Controller、Service、Dao等）
 
     注意：业务组件一定要放在启动类包下或子包下。
 
