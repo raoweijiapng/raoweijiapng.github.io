@@ -1,5 +1,5 @@
 ---
-title: Java_SpringBoot(3)之JMabtis的扩展使用
+title: Java_SpringBoot(4)之Mabtis的扩展使用
 tags: java SpringBoot
 categories: java
 ---
@@ -155,25 +155,25 @@ categories: java
 
     > 在NewsMapper.xml文件中输入
 
-  ```xml
-    <update id="dynamicUpdate" parameterType="cn.xdl.entity.News">
-    update knowledge
-        <set>
-            <if test="title != null">
-                name=#{name},
-            </if>
-            <if test="content != null">
-                content=#{content},
-            </if>
-            <if test="sticky != null">
-                sticky=#{sticky}
-            </if>
-        </set>
-        <where>
-            id=#{id}
-        </where>
-    </update>
-  ```
+    ```xml
+      <update id="dynamicUpdate" parameterType="cn.xdl.entity.News">
+      update knowledge
+          <set>
+              <if test="title != null">
+                  name=#{name},
+              </if>
+              <if test="content != null">
+                  content=#{content},
+              </if>
+              <if test="sticky != null">
+                  sticky=#{sticky}
+              </if>
+          </set>
+          <where>
+              id=#{id}
+          </where>
+      </update>
+    ```
 
     > 定义Mapper映射器接口（与XML文件SQL映射，配置@MapperScan）
 

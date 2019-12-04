@@ -229,9 +229,9 @@ categories: java
       }
     ```
 
-##SpringBoot访问数据库
+## SpringBoot访问数据库
 
-###DataSource连接池
+### DataSource连接池
 
   种类：druid、dbcp、hikari、dbcp2、c3p0、proxool、tomcat-jdbc
 
