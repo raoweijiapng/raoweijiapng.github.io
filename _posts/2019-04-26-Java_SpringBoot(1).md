@@ -69,21 +69,21 @@ categories: java
 
     spring-boot-devtools //热启动，代码修改后自动重启
 
-  ```xml
-  <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>cn.xdl</groupId>
-    <artifactId>boot01</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <dependencies>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-        <version>2.1.2.RELEASE</version>
-      </dependency>
-    </dependencies>
-  </project>  
-  ```
+    ```xml
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+      <groupId>cn.xdl</groupId>
+      <artifactId>boot01</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <dependencies>
+        <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+          <version>2.1.2.RELEASE</version>
+        </dependency>
+      </dependencies>
+    </project>  
+    ```
 
   2. 在src/main/resources里添加application.properties或者application.yml
 
@@ -96,43 +96,43 @@ categories: java
       server:
         port: 8888
 
-  提示：配置文件的key可以参考《SpringBoot2.x配置参数大全.docx》
+    提示：配置文件的key可以参考《SpringBoot2.x配置参数大全.docx》
 
   3. 在src/main/java下创建cn.xdl目录,并向里添加启动类RunXxxx
 
-  ```java
-    package cn.xdl;
-    import org.springframework.boot.SpringApplication;
-    import org.springframework.boot.autoconfigure.SpringBootApplication;
-    import org.springframework.context.ApplicationContext;
-    @SpringBootApplication
-    public class RunBoot {
-      public static void main(String[] args) {
-        ApplicationContext ac = SpringApplication.run(RunBoot.class, args);
+    ```java
+      package cn.xdl;
+      import org.springframework.boot.SpringApplication;
+      import org.springframework.boot.autoconfigure.SpringBootApplication;
+      import org.springframework.context.ApplicationContext;
+      @SpringBootApplication
+      public class RunBoot {
+        public static void main(String[] args) {
+          ApplicationContext ac = SpringApplication.run(RunBoot.class, args);
+        }
       }
-    }
-  ```
+    ```
 
   4. 业务处理组件（Controller、Service、Dao等）
 
-  注意：业务组件一定要放在启动类包下或子包下。
+    注意：业务组件一定要放在启动类包下或子包下。
 
-  > 在src/main/java/cn/xdl下创建web目录,并在此目录下创建HelloController.class
+    > 在src/main/java/cn/xdl下创建web目录,并在此目录下创建HelloController.class
 
-  ```java
-    package cn.xdl.web;
-    import org.springframework.web.bind.annotation.RequestMapping;
-    import org.springframework.web.bind.annotation.RestController;
-    //@Controller
-    @RestController //等价于@Controller+@ResponseBody
-    public class HelloController {
-      @RequestMapping("/hello")
-    //  @ResponseBody
-      public String say() {
-        return "Hello SpringBoot";
-      }      
-    }
-  ```
+    ```java
+      package cn.xdl.web;
+      import org.springframework.web.bind.annotation.RequestMapping;
+      import org.springframework.web.bind.annotation.RestController;
+      //@Controller
+      @RestController //等价于@Controller+@ResponseBody
+      public class HelloController {
+        @RequestMapping("/hello")
+      //  @ResponseBody
+        public String say() {
+          return "Hello SpringBoot";
+        }      
+      }
+    ```
 
 ## SpringBoot程序启动过程
 
