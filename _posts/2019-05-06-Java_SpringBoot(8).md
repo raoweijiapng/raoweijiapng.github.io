@@ -261,6 +261,6 @@ categories: java
       / ： 表示增量，0/1表示0\1\2\3\4递增加1；0/5表示0\5\10\15；1/5表示1\6\11\16\21
       L ： 只用在日和星期部分，表示最后一天、周六
     ```
-
-  ![cron使用案例](https://raoweijiapng.github.io/static/img/java/cron.png)
+    
+    ![cron使用案例](https://raoweijiapng.github.io/static/img/java/cron.png)
 
