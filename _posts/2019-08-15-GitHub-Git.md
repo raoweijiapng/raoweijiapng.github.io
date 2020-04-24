@@ -1,5 +1,5 @@
 ---
-title: 基于jekyll使用git连接githut搭建个人博客
+title: 基于jekyll使用git连接github搭建个人博客
 tags: git github jekyll
 categories: blog
 ---
