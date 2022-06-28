@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>微信公众号网页开发的网页授权 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="网页授权的回调域名   在微信公众号请求用户网页授权之前，开发者需要先到公众平台官网中的“开发-接口权限-网页服务-网页帐号-网页授权获取用户基本信息”的配置选项中，修改授权回调域名。请注意，这里填写的是域名（是一个字符串），而不是URL，因此请勿加http:&#x2F;&#x2F;等协议头；   授权回调域名配置规范为全域名，比如需要网页授权的域名为：www.qq.com，配置以后此域名下面的页面http:&#x2F;&#x2F;ww">
+<meta property="og:type" content="article">
+<meta property="og:title" content="微信公众号网页开发的网页授权">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/3567097989/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="网页授权的回调域名   在微信公众号请求用户网页授权之前，开发者需要先到公众平台官网中的“开发-接口权限-网页服务-网页帐号-网页授权获取用户基本信息”的配置选项中，修改授权回调域名。请注意，这里填写的是域名（是一个字符串），而不是URL，因此请勿加http:&#x2F;&#x2F;等协议头；   授权回调域名配置规范为全域名，比如需要网页授权的域名为：www.qq.com，配置以后此域名下面的页面http:&#x2F;&#x2F;ww">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2020-05-07T12:45:58.000Z">
+<meta property="article:modified_time" content="2022-06-06T05:48:42.827Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/3567097989/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '微信公众号网页开发的网页授权',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-06 13:48:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">微信公众号网页开发的网页授权</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-05-07T12:45:58.000Z" title="发表于 2020-05-07 20:45:58">2020-05-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-06T05:48:42.827Z" title="更新于 2022-06-06 13:48:42">2022-06-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7/">微信公众号</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="微信公众号网页开发的网页授权"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="网页授权的回调域名">网页授权的回调域名</h2>
+<ul>
+<li>
+<p>在微信公众号请求用户网页授权之前，开发者需要先到公众平台官网中的“开发-接口权限-网页服务-网页帐号-网页授权获取用户基本信息”的配置选项中，修改授权回调域名。请注意，这里填写的是域名（是一个字符串），而不是URL，因此请勿加http://等协议头；</p>
+</li>
+<li>
+<p>授权回调域名配置规范为全域名，比如需要网页授权的域名为：<a target="_blank" rel="noopener" href="http://www.qq.com">www.qq.com</a>，配置以后此域名下面的页面http://www.qq.com/music.html、<a target="_blank" rel="noopener" href="http://www.qq.com/login.html%E9%83%BD%E5%8F%AF%E4%BB%A5%E8%BF%9B%E8%A1%8COAuth2.0%E9%89%B4%E6%9D%83%E3%80%82%E4%BD%86http://pay.qq.com%E3%80%81http://music.qq.com%E3%80%81http://qq.com%E6%97%A0%E6%B3%95%E8%BF%9B%E8%A1%8COAuth2.0%E9%89%B4%E6%9D%83">http://www.qq.com/login.html都可以进行OAuth2.0鉴权。但http://pay.qq.com、http://music.qq.com、http://qq.com无法进行OAuth2.0鉴权</a></p>
+</li>
+</ul>
+<h2 id="关于网页授权的两种scope的区别说明">关于网页授权的两种scope的区别说明</h2>
+<ul>
+<li>
+<p>以snsapi_base为scope发起的网页授权，是用来获取进入页面的用户的openid的，并且是静默授权并自动跳转到回调页的。</p>
+</li>
+<li>
+<p>以snsapi_userinfo为scope发起的网页授权，是用来获取用户的基本信息的。但这种授权需要用户手动同意，并且由于用户同意过，所以无须关注，就可在授权后获取该用户的基本信息。</p>
+</li>
+<li>
+<p>用户管理类接口中的“获取用户基本信息接口”，是在用户和公众号产生消息交互或关注后事件推送后，才能根据用户OpenID来获取用户基本信息。这个接口，包括其他微信接口，都是需要该用户（即openid）关注了公众号后，才能调用成功的。</p>
+</li>
+</ul>
+<h2 id="关于网页授权access-token和普通access-token的区别">关于网页授权access_token和普通access_token的区别</h2>
+<ul>
+<li>
+<p>微信网页授权是通过OAuth2.0机制实现的，在用户授权给公众号后，公众号可以获取到一个网页授权特有的接口调用凭证（网页授权access_token），通过网页授权access_token可以进行授权后接口调用，如获取用户基本信息；</p>
+</li>
+<li>
+<p>其他微信接口，需要通过基础支持中的“获取access_token”接口来获取到的普通access_token调用。</p>
+</li>
+</ul>
+<h2 id="关于UnionID机制">关于UnionID机制</h2>
+<ul>
+<li>
+<p>请注意，网页授权获取用户基本信息也遵循UnionID机制。即如果开发者有在多个公众号，或在公众号、移动应用之间统一用户帐号的需求，需要前往微信开放平台（<a target="_blank" rel="noopener" href="http://open.weixin.qq.com">open.weixin.qq.com</a>）绑定公众号后，才可利用UnionID机制来满足上述需求。</p>
+</li>
+<li>
+<p>UnionID机制的作用说明：如果开发者拥有多个移动应用、网站应用和公众帐号，可通过获取用户基本信息中的unionid来区分用户的唯一性，因为同一用户，对同一个微信开放平台下的不同应用（移动应用、网站应用和公众帐号），unionid是相同的。</p>
+</li>
+</ul>
+<h2 id="关于特殊场景下的静默授权">关于特殊场景下的静默授权</h2>
+<ul>
+<li>
+<p>上面已经提到，对于以snsapi_base为scope的网页授权，就静默授权的，用户无感知；</p>
+</li>
+<li>
+<p>对于已关注公众号的用户，如果用户从公众号的会话或者自定义菜单进入本公众号的网页授权页，即使是scope为snsapi_userinfo，也是静默授权，用户无感知。</p>
+</li>
+</ul>
+<h2 id="网页授权流程">网页授权流程</h2>
+<ul>
+<li>第一步：用户同意授权，获取code</li>
+</ul>
+<blockquote>
+<p>参考链接</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>scope为snsapi_base</p>
+</blockquote>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx520c15f417810387&amp;redirect_uri=https%3A%2F%2Fchong.qq.com%2Fphp%2Findex.php%3Fd%3D%26c%3DwxAdapter%26m%3DmobileDeal%26showwxpaytitle%3D1%26vb2ctag%3D4_2030_5_1194_60&amp;response_type=code&amp;scope=snsapi_base&amp;state=123#wechat_redirect</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<p>scope为snsapi_userinfo</p>
+</blockquote>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxf0e81c3bee622d60&amp;redirect_uri=http%3A%2F%2Fnba.bluewebgame.com%2Foauth_response.php&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=STATE#wechat_redirect</span><br></pre></td></tr></table></figure>
+<blockquote>
+<blockquote>
+<p>尤其注意：跳转回调redirect_uri，应当使用https链接来确保授权code的安全性。</p>
+</blockquote>
+</blockquote>
+  <img src="/posts/3567097989/1.png" class="post-image">
+<ul>
+<li>将获取code,授权的请求做成二维码</li>
+</ul>
+<blockquote>
+<p>制作二维码的工具类QRCodeGenerator</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">import com.google.zxing.BarcodeFormat;</span><br><span class="line">import com.google.zxing.EncodeHintType;</span><br><span class="line">import com.google.zxing.MultiFormatWriter;</span><br><span class="line">import com.google.zxing.WriterException;</span><br><span class="line">import com.google.zxing.common.BitMatrix;</span><br><span class="line">import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;</span><br><span class="line"></span><br><span class="line">import javax.imageio.ImageIO;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import java.awt.image.BufferedImage;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.Hashtable;</span><br><span class="line"></span><br><span class="line">public class QRCodeGenerator &#123;</span><br><span class="line"></span><br><span class="line">	public static void creatRrCode(String contents, int width, int height,HttpServletResponse response) &#123;</span><br><span class="line">        Hashtable hints = new Hashtable();</span><br><span class="line">        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H); //容错级别最高</span><br><span class="line">        hints.put(EncodeHintType.CHARACTER_SET, &quot;utf-8&quot;);  //设置字符编码</span><br><span class="line">        hints.put(EncodeHintType.MARGIN, 1);                //二维码空白区域,最小为0也有白边,只是很小,最小是6像素左右</span><br><span class="line">        try &#123;</span><br><span class="line">        	// 1、读取文件转换为字节数组</span><br><span class="line">            BitMatrix bitMatrix = new MultiFormatWriter().encode(contents, BarcodeFormat.QR_CODE, width, height, hints);</span><br><span class="line"></span><br><span class="line">            BufferedImage image = toBufferedImage(bitMatrix);</span><br><span class="line"></span><br><span class="line">            //转换成png格式的IO流</span><br><span class="line">            ImageIO.write(image, &quot;png&quot;, response.getOutputStream());</span><br><span class="line">			// byte[] bytes = out.toByteArray();</span><br><span class="line">			// 2、将字节数组转为二进制</span><br><span class="line">			// BASE64Encoder encoder = new BASE64Encoder();</span><br><span class="line">			// binary = encoder.encodeBuffer(bytes).trim();</span><br><span class="line">        &#125; catch (WriterException e) &#123;</span><br><span class="line">        	// TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            // TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * image流数据处理</span><br><span class="line">     *</span><br><span class="line">     * @author ianly</span><br><span class="line">     */</span><br><span class="line">    public static BufferedImage toBufferedImage(BitMatrix matrix) &#123;</span><br><span class="line">        int width = matrix.getWidth();</span><br><span class="line">        int height = matrix.getHeight();</span><br><span class="line">        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);</span><br><span class="line">        for (int x = 0; x &lt; width; x++) &#123;</span><br><span class="line">            for (int y = 0; y &lt; height; y++) &#123;</span><br><span class="line">                image.setRGB(x, y, matrix.get(x, y) ? 0xFF000000 : 0xFFFFFFFF);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return image;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>显示二维码的页面</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot;</span><br><span class="line">   pageEncoding=&quot;UTF-8&quot;%&gt;</span><br><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">&lt;title&gt;微信登录&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;img  id=&quot;qrcode&quot; style=&quot;padding-left: 20px&quot; src=&quot;qrcode&quot;&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>二维码的地址,后台controller代码</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public String appid = &quot;wxe6774713a448fb6f&quot;;</span><br><span class="line">public String secret = &quot;1fec63da4f2a53c3224e6adf6dd4876e&quot;;</span><br><span class="line"></span><br><span class="line">	@RequestMapping(&quot;qrcode&quot;)</span><br><span class="line">   public void login(HttpServletResponse response)&#123;    	</span><br><span class="line">   	String url = &quot;https://open.weixin.qq.com/connect/oauth2/authorize?&quot;;    	</span><br><span class="line">   	String redirect_uri = URLEncoder.encode(&quot;http://eeee.free.idcfengye.com/getCode&quot;);				</span><br><span class="line">	String params = &quot;appid=&quot;+appid+&quot;&amp;secret=&quot;+secret+&quot;&amp;redirect_uri=&quot;+redirect_uri+&quot;&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=STATE#wechat_redirect&quot;;		</span><br><span class="line">   	QRCodeGenerator.creatRrCode(url+params, 180,180,response);    	</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>code传递二维码的redirect_uri,然后通过code获取access_token,再刷新access_token,最后拉取用户信息</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">//二维码地址的redirect_uri</span><br><span class="line"> @RequestMapping(&quot;/getCode&quot;)</span><br><span class="line"> public ModelAndView toSuccess(HttpServletRequest request)&#123;</span><br><span class="line"> 	String code = request.getParameter(&quot;code&quot;);</span><br><span class="line"></span><br><span class="line"> 	String url = &quot;https://api.weixin.qq.com/sns/oauth2/access_token?&quot;;    	</span><br><span class="line"> 	String params = &quot;appid=&quot;+appid+&quot;&amp;secret=&quot;+secret+&quot;&amp;code=&quot;+code+&quot;&amp;grant_type=authorization_code&quot;;</span><br><span class="line"></span><br><span class="line"> 	//调用httpGet方法发送url并返回json对象,可以获取access_token和refresh_token</span><br><span class="line">     JSONObject jsonObject = this.httpGet(url+params);        </span><br><span class="line">     //使用refresh_token刷新access_token  </span><br><span class="line">     String refresh_token = jsonObject.getString(&quot;refresh_token&quot;);</span><br><span class="line"></span><br><span class="line">     String url1 = &quot;https://api.weixin.qq.com/sns/oauth2/refresh_token?&quot;;        </span><br><span class="line">     String params1 = &quot;appid=&quot;+appid+&quot;&amp;grant_type=refresh_token&amp;refresh_token=&quot;+refresh_token;</span><br><span class="line"></span><br><span class="line">     //调用httpGet方法发送url并返回json对象,可以获取刷新后的access_token</span><br><span class="line">     JSONObject jsonObject1 = this.httpGet(url1+params1);        </span><br><span class="line">     //使用刷新的access_token和openid获取用户信息</span><br><span class="line">     String access_token = jsonObject.getString(&quot;access_token&quot;);        </span><br><span class="line">     String openid = jsonObject.getString(&quot;openid&quot;);</span><br><span class="line"></span><br><span class="line">     String url2 = &quot;https://api.weixin.qq.com/sns/userinfo?&quot;;        </span><br><span class="line">     String params2 = &quot;access_token=&quot;+access_token+&quot;&amp;openid=&quot;+openid+&quot;&amp;lang=zh_CN&quot;;</span><br><span class="line"></span><br><span class="line">     //调用httpGet方法发送url并返回json对象,获取用户信息</span><br><span class="line">     JSONObject jsonObject2 = this.httpGet(url2+params2);    	</span><br><span class="line"> 	//System.out.println(jsonObject2);</span><br><span class="line"></span><br><span class="line"> 	ModelAndView modelAndView = new ModelAndView();</span><br><span class="line">     modelAndView.setViewName(&quot;success&quot;);</span><br><span class="line">     modelAndView.addObject(&quot;userInfo&quot;, jsonObject2);    	</span><br><span class="line"> 	return modelAndView;    	</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用htpClient发送url请求获取返回，用阿里的fastjson解析json</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">public JSONObject httpGet(String url) &#123;</span><br><span class="line">    JSONObject jsonResult = null;</span><br><span class="line">    try &#123;</span><br><span class="line">    	//目前HttpClient最新版的实现类为CloseableHttpClient</span><br><span class="line">        CloseableHttpClient client = HttpClients.createDefault();</span><br><span class="line">        //get方法</span><br><span class="line">        HttpGet request = new HttpGet(url);</span><br><span class="line">        //post方法</span><br><span class="line">        //HttpPost request = new HttpPost(url);</span><br><span class="line"></span><br><span class="line">        //执行Request请求,CloseableHttpClient的execute方法返回的response都是CloseableHttpResponse类型            </span><br><span class="line">        CloseableHttpResponse response = client.execute(request);</span><br><span class="line"></span><br><span class="line">        //判断响应的状态码是否为200</span><br><span class="line">        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) &#123;</span><br><span class="line">        	//用EntityUtils.toString()这个静态方法将HttpEntity转换成字符串,防止服务器返回的数据带有中文,所以在转换的时候将字符集指定成utf-8就可以了</span><br><span class="line">            String strResult = EntityUtils.toString(response.getEntity(),&quot;UTF-8&quot;);</span><br><span class="line">            //将字符串转换json对象</span><br><span class="line">            jsonResult = JSON.parseObject(strResult);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            System.out.println(&quot;请求出错&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    return jsonResult;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/3567097989/">https://raoweijiapng.gitee.io/posts/3567097989/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/109259093/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">微信公众号网页开发JS_SDK之使用配置说明</div></div></a></div><div class="next-post pull-right"><a href="/posts/1544898237/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">百度地图api的浏览器定位和转换坐标</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E6%8E%88%E6%9D%83%E7%9A%84%E5%9B%9E%E8%B0%83%E5%9F%9F%E5%90%8D"><span class="toc-number">1.</span> <span class="toc-text">网页授权的回调域名</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%BD%91%E9%A1%B5%E6%8E%88%E6%9D%83%E7%9A%84%E4%B8%A4%E7%A7%8Dscope%E7%9A%84%E5%8C%BA%E5%88%AB%E8%AF%B4%E6%98%8E"><span class="toc-number">2.</span> <span class="toc-text">关于网页授权的两种scope的区别说明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%BD%91%E9%A1%B5%E6%8E%88%E6%9D%83access-token%E5%92%8C%E6%99%AE%E9%80%9Aaccess-token%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">3.</span> <span class="toc-text">关于网页授权access_token和普通access_token的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8EUnionID%E6%9C%BA%E5%88%B6"><span class="toc-number">4.</span> <span class="toc-text">关于UnionID机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E7%89%B9%E6%AE%8A%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E9%9D%99%E9%BB%98%E6%8E%88%E6%9D%83"><span class="toc-number">5.</span> <span class="toc-text">关于特殊场景下的静默授权</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5%E6%8E%88%E6%9D%83%E6%B5%81%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text">网页授权流程</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1374871441/" title="Impala安装错误问题">Impala安装错误问题</a><time datetime="2022-06-27T14:05:29.000Z" title="发表于 2022-06-27 22:05:29">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2559104384/" title="Impala安装与⼊⻔案例">Impala安装与⼊⻔案例</a><time datetime="2022-06-27T08:46:00.000Z" title="发表于 2022-06-27 16:46:00">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/762060305/" title="Impala概述">Impala概述</a><time datetime="2022-06-27T08:32:19.000Z" title="发表于 2022-06-27 16:32:19">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3793835697/" title="Sqoop常用命令及参数">Sqoop常用命令及参数</a><time datetime="2022-06-27T07:39:14.000Z" title="发表于 2022-06-27 15:39:14">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4171003358/" title="Sqoop应用案例">Sqoop应用案例</a><time datetime="2022-06-27T00:42:49.000Z" title="发表于 2022-06-27 08:42:49">2022-06-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

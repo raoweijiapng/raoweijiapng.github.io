@@ -1,0 +1,549 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Apache Hadoop的完全分布式集群搭建 | WeiJia_Rao</title><meta name="keywords" content="HDFS,MapReduce,YARN"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="集群规划  安装Jdk   登录linux121节点，在&#x2F;opt目录下创建文件夹。 12mkdir -p &#x2F;opt&#x2F;lagou&#x2F;software --软件安装包存放目录mkdir -p &#x2F;opt&#x2F;lagou&#x2F;servers --软件安装目录   上传jdk安装文件到&#x2F;opt&#x2F;lagou&#x2F;software。   进入&#x2F;opt&#x2F;lagou&#x2F;software,解压安装文件到&#x2F;opt&#x2F;lagou&#x2F;serv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Hadoop的完全分布式集群搭建">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/3144417379/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="集群规划  安装Jdk   登录linux121节点，在&#x2F;opt目录下创建文件夹。 12mkdir -p &#x2F;opt&#x2F;lagou&#x2F;software --软件安装包存放目录mkdir -p &#x2F;opt&#x2F;lagou&#x2F;servers --软件安装目录   上传jdk安装文件到&#x2F;opt&#x2F;lagou&#x2F;software。   进入&#x2F;opt&#x2F;lagou&#x2F;software,解压安装文件到&#x2F;opt&#x2F;lagou&#x2F;serv">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2021-12-22T13:45:23.000Z">
+<meta property="article:modified_time" content="2021-12-23T14:03:00.000Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="HDFS">
+<meta property="article:tag" content="MapReduce">
+<meta property="article:tag" content="YARN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/3144417379/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Apache Hadoop的完全分布式集群搭建',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-12-23 22:03:00'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Apache Hadoop的完全分布式集群搭建</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-22T13:45:23.000Z" title="发表于 2021-12-22 21:45:23">2021-12-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-12-23T14:03:00.000Z" title="更新于 2021-12-23 22:03:00">2021-12-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Hadoop/">Hadoop</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Apache Hadoop的完全分布式集群搭建"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="集群规划">集群规划</h2>
+<img src="/posts/3144417379/1.jpg" class="post-image">
+<h2 id="安装Jdk">安装Jdk</h2>
+<ul>
+<li>
+<p>登录linux121节点，在/opt目录下创建文件夹。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /opt/lagou/software --软件安装包存放目录</span><br><span class="line">mkdir -p /opt/lagou/servers --软件安装目录</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>上传jdk安装文件到/opt/lagou/software。</p>
+</li>
+<li>
+<p>进入/opt/lagou/software,解压安装文件到/opt/lagou/servers</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf jdk1.8.0_231.tar.gz -C /opt/lagou/servers</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>查看是否解压成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers</span><br><span class="line">ll</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>添加Jdk到环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>文件末尾添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#JAVA_HOME</span><br><span class="line">export JAVA_HOME=/opt/lagou/servers/jdk1.8.0_231</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>使环境变量生效</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>验证Jdk</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="安装Hadoop">安装Hadoop</h2>
+<ul>
+<li>
+<p>上传hadoop安装文件到/opt/lagou/software。</p>
+</li>
+<li>
+<p>进入/opt/lagou/software,解压安装文件到/opt/lagou/servers</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf hadoop-2.9.2.tar.gz -C /opt/lagou/servers</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>查看是否解压成功</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers</span><br><span class="line">ll</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>添加Hadoop到环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br></pre></td></tr></table></figure>
+<p>文件末尾添加</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">##HADOOP_HOME</span><br><span class="line">export HADOOP_HOME=/opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/bin</span><br><span class="line">export PATH=$PATH:$HADOOP_HOME/sbin</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>使环境变量生效</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>验证hadoop</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop version</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>hadoop目录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">ll</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">drwxr-xr-x. 2 root root 194 Nov 13 2018 bin</span><br><span class="line">drwxr-xr-x. 3 root root 20 Nov 13 2018 etc</span><br><span class="line">drwxr-xr-x. 2 root root 106 Nov 13 2018 include</span><br><span class="line">drwxr-xr-x. 3 root root 20 Nov 13 2018 lib</span><br><span class="line">drwxr-xr-x. 2 root root 239 Nov 13 2018 libexec</span><br><span class="line">-rw-r--r--. 1 root root 106210 Nov 13 2018 LICENSE.txt</span><br><span class="line">-rw-r--r--. 1 root root 15917 Nov 13 2018 NOTICE.txt</span><br><span class="line">-rw-r--r--. 1 root root 1366 Nov 13 2018 README.txt</span><br><span class="line">drwxr-xr-x. 3 root root 4096 Nov 13 2018 sbin</span><br><span class="line">drwxr-xr-x. 4 root root 31 Nov 13 2018 share</span><br></pre></td></tr></table></figure>
+<ol>
+<li>
+<p>bin目录:对Hadoop进行操作的相关命令，如hadoop,hdfs等。</p>
+</li>
+<li>
+<p>etc目录：Hadoop的配置文件目录，如hdfs-site.xml,core-site.xml等。</p>
+</li>
+<li>
+<p>lib目录：Hadoop本地库（解压缩的依赖）。</p>
+</li>
+<li>
+<p>sbin目录：存放的是Hadoop集群启动停止相关脚本，命令。</p>
+</li>
+<li>
+<p>share目录：Hadoop的一些jar,官方案例jar，文档等。</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="集群配置">集群配置</h2>
+<p>Hadoop集群配置 = HDFS集群配置 + MapReduce集群配置 + Yarn集群配置</p>
+<h3 id="HDFS集群配置">HDFS集群配置</h3>
+<ol>
+<li>将JDK路径明确配置给HDFS（<a target="_blank" rel="noopener" href="http://xn--hadoop-env-yu6pe85r.sh">修改hadoop-env.sh</a>）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers/hadoop-2.9.2/etc/hadoop</span><br><span class="line">vim hadoop-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/opt/lagou/servers/jdk1.8.0_231</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/2.png" class="post-image">
+<ol start="2">
+<li>指定NameNode节点以及数据存储目录（修改core-site.xml）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">vim core-site.xml</span><br><span class="line"></span><br><span class="line">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;fs.defaultFS&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;hdfs://linux121:9000&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!-- 指定Hadoop运行时产生文件的存储目录 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;/opt/lagou/servers/hadoop-2.9.2/data/tmp&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/3.jpg" class="post-image">
+<br>
+<p>core-site.xml的默认配置，可以去官方文档<a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r2.9.2/hadoop-project-dist/hadoop-common/core-default.xml">查看</a>。</p>
+<ol start="3">
+<li>指定SecondaryNameNode节点（修改hdfs-site.xml）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vim hdfs-site.xml</span><br><span class="line"></span><br><span class="line">&lt;!-- 指定Hadoop辅助名称节点主机配置 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt; &lt;value&gt;linux123:50090&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!--副本数量 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;dfs.replication&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;3&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/4.jpg" class="post-image">
+<br>
+<p>hdfs-site.xml的默认配置，可以去官方文档<a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r2.9.2/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml">查看</a>。</p>
+<ol start="4">
+<li>指定DataNode从节点（修改etc/hadoop/slaves文件，每个节点配置信息占一行）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim slaves</span><br><span class="line"></span><br><span class="line">linux121</span><br><span class="line">linux122</span><br><span class="line">linux123</span><br></pre></td></tr></table></figure>
+<h3 id="MapReduce集群配置">MapReduce集群配置</h3>
+<ol>
+<li>将JDK路径明确配置给MapReduce（<a target="_blank" rel="noopener" href="http://xn--mapred-env-yu6pe85r.sh">修改mapred-env.sh</a>）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim mapred-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/opt/lagou/servers/jdk1.8.0_231</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/5.png" class="post-image">
+<br>
+<ol start="2">
+<li>指定MapReduce计算框架运行Yarn资源调度框架（修改mapred-site.xml）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mv mapred-site.xml.template mapred-site.xml</span><br><span class="line">vim mapred-site.xml</span><br><span class="line"></span><br><span class="line">&lt;!-- 指定MR运行在Yarn上 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;yarn&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/5.png" class="post-image">
+<br>
+<p>mapred-site.xml的默认配置，可以去官方文档<a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r2.9.2/hadoop-mapreduce-client/hadoop-mapreduce-client-core/mapred-default.xml">查看</a>。</p>
+<h3 id="Yarn集群配置">Yarn集群配置</h3>
+<ol>
+<li>将JDK路径明确配置给Yarn（<a target="_blank" rel="noopener" href="http://xn--yarn-env-0n3mm27o.sh">修改yarn-env.sh</a>）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim yarn-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/opt/lagou/servers/jdk1.8.0_231</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/6.jpg" class="post-image">
+<ol start="2">
+<li>指定ResourceManager老大节点所在计算机节点（修改yarn-site.xml）。</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">vim yarn-site.xml</span><br><span class="line"></span><br><span class="line">&lt;!-- 指定YARN的ResourceManager的地址 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.resourcemanager.hostname&lt;/name&gt; &lt;value&gt;linux123&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!-- Reducer获取数据的方式 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt; &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3144417379/7.jpg" class="post-image">
+<br>
+<p>yarn-site.xml的默认配置，可以去官方文档<a target="_blank" rel="noopener" href="https://hadoop.apache.org/docs/r2.9.2/hadoop-yarn/hadoop-yarn-common/yarn-default.xml">查看</a>。</p>
+<ol start="3">
+<li>指定NodeManager节点（会通过slaves文件内容确定）。</li>
+</ol>
+<p>注意：Hadoop安装目录所属用户和所属用户组信息，默认是501 dialout，而我们操作Hadoop集群的用户使用的是虚拟机的root用户，<br>
+所以为了避免出现信息混乱，修改Hadoop安装目录所属用户和用户组！！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R root:root /opt/lagou/servers/hadoop-2.9.2</span><br></pre></td></tr></table></figure>
+<h2 id="分发配置">分发配置</h2>
+<h3 id="编写集群分发脚本rsync-script">编写集群分发脚本rsync-script</h3>
+<ul>
+<li>
+<p>rsync 远程同步工具</p>
+<p>rsync主要用于备份和镜像。具有速度快、避免复制相同内容和支持符号链接的优点。</p>
+<p>rsync和scp区别：用rsync做文件的复制要比scp的速度快，rsync只对差异文件做更新。scp是把所有文件都复制过去。</p>
+<ol>
+<li>基本语法</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rsync  -rvl      $pdir/$fname         $user@$host:$pdir/$fname</span><br><span class="line"></span><br><span class="line">命令   选项参数   要拷贝的文件路径/名称  目的用户@主机:目的路径/名称</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>选项参数说明</li>
+</ol>
+  <img src="/posts/3144417379/8.jpg" class="post-image">
+</li>
+<li>
+<p>rsync案例</p>
+<ol>
+<li>三台虚拟机安装rsync (执行安装需要保证机器联网)</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 ~]# yum install -y rsync</span><br></pre></td></tr></table></figure>
+<p>2.把linux121机器上的/opt/lagou/software目录同步到linux122服务器的root用户下的/opt/目录</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 opt]$ rsync -rvl /opt/lagou/software/ root@linux122:/opt/lagou/software</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="集群分发脚本编写">集群分发脚本编写</h3>
+<ul>
+<li>
+<p>在/usr/local/bin目录下创建文件rsync-script，并编写文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 bin]$ touch rsync-script</span><br><span class="line">[root@linux121 bin]$ vim rsync-script</span><br></pre></td></tr></table></figure>
+<p>在文件中编写shell代码，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"></span><br><span class="line">#1 获取命令输入参数的个数，如果个数为0，直接退出命令 paramnum=$#</span><br><span class="line">if((paramnum==0));</span><br><span class="line">then echo no params; exit;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">#2 根据传入参数获取文件名称</span><br><span class="line">p1=$1</span><br><span class="line">file_name=`basename $p1`</span><br><span class="line">echo fname=$file_name</span><br><span class="line"></span><br><span class="line">#3 获取输入参数的绝对路径</span><br><span class="line">pdir=`cd -P $(dirname $p1); pwd`</span><br><span class="line">echo pdir=$pdir</span><br><span class="line"></span><br><span class="line">#4 获取用户名称</span><br><span class="line">user=`whoami`</span><br><span class="line"></span><br><span class="line">#5 循环执行rsync</span><br><span class="line">for((host=121; host&lt;124; host++));</span><br><span class="line">do</span><br><span class="line">echo ------------------- linux$host --------------</span><br><span class="line">rsync -rvl $pdir/$file_name $user@linux$host:$pdir</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>修改脚本 rsync-script 具有执行权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 bin]$ chmod 777 rsync-script</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>调用脚本形式：rsync-script 文件名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 bin]$ rsync-script /home/root/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>调用脚本分发Hadoop安装目录到其它节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 bin]$ rsync-script /opt/lagou/servers/hadoop-2.9.2</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="启动集群">启动集群</h2>
+<p>注意：如果集群是第一次启动，需要在Namenode所在节点格式化NameNode，非第一次不用执行格式化Namenode操作！！</p>
+<h3 id="单节点启动">单节点启动</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop namenode -format</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>在linux121上启动NameNode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop-daemon.sh start namenode</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br><span class="line">3461 NameNode</span><br><span class="line">3608 Jps</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在linux121、linux122以及linux123上分别启动DataNode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop-daemon.sh start datanode</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br><span class="line">3461 NameNode</span><br><span class="line">3608 Jps</span><br><span class="line">3561 DataNode</span><br><span class="line"></span><br><span class="line">[root@linux122 hadoop-2.9.2]$ hadoop-daemon.sh start datanode</span><br><span class="line">[root@linux122 hadoop-2.9.2]$ jps</span><br><span class="line">3190 DataNode</span><br><span class="line">3279 Jps</span><br><span class="line"></span><br><span class="line">[root@linux123 hadoop-2.9.2]$ hadoop-daemon.sh start datanode</span><br><span class="line">[root@linux123 hadoop-2.9.2]$ jps</span><br><span class="line">3237 Jps</span><br><span class="line">3163 DataNode</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>web端查看Hdfs界面</p>
+<p><a target="_blank" rel="noopener" href="http://linux121:50070/dfshealth.html#tab-overview">http://linux121:50070/dfshealth.html#tab-overview</a></p>
+<img src="/posts/3144417379/9.jpg" class="post-image">
+</li>
+</ul>
+<br>
+<p>查看HDFS集群正常节点：</p>
+  <img src="/posts/3144417379/10.jpg" class="post-image">
+<ul>
+<li>
+<p>Yarn集群单节点启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@linux123 servers]# yarn-daemon.sh start resourcemanager</span><br><span class="line">[root@linux123 servers]# jps</span><br><span class="line">3190 DataNode</span><br><span class="line">3279 Jps</span><br><span class="line">881 ResourceManager</span><br><span class="line"></span><br><span class="line">[root@linux122 servers]# yarn-daemon.sh start nodemanager</span><br><span class="line">[root@linux122 servers]# jps</span><br><span class="line">3190 DataNode</span><br><span class="line">3279 Jps</span><br><span class="line">8166 NodeManager</span><br><span class="line"></span><br><span class="line">[root@linux121 servers]# yarn-daemon.sh start nodemanager</span><br><span class="line">[root@linux121 servers]# jps</span><br><span class="line">3461 NameNode</span><br><span class="line">3608 Jps</span><br><span class="line">3561 DataNode</span><br><span class="line">8166 NodeManager</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="单节点关闭">单节点关闭</h3>
+<ul>
+<li>
+<p>在linux121上关闭NameNode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop-daemon.sh stop namenode</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br><span class="line">3608 Jps</span><br><span class="line">3561 DataNode</span><br><span class="line">8166 NodeManager</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在linux121、linux122以及linux123上分别关闭DataNode</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop-daemon.sh stop datanode</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br><span class="line">3608 Jps</span><br><span class="line">8166 NodeManager</span><br><span class="line"></span><br><span class="line">[root@linux122 hadoop-2.9.2]$ hadoop-daemon.sh stop datanode</span><br><span class="line">[root@linux122 hadoop-2.9.2]$ jps</span><br><span class="line">3279 Jps</span><br><span class="line">8166 NodeManager</span><br><span class="line"></span><br><span class="line">[root@linux123 hadoop-2.9.2]$ hadoop-daemon.sh stop datanode</span><br><span class="line">[root@linux123 hadoop-2.9.2]$ jps</span><br><span class="line">3237 Jps</span><br><span class="line">881 ResourceManager</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>Yarn集群单节点关闭</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@linux123 servers]# yarn-daemon.sh stop resourcemanager</span><br><span class="line">[root@linux123 servers]# jps</span><br><span class="line">3279 Jps</span><br><span class="line"></span><br><span class="line">[root@linux122 servers]# yarn-daemon.sh stop nodemanager</span><br><span class="line">[root@linux122 servers]# jps</span><br><span class="line">3279 Jps</span><br><span class="line"></span><br><span class="line">[root@linux121 servers]# yarn-daemon.sh stop nodemanager</span><br><span class="line">[root@linux121 servers]# jps</span><br><span class="line">3608 Jps</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="集群群起">集群群起</h3>
+<p>注意:如果已经单节点方式启动了Hadoop,可以先停止之前的启动的Namenode与Datanode进程,如果之前Namenode没有执行格式化，这里需要执行格式化!!!</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hadoop namenode -format</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>启动HDFS</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ start-dfs.sh</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br><span class="line">4166 NameNode</span><br><span class="line">4482 Jps</span><br><span class="line">4263 DataNode</span><br><span class="line"></span><br><span class="line">[root@linux122 hadoop-2.9.2]$ jps</span><br><span class="line">3218 DataNode</span><br><span class="line">3288 Jps</span><br><span class="line">[root@linux123 hadoop-2.9.2]$ jps</span><br><span class="line">3221 DataNode</span><br><span class="line">3283 SecondaryNameNode</span><br><span class="line">3364 Jps</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>启动YARN</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux123 hadoop-2.9.2]$ start-yarn.sh</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>注意：NameNode和ResourceManger不是在同一台机器，不能在NameNode上启动 YARN，应该在ResouceManager所在的机器上启动YARN。</p>
+<h3 id="集群群关闭">集群群关闭</h3>
+<ul>
+<li>
+<p>关闭HDFS</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ stop-dfs.sh</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br><span class="line">4482 Jps</span><br><span class="line"></span><br><span class="line">[root@linux122 hadoop-2.9.2]$ jps</span><br><span class="line">3288 Jps</span><br><span class="line">[root@linux123 hadoop-2.9.2]$ jps</span><br><span class="line">3364 Jps</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>启动YARN</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux123 hadoop-2.9.2]$ stop-yarn.sh</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="集群测试">集群测试</h2>
+<ul>
+<li>
+<p>HDFS 分布式存储初体验</p>
+<p>从linux本地文件系统上传下载文件验证HDFS集群工作正常。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#在HDFS文件系统根目录创建/test/input的文件夹</span><br><span class="line">hdfs dfs -mkdir -p /test/input</span><br><span class="line"></span><br><span class="line">#本地hoome目录创建一个文件</span><br><span class="line">cd /root</span><br><span class="line">vim test.txt</span><br><span class="line"></span><br><span class="line">hello hdfs</span><br><span class="line"></span><br><span class="line">#上传linxu文件到Hdfs</span><br><span class="line">hdfs dfs -put /root/test.txt /test/input</span><br><span class="line"></span><br><span class="line">#从Hdfs下载文件到linux本地</span><br><span class="line">hdfs dfs -get /test/input/test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>MapReduce 分布式计算初体验</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">#在HDFS文件系统根目录下面创建一个wcinput文件夹</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ hdfs dfs -mkdir /wcinput</span><br><span class="line"></span><br><span class="line">#在/root/目录下创建一个wc.txt文件(本地文件系统)</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ cd /root/</span><br><span class="line">[root@linux121 wcinput]$ touch wc.txt</span><br><span class="line"></span><br><span class="line">#编辑wc.txt文件</span><br><span class="line">[root@linux121 wcinput]$ vi wc.txt</span><br><span class="line"></span><br><span class="line">#在文件中输入如下内容</span><br><span class="line">hadoop mapreduce yarn</span><br><span class="line">hdfs hadoop mapreduce</span><br><span class="line">mapreduce yarn lagou</span><br><span class="line">lagou</span><br><span class="line">lagou</span><br><span class="line"></span><br><span class="line">#保存退出</span><br><span class="line">: wq!</span><br><span class="line"></span><br><span class="line">#上传wc.txt到Hdfs目录/wcinput下</span><br><span class="line">hdfs dfs -put wc.txt /wcinput</span><br><span class="line"></span><br><span class="line">#回到Hadoop目录/opt/lagou/servers/hadoop-2.9.2执行程序</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.9.2.jar wordcount /wcinput /wcoutput</span><br><span class="line"></span><br><span class="line">#查看结果</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ hdfs dfs -cat /wcoutput/part-r-00000</span><br><span class="line"></span><br><span class="line">hadoop 2</span><br><span class="line">hdfs 1</span><br><span class="line">lagou 3</span><br><span class="line">mapreduce 3</span><br><span class="line">yarn 2</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="配置历史服务器">配置历史服务器</h2>
+<p>在Yarn中运行的任务产生的日志数据不能查看，为了查看程序的历史运行情况，需要配置一下历史日志服务器。具体配置步骤如下：</p>
+<ul>
+<li>
+<p>配置mapred-site.xml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop]$ vi mapred-site.xml</span><br></pre></td></tr></table></figure>
+<p>在该文件里面增加如下配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 历史服务器端地址 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt; &lt;value&gt;linux121:10020&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!-- 历史服务器web端地址 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt; &lt;value&gt;linux121:19888&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>分发mapred-site.xml到其它节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync-script mapred-site.xml</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>启动历史服务器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ mr-jobhistory-daemon.sh start historyserver</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ jps</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>查看JobHistory</p>
+<p><a target="_blank" rel="noopener" href="http://linux121:19888/jobhistory">http://linux121:19888/jobhistory</a></p>
+</li>
+</ul>
+<h2 id="配置日志的聚集">配置日志的聚集</h2>
+<p>日志聚集：应用(Job)运行完成以后，将应用运行日志信息从各个task汇总上传到HDFS系统上。</p>
+<p>日志聚集功能好处：可以方便的查看到程序运行详情，方便开发调试。</p>
+<p>注意：开启日志聚集功能，需要重新启动NodeManager、ResourceManager和HistoryManager。</p>
+<ul>
+<li>配置yarn-site.xml</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop]$ vi yarn-site.xml</span><br></pre></td></tr></table></figure>
+<p>在该文件里面增加如下配置。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 日志聚集功能使能 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.log-aggregation-enable&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;!-- 日志保留时间设置7天 --&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.log-aggregation.retain-seconds&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;604800&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.log.server.url&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;http://linux121:19888/jobhistory/logs&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>分发yarn-site.xml到集群其它节点</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync-script yarn-site.xml</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>关闭NodeManager 、ResourceManager和HistoryManager</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ yarn-daemon.sh stop resourcemanager</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ yarn-daemon.sh stop nodemanager</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ mr-jobhistory-daemon.sh stop historyserver</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>启动NodeManager 、ResourceManager和HistoryManager</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ yarn-daemon.sh start resourcemanager</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ yarn-daemon.sh start nodemanager</span><br><span class="line">[root@linux121 hadoop-2.9.2]$ mr-jobhistory-daemon.sh start historyserver</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>删除HDFS上已经存在的输出文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ bin/hdfs dfs -rm -R /wcoutput</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>执行WordCount程序</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop jar share/hadoop/mapreduce/hadoop- mapreduce-examples-2.9.2.jar wordcount /wcinput /wcoutput</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>查看日志，如图所示</p>
+<p><a target="_blank" rel="noopener" href="http://linux121:19888/jobhistory">http://linux121:19888/jobhistory</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@linux121 hadoop-2.9.2]$ hadoop jar share/hadoop/mapreduce/hadoop- mapreduce-examples-2.9.2.jar wordcount /wcinput /wcoutput</span><br></pre></td></tr></table></figure>
+<img src="/posts/3144417379/11.jpg" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417379/12.jpg" class="post-image">
+<br>
+  <img src="/posts/3144417379/13.jpg" class="post-image">
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/3144417379/">https://raoweijiapng.gitee.io/posts/3144417379/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HDFS/">HDFS</a><a class="post-meta__tags" href="/tags/MapReduce/">MapReduce</a><a class="post-meta__tags" href="/tags/YARN/">YARN</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/864698959/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HDFS分布式文件系统的概念和架构</div></div></a></div><div class="next-post pull-right"><a href="/posts/3144417380/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Apache Hadoop的完全分布式集群环境准备</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/2042334067/" title="Apache Hadoop的重要组成"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-16</div><div class="title">Apache Hadoop的重要组成</div></div></a></div><div><a href="/posts/864698959/" title="HDFS分布式文件系统的概念和架构"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-23</div><div class="title">HDFS分布式文件系统的概念和架构</div></div></a></div><div><a href="/posts/2617171267/" title="HDFS的Java客户端操作"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-28</div><div class="title">HDFS的Java客户端操作</div></div></a></div><div><a href="/posts/2506503883/" title="HDFS的Shell客户端操作"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-12-28</div><div class="title">HDFS的Shell客户端操作</div></div></a></div><div><a href="/posts/3970506502/" title="HDFS读写解析"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-04</div><div class="title">HDFS读写解析</div></div></a></div><div><a href="/posts/2156535553/" title="Hadoop的限额与归档以及集群安全模式"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-06</div><div class="title">Hadoop的限额与归档以及集群安全模式</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E8%A7%84%E5%88%92"><span class="toc-number">1.</span> <span class="toc-text">集群规划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Jdk"><span class="toc-number">2.</span> <span class="toc-text">安装Jdk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Hadoop"><span class="toc-number">3.</span> <span class="toc-text">安装Hadoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">4.</span> <span class="toc-text">集群配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HDFS%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">4.1.</span> <span class="toc-text">HDFS集群配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MapReduce%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">4.2.</span> <span class="toc-text">MapReduce集群配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Yarn%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">4.3.</span> <span class="toc-text">Yarn集群配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8F%91%E9%85%8D%E7%BD%AE"><span class="toc-number">5.</span> <span class="toc-text">分发配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E5%86%99%E9%9B%86%E7%BE%A4%E5%88%86%E5%8F%91%E8%84%9A%E6%9C%ACrsync-script"><span class="toc-number">5.1.</span> <span class="toc-text">编写集群分发脚本rsync-script</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E5%88%86%E5%8F%91%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99"><span class="toc-number">5.2.</span> <span class="toc-text">集群分发脚本编写</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8%E9%9B%86%E7%BE%A4"><span class="toc-number">6.</span> <span class="toc-text">启动集群</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E5%90%AF%E5%8A%A8"><span class="toc-number">6.1.</span> <span class="toc-text">单节点启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E8%8A%82%E7%82%B9%E5%85%B3%E9%97%AD"><span class="toc-number">6.2.</span> <span class="toc-text">单节点关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%BE%A4%E8%B5%B7"><span class="toc-number">6.3.</span> <span class="toc-text">集群群起</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E7%BE%A4%E5%85%B3%E9%97%AD"><span class="toc-number">6.4.</span> <span class="toc-text">集群群关闭</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%B5%8B%E8%AF%95"><span class="toc-number">7.</span> <span class="toc-text">集群测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%8E%86%E5%8F%B2%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">8.</span> <span class="toc-text">配置历史服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%97%A5%E5%BF%97%E7%9A%84%E8%81%9A%E9%9B%86"><span class="toc-number">9.</span> <span class="toc-text">配置日志的聚集</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1374871441/" title="Impala安装错误问题">Impala安装错误问题</a><time datetime="2022-06-27T14:05:29.000Z" title="发表于 2022-06-27 22:05:29">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2559104384/" title="Impala安装与⼊⻔案例">Impala安装与⼊⻔案例</a><time datetime="2022-06-27T08:46:00.000Z" title="发表于 2022-06-27 16:46:00">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/762060305/" title="Impala概述">Impala概述</a><time datetime="2022-06-27T08:32:19.000Z" title="发表于 2022-06-27 16:32:19">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3793835697/" title="Sqoop常用命令及参数">Sqoop常用命令及参数</a><time datetime="2022-06-27T07:39:14.000Z" title="发表于 2022-06-27 15:39:14">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4171003358/" title="Sqoop应用案例">Sqoop应用案例</a><time datetime="2022-06-27T00:42:49.000Z" title="发表于 2022-06-27 08:42:49">2022-06-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

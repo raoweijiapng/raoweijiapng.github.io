@@ -1,0 +1,416 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Hive调优实战 | WeiJia_Rao</title><meta name="keywords" content="Hive"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数据说明 学生信息表（student_txt）定义如下：   1234567891011121314151617-- 创建数据库create database tuning;use tuning;-- 创建表create table if not exists tuning.student_txt(  s_no string comment &amp;#x27;学号&amp;#x27;,  s_name stri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive调优实战">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/3599756135/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="数据说明 学生信息表（student_txt）定义如下：   1234567891011121314151617-- 创建数据库create database tuning;use tuning;-- 创建表create table if not exists tuning.student_txt(  s_no string comment &amp;#x27;学号&amp;#x27;,  s_name stri">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-06-22T10:01:17.000Z">
+<meta property="article:modified_time" content="2022-06-22T11:06:57.744Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Hive">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/3599756135/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hive调优实战',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-22 19:06:57'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Hive调优实战</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-06-22T10:01:17.000Z" title="发表于 2022-06-22 18:01:17">2022-06-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-22T11:06:57.744Z" title="更新于 2022-06-22 19:06:57">2022-06-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Hadoop/">Hadoop</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Hive调优实战"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1>数据说明</h1>
+<p>学生信息表（student_txt）定义如下：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-- 创建数据库</span><br><span class="line">create database tuning;</span><br><span class="line">use tuning;</span><br><span class="line"></span><br><span class="line">-- 创建表</span><br><span class="line">create table if not exists tuning.student_txt(</span><br><span class="line">  s_no string comment &#x27;学号&#x27;,</span><br><span class="line">  s_name string comment &#x27;姓名&#x27;,</span><br><span class="line">   s_birth string comment &#x27;出生日期&#x27;,</span><br><span class="line">   s_age int comment &#x27;年龄&#x27;,</span><br><span class="line">   s_sex string comment &#x27;性别&#x27;,</span><br><span class="line">   s_score int comment &#x27;综合得分&#x27;,</span><br><span class="line">   s_desc string comment &#x27;自我介绍&#x27;</span><br><span class="line">)row format delimited fields terminated by &#x27;\t&#x27;;</span><br><span class="line"></span><br><span class="line">-- 数据加载</span><br><span class="line">load data local inpath &#x27;/root/hive/student/*.txt&#x27; into table tuning.student_txt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>数据文件位置：/root/hive/student，50个文件，每个文件平均大小 40M 左右，包含4W条左右的信息；</p>
+</blockquote>
+<h1>SQL案例</h1>
+<p>查询 student_txt 表，每个年龄最晚出生和最早出生的人的出生日期，并将其存入表student_stat 中。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- 创建 student_stat 表</span><br><span class="line">create table student_stat (</span><br><span class="line">  age int,</span><br><span class="line">  brith string</span><br><span class="line">) partitioned by (tp string);</span><br><span class="line"></span><br><span class="line">-- 开启动态分区</span><br><span class="line">set hive.exec.dynamic.partition=true;</span><br><span class="line">set hive.exec.dynamic.partition.mode=nonstrict;</span><br><span class="line"></span><br><span class="line">-- 插入数据</span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age</span><br><span class="line">union all</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age;</span><br><span class="line">-- 备注：union all 重复的行不会被删除</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>静态分区：若分区的值是确定的，新增分区或者是加载分区数据时，指定分区名</p>
+</li>
+<li>
+<p>动态分区：分区的值是非确定的，由输入数据来确定</p>
+</li>
+<li>
+<p>hive.exec.dynamic.partition（默认值true），是否开启动态分区功能，默认开启</p>
+</li>
+<li>
+<p>hive.exec.dynamic.partition.mode（默认值strict），动态分区的模式</p>
+</li>
+<li>
+<p>strict 至少一个分区为静态分区</p>
+</li>
+<li>
+<p>nonstrict 允许所有的分区字段都可以使用动态分区</p>
+</li>
+</ul>
+<h1>执行计划</h1>
+<p>要了解Hive 是如何工作的，需要了解EXPLAIN的功能，它能帮助我们了解 Hive 如何将查询转化成 Mapreduce 任务。</p>
+<p>Hive的执行计划不是最终真实的执行计划，但是对了解其中的细节仍然有帮助。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">explain select * from student_txt;</span><br><span class="line">explain select * from student_txt limit 10;</span><br><span class="line"></span><br><span class="line">Explain</span><br><span class="line">STAGE DEPENDENCIES:</span><br><span class="line">  Stage-0 is a root stage</span><br><span class="line"></span><br><span class="line">STAGE PLANS:</span><br><span class="line">  Stage: Stage-0</span><br><span class="line">    Fetch Operator limit: -1</span><br><span class="line">      Processor Tree:</span><br><span class="line">        TableScan</span><br><span class="line">        alias: student_txt</span><br><span class="line">        Statistics: Num rows: 4317304 Data size: 2193190912 Basic stats: COMPLETE Column stats: NONE</span><br><span class="line">        Select Operator</span><br><span class="line">          expressions: s_no (type: string), s_name (type: string), s_birth (type: string), s_age (type: int), s_sex (type: string), s_score (type: int), s_desc (type: string)</span><br><span class="line">          outputColumnNames: _col0, _col1, _col2, _col3, _col4, _col5, _col6</span><br><span class="line">          Statistics: Num rows: 4317304 Data size: 2193190912 Basic stats: COMPLETE Column stats: NONE</span><br><span class="line">            ListSink  </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>执行计划比较简单，只有一个Stage，这个Stage中只有Fetch Operator，读取数据。</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">explain select count(*) from student_txt limit 10;</span><br><span class="line"></span><br><span class="line">Explain</span><br><span class="line">STAGE DEPENDENCIES:</span><br><span class="line">  Stage-1 is a root stage</span><br><span class="line">  Stage-0 depends on stages: Stage-1</span><br><span class="line"></span><br><span class="line">STAGE PLANS:</span><br><span class="line">  Stage: Stage-1</span><br><span class="line">    Map Reduce</span><br><span class="line">      Map Operator Tree:</span><br><span class="line">        TableScan</span><br><span class="line">        alias: student_txt</span><br><span class="line">        Statistics: Num rows: 1 Data size: 2193190912 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">        Select Operator</span><br><span class="line">          Statistics: Num rows: 1 Data size: 2193190912 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">          Group By Operator</span><br><span class="line">            aggregations: count(1)</span><br><span class="line">            mode: hash</span><br><span class="line">            outputColumnNames: _col0</span><br><span class="line">            Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">            Reduce Output Operator</span><br><span class="line">              sort order:</span><br><span class="line">              Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">              TopN Hash Memory Usage: 0.1</span><br><span class="line">              value expressions: _col0 (type: bigint)</span><br><span class="line">      Reduce Operator Tree:</span><br><span class="line">        Group By Operator</span><br><span class="line">          aggregations: count(VALUE._col0)</span><br><span class="line">          mode: mergepartial</span><br><span class="line">          outputColumnNames: _col0</span><br><span class="line">          Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">          Limit</span><br><span class="line">            Number of rows: 10</span><br><span class="line">            Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">            File Output Operator</span><br><span class="line">              compressed: false</span><br><span class="line">              Statistics: Num rows: 1 Data size: 8 Basic stats: COMPLETE Column stats: COMPLETE</span><br><span class="line">              table:</span><br><span class="line">                input format: org.apache.hadoop.mapred.SequenceFileInputFormat</span><br><span class="line">                output format: org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat</span><br><span class="line">                serde: org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe</span><br><span class="line"></span><br><span class="line">  Stage: Stage-0</span><br><span class="line">  Fetch Operator</span><br><span class="line">    limit: 10</span><br><span class="line">    Processor Tree:</span><br><span class="line">      ListSink</span><br></pre></td></tr></table></figure>
+<p>SQL语句 select count(*) from student_txt limit 10 ：</p>
+<ul>
+<li>
+<p>Stage-1、Stage-0，Stage-0 依赖 Stage-1</p>
+</li>
+<li>
+<p>Stage-0 在结果集中取10条数据，显示在屏幕上</p>
+</li>
+<li>
+<p>Stage-1 包含Map Task 和 Reduce Task</p>
+</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">explain</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age</span><br><span class="line">union all</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age;  </span><br></pre></td></tr></table></figure>
+<p>SQL有4个Stage，关系如下：</p>
+  <img src="/posts/3599756135/1.jpg" class="post-image">
+  <br>
+<ul>
+<li>
+<p>Stage-1、Stage-3是root Stage，包含 Map Task、Reduce Task</p>
+</li>
+<li>
+<p>Stage-2 合并前两个Stage的数据集</p>
+</li>
+<li>
+<p>Stage-0将数据显示在屏幕上</p>
+</li>
+</ul>
+<p><strong>执行计划关键词信息说明</strong></p>
+<ul>
+<li>
+<p>Map Reduce：表示当前任务所用的计算引擎是 MapReduce</p>
+</li>
+<li>
+<p>Map Operator Tree：表示当前描述的 Map 阶段执行的操作信息</p>
+</li>
+<li>
+<p>Reduce Operator Tree：表示当前描述的 Reduce 阶段执行的操作信息</p>
+</li>
+</ul>
+<p><strong>Map/Reduce Operator Tree 关键信息说明</strong></p>
+<ul>
+<li>
+<p>TableScan：表示对关键字 alias 声明的结果集进行扫描</p>
+</li>
+<li>
+<p>Statistics：表示当前 Stage 的统计信息，这个信息通常是预估值</p>
+</li>
+<li>
+<p>Filter Operator：表示在数据集上进行过滤</p>
+</li>
+<li>
+<p>predicate：表示在 Filter Operator 进行过滤时，所用的谓词</p>
+</li>
+<li>
+<p>Select Operator：表示对结果集上对列进行投影，即筛选列</p>
+</li>
+<li>
+<p>expressions：表示需要投影的列，即筛选的列</p>
+</li>
+<li>
+<p>outputColumnNames：表示输出的列名</p>
+</li>
+<li>
+<p>Group By Operator：表示在结果集上分组聚合</p>
+</li>
+<li>
+<p>aggregations：表示分组聚合使用的算法</p>
+</li>
+<li>
+<p>keys：分组的列</p>
+</li>
+<li>
+<p>Reduce Output Operator：表示当前描述的是对之前结果聚合后的信息</p>
+</li>
+<li>
+<p>key expressions / value expressions：Map阶段输出key、value所用的数据列</p>
+</li>
+<li>
+<p>sort order：是否进行排序，+ 正序，- 倒序</p>
+</li>
+<li>
+<p>Map-reduce partition columns：Map 阶段输出到 Reduce 阶段的分区列</p>
+</li>
+<li>
+<p>compressed：文件输出的结果是否进行压缩</p>
+</li>
+<li>
+<p>input format / output format：输入输出的文件类型</p>
+</li>
+<li>
+<p>serde：数据序列化、反序列化的方式</p>
+</li>
+</ul>
+<h2 id="执行计划小结">执行计划小结</h2>
+<p>一条 Hive SQL 语句会包含一个或多个Stage，不同的 Stage 间会存在着依赖关系。</p>
+<p>越复杂的查询有越多的Stage，Stage越多就需要越多的时间时间来完成。</p>
+<p>一个Stage可以是：Mapreduce任务（最耗费资源）、Move Operator（数据移动）、Stats-Aggr Operator（搜集统计数据）、Fetch Operator（读取数据）等；默认情况下，Hive一次只执行一个stage。</p>
+<h1>问题解答</h1>
+<h2 id="问题1：SQL执行过程中有多少个job（Stage）">问题1：SQL执行过程中有多少个job（Stage）</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">explain insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age</span><br><span class="line">union all</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age;</span><br></pre></td></tr></table></figure>
+  <img src="/posts/3599756135/2.jpg" class="post-image">
+  <br>
+<ul>
+<li>
+<p>整个SQL语句分为 10 个Stage</p>
+</li>
+<li>
+<p>其中Stage-1、Stage-9包含 Map Task、Reduce Task</p>
+</li>
+<li>
+<p>Stage-2 完成数据合并</p>
+</li>
+<li>
+<p>Stage 8、5、4、6、7、0 组合完成数据的插入（动态分区插入）</p>
+</li>
+<li>
+<p>Stage-3 收集SQL语句执行过程中的统计信息</p>
+</li>
+<li>
+<p>Stage-1、Stage-9、Stage-2 最为关键，占用了整个SQL绝大部分资源</p>
+</li>
+</ul>
+<h2 id="问题2：为什么在-Stage-1、Stage-9-中都有-9个-Map-task、9个-Reduce-task">问题2：为什么在 Stage-1、Stage-9 中都有 9个 Map task、9个 Reduce task</h2>
+<p>决定map task、reduce task的因素比较多，包括文件格式、文件大小（关键因素）、文件数量、参数设置等。下面是两个重要参数：</p>
+<ul>
+<li>
+<p>mapred.max.split.size=256000000</p>
+</li>
+<li>
+<p>hive.exec.reducers.bytes.per.reducer=256000000</p>
+</li>
+</ul>
+<p>在Map Task中输入数据大小：2193190840 / 256000000 = 9</p>
+<p>如何调整Map task、Reduce task的个数？</p>
+<p>将这两个参数放大一倍设置，观察是否生效：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">set mapred.max.split.size=512000000;</span><br><span class="line">set hive.exec.reducers.bytes.per.reducer=512000000;</span><br><span class="line"></span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age</span><br><span class="line">union all</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age;</span><br></pre></td></tr></table></figure>
+<p>此时 Map Task、Reduce Task的个数均为5个，执行时间 80S 左右。</p>
+<h1>SQL优化</h1>
+<h2 id="方法一：减少Map、Reduce-Task-数">方法一：减少Map、Reduce Task 数</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">set mapred.max.split.size=1024000000;</span><br><span class="line">set hive.exec.reducers.bytes.per.reducer=1024000000;</span><br><span class="line"></span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age</span><br><span class="line">union all</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">from student_txt</span><br><span class="line">group by s_age;</span><br></pre></td></tr></table></figure>
+<p>参数从 256M =&gt; 512M ，有效果; 参数从 512M =&gt; 1024M，效果不明显</p>
+<p>有效果，说明了一个问题：设置合理的Map、Reduce个数</p>
+<h2 id="方法二：减少Stage">方法二：减少Stage</h2>
+<p>使用Hive多表插入语句。可以在同一个查询中使用多个 insert 子句，这样的好处是只需要扫描一次源表就可以生成多个不相交的输出。如：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">from tab1</span><br><span class="line">insert overwrite table tab2 partition (age)</span><br><span class="line">select name,address,school,age</span><br><span class="line">insert overwrite table tab3</span><br><span class="line">select name,address</span><br><span class="line">where age&gt;24;</span><br></pre></td></tr></table></figure>
+<p>多表插入的关键点：</p>
+<ul>
+<li>
+<p>从同一张表选取数据，可以将选取的数据插入其他不同的表中（也可以是相同的表）</p>
+</li>
+<li>
+<p>将 “from 表名”，放在SQL语句的头部</p>
+</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">-- 开启动态分区插入</span><br><span class="line">set hive.exec.dynamic.partition=true;</span><br><span class="line">set hive.exec.dynamic.partition.mode=nonstrict;</span><br><span class="line"></span><br><span class="line">-- 优化后的SQL</span><br><span class="line">from student_txt</span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">group by s_age</span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">group by s_age;</span><br><span class="line"></span><br><span class="line">-- 执行计划</span><br><span class="line">explain</span><br><span class="line">from student_txt</span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">group by s_age</span><br><span class="line">insert overwrite table student_stat partition(tp)</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">group by s_age;</span><br></pre></td></tr></table></figure>
+<p>减少 stage，最关键的是减少了一次数据源的扫描，性能得到了提升。</p>
+<h1>文件格式</h1>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">-- 创建表插入数据，改变表的存储格式</span><br><span class="line">create table student_parquet</span><br><span class="line">stored as parquet</span><br><span class="line">as</span><br><span class="line">select * from student_txt;</span><br><span class="line"></span><br><span class="line">select count(1) from student_parquet;</span><br><span class="line"></span><br><span class="line">-- 仅创建表结构，改变表的存储格式，但是分区的信息丢掉了</span><br><span class="line">create table student_stat_parquet</span><br><span class="line">stored as parquet</span><br><span class="line">as</span><br><span class="line">select * from student_stat</span><br><span class="line">where 1&gt;2;</span><br><span class="line"></span><br><span class="line">-- 重新创建表</span><br><span class="line">drop table student_stat_parquet;</span><br><span class="line">create table student_stat_parquet (</span><br><span class="line">  age int,</span><br><span class="line">  b string</span><br><span class="line">)</span><br><span class="line">partitioned by (tp string)</span><br><span class="line">stored as parquet;</span><br></pre></td></tr></table></figure>
+<p>CTAS创建表存储格式变成默认格式TEXTFILE，可以在CTAS语句中指定表的存储格式，行和列的分隔符等。</p>
+<p>使用as select查询创建并填充表，select中选取的列名会作为新表的列名,会改变表的属性、结构，只能是内部表、分区分桶也没有了,字段的注释comment也会丢掉。</p>
+<p>更改表的存储格式后，数据文件大小在50M左右。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">explain select count(1) from student_parquet;</span><br><span class="line"></span><br><span class="line">Explain</span><br><span class="line">STAGE DEPENDENCIES:</span><br><span class="line">  Stage-0 is a root stage</span><br><span class="line"></span><br><span class="line">STAGE PLANS:</span><br><span class="line">  Stage: Stage-0</span><br><span class="line">  Fetch Operator</span><br><span class="line">    limit: 1</span><br><span class="line">    Processor Tree:</span><br><span class="line">      ListSink</span><br></pre></td></tr></table></figure>
+<p>parquet 文件保存了很多的元数据信息，所以这里没有Map、Reduce Task，直接从文件中的元数据就可以获取记录行数。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">from student_parquet</span><br><span class="line">insert into table student_stat_parquet partition(tp)</span><br><span class="line">select s_age, min(s_birth) stat, &#x27;min&#x27; tp</span><br><span class="line">group by s_age</span><br><span class="line">insert into table student_stat_parquet partition(tp)</span><br><span class="line">select s_age, max(s_birth) stat, &#x27;max&#x27; tp</span><br><span class="line">group by s_age;</span><br><span class="line"></span><br><span class="line">-- 禁用本地模式 set hive.exec.mode.local.auto=false;</span><br></pre></td></tr></table></figure>
+<p>使用parquet文件格式再执行SQL语句，此时符合本地模式的使用条件，执行速度非常快，仅 20S 左右；</p>
+<p>禁用本地模式后，执行时间也在 40S 左右。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/3599756135/">https://raoweijiapng.gitee.io/posts/3599756135/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Hive/">Hive</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/2207572456/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Hue安装与配置</div></div></a></div><div class="next-post pull-right"><a href="/posts/3214234217/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hive调优策略</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/896959676/" title="Hive-HQL之DDL命令"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-18</div><div class="title">Hive-HQL之DDL命令</div></div></a></div><div><a href="/posts/708419479/" title="Hive-HQL之DML命令"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-21</div><div class="title">Hive-HQL之DML命令</div></div></a></div><div><a href="/posts/19774451/" title="Hive-HQL之DQL命令"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-19</div><div class="title">Hive-HQL之DQL命令</div></div></a></div><div><a href="/posts/2788551312/" title="Hive-HQL之数据操作"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-18</div><div class="title">Hive-HQL之数据操作</div></div></a></div><div><a href="/posts/2770917943/" title="Hive-HQL之系统内置函数"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-20</div><div class="title">Hive-HQL之系统内置函数</div></div></a></div><div><a href="/posts/3189962398/" title="Hive-HQL之窗口函数"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-20</div><div class="title">Hive-HQL之窗口函数</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">数据说明</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">SQL案例</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">执行计划</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E5%B0%8F%E7%BB%93"><span class="toc-number">3.1.</span> <span class="toc-text">执行计划小结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">问题解答</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%981%EF%BC%9ASQL%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E4%B8%AD%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AAjob%EF%BC%88Stage%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">问题1：SQL执行过程中有多少个job（Stage）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%982%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9C%A8-Stage-1%E3%80%81Stage-9-%E4%B8%AD%E9%83%BD%E6%9C%89-9%E4%B8%AA-Map-task%E3%80%819%E4%B8%AA-Reduce-task"><span class="toc-number">4.2.</span> <span class="toc-text">问题2：为什么在 Stage-1、Stage-9 中都有 9个 Map task、9个 Reduce task</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">SQL优化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80%EF%BC%9A%E5%87%8F%E5%B0%91Map%E3%80%81Reduce-Task-%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">方法一：减少Map、Reduce Task 数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C%EF%BC%9A%E5%87%8F%E5%B0%91Stage"><span class="toc-number">5.2.</span> <span class="toc-text">方法二：减少Stage</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">文件格式</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1374871441/" title="Impala安装错误问题">Impala安装错误问题</a><time datetime="2022-06-27T14:05:29.000Z" title="发表于 2022-06-27 22:05:29">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2559104384/" title="Impala安装与⼊⻔案例">Impala安装与⼊⻔案例</a><time datetime="2022-06-27T08:46:00.000Z" title="发表于 2022-06-27 16:46:00">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/762060305/" title="Impala概述">Impala概述</a><time datetime="2022-06-27T08:32:19.000Z" title="发表于 2022-06-27 16:32:19">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3793835697/" title="Sqoop常用命令及参数">Sqoop常用命令及参数</a><time datetime="2022-06-27T07:39:14.000Z" title="发表于 2022-06-27 15:39:14">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4171003358/" title="Sqoop应用案例">Sqoop应用案例</a><time datetime="2022-06-27T00:42:49.000Z" title="发表于 2022-06-27 08:42:49">2022-06-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

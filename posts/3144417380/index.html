@@ -1,0 +1,610 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Apache Hadoop的完全分布式集群环境准备 | WeiJia_Rao</title><meta name="keywords" content="VMware-Workstation,CentOS"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Hadoop搭建方式：   单机模式：单节点模式，非集群，生产不会使用这种方式；   单机伪分布式模式：单节点，多线程模拟集群的效果，生产不会使用这种方式；   完全分布式模式：多台节点，真正的分布式Hadoop集群的搭建（生产环境建议使用这种方式）；   VMware Workstation安装   双击运行安装包程序。    接受许可证协议。    选择安装位置，建议非中文无空格，增强型键盘驱">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Hadoop的完全分布式集群环境准备">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/3144417380/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="Hadoop搭建方式：   单机模式：单节点模式，非集群，生产不会使用这种方式；   单机伪分布式模式：单节点，多线程模拟集群的效果，生产不会使用这种方式；   完全分布式模式：多台节点，真正的分布式Hadoop集群的搭建（生产环境建议使用这种方式）；   VMware Workstation安装   双击运行安装包程序。    接受许可证协议。    选择安装位置，建议非中文无空格，增强型键盘驱">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2021-12-21T13:35:14.000Z">
+<meta property="article:modified_time" content="2022-06-06T08:38:45.769Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="VMware-Workstation">
+<meta property="article:tag" content="CentOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/3144417380/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Apache Hadoop的完全分布式集群环境准备',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-06 16:38:45'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Apache Hadoop的完全分布式集群环境准备</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-12-21T13:35:14.000Z" title="发表于 2021-12-21 21:35:14">2021-12-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-06T08:38:45.769Z" title="更新于 2022-06-06 16:38:45">2022-06-06</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Hadoop/">Hadoop</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Apache Hadoop的完全分布式集群环境准备"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Hadoop搭建方式：</p>
+<ul>
+<li>
+<p>单机模式：单节点模式，非集群，生产不会使用这种方式；</p>
+</li>
+<li>
+<p>单机伪分布式模式：单节点，多线程模拟集群的效果，生产不会使用这种方式；</p>
+</li>
+<li>
+<p>完全分布式模式：多台节点，真正的分布式Hadoop集群的搭建（生产环境建议使用这种方式）；</p>
+</li>
+</ul>
+<h2 id="VMware-Workstation安装">VMware Workstation安装</h2>
+<ul>
+<li>
+<p>双击运行安装包程序。</p>
+<img src="/posts/3144417380/1.png" class="post-image">
+</li>
+<li>
+<p>接受许可证协议。</p>
+<img src="/posts/3144417380/2.png" class="post-image">
+</li>
+<li>
+<p>选择安装位置，建议非中文无空格，增强型键盘驱动程序可选。</p>
+<img src="/posts/3144417380/3.png" class="post-image">
+</li>
+<li>
+<p>按照自身使用习惯勾选产品更新和客户体验提升计划。</p>
+<img src="/posts/3144417380/4.png" class="post-image">
+</li>
+<li>
+<p>勾选，桌面和开始创建快捷方式。</p>
+<img src="/posts/3144417380/5.png" class="post-image">
+</li>
+<li>
+<p>开始安装。</p>
+<img src="/posts/3144417380/6.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/7.png" class="post-image">
+<ul>
+<li>
+<p>可输入许可证也可直接完成，如直接完成需要在打开软件时输入许可证。</p>
+<img src="/posts/3144417380/8.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/9.png" class="post-image">
+<ul>
+<li>
+<p>稍等一会儿，完成。</p>
+<img src="/posts/3144417380/10.png" class="post-image">
+</li>
+</ul>
+<h2 id="CentOS安装">CentOS安装</h2>
+<ul>
+<li>
+<p>在VMware中新建虚拟机。</p>
+<img src="/posts/3144417380/11.png" class="post-image">
+</li>
+<li>
+<p>默认即可,不需要做任何修改，直接下一步。</p>
+<img src="/posts/3144417380/12.png" class="post-image">
+</li>
+<li>
+<p>选择稍后安装操作系统，然后下一步。</p>
+<img src="/posts/3144417380/13.png" class="post-image">
+</li>
+<li>
+<p>选择安装的操作系统为Linux,版本为CentOS7 64位。</p>
+<img src="/posts/3144417380/14.png" class="post-image">
+</li>
+<li>
+<p>虚拟机命名，可随意取， 安装位置最好选择固态硬盘(有固态的情况)。</p>
+<img src="/posts/3144417380/15.png" class="post-image">
+</li>
+<li>
+<p>按照物理机CPU实际情况，选择处理器配置, 处理器数量*每个处理器内存数量要小于等于物理机CPU的数量，否则报错。选择虚拟机CPU配置。</p>
+<img src="/posts/3144417380/16.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/17.png" class="post-image">
+<ul>
+<li>
+<p>选择分配给虚拟机的内存，最少2G,后续建议适当调大。</p>
+<img src="/posts/3144417380/18.png" class="post-image">
+</li>
+<li>
+<p>网络类型选择NAT。</p>
+<img src="/posts/3144417380/19.png" class="post-image">
+</li>
+<li>
+<p>I/O控制器类型选择默认推荐即可。</p>
+<img src="/posts/3144417380/20.png" class="post-image">
+</li>
+<li>
+<p>磁盘类型选择SCSI。</p>
+<img src="/posts/3144417380/21.png" class="post-image">
+</li>
+<li>
+<p>选择创建新虚拟磁盘。</p>
+<img src="/posts/3144417380/22.png" class="post-image">
+</li>
+<li>
+<p>磁盘容量指定50G，选择将虚拟磁盘拆分成多个文件. 不要勾选立即分配所有磁盘空间,否则会直接占用50G大小的磁盘空间。</p>
+<img src="/posts/3144417380/23.png" class="post-image">
+</li>
+<li>
+<p>选择Linux文件的存储位置，建议选择到Linux的安装位置，存储到第5步选择的目录下。</p>
+
+</li>
+<li>
+<p>装机器完成。 点击完成即可。如果想更改配置，可点击自定义硬件。对之前步骤的选择进行更改。</p>
+<img src="/posts/3144417380/25.png" class="post-image">
+</li>
+<li>
+<p>装系统，选择系统盘位置。</p>
+<img src="/posts/3144417380/26.png" class="post-image">
+</li>
+<li>
+<p>开启虚拟机。</p>
+<img src="/posts/3144417380/27.png" class="post-image">
+</li>
+<li>
+<p>进入倒计时,鼠标点进去, 键盘上下键可以选择，选择Install CentOS 7，然后回车即可。不要选择Test this media &amp; install CentOS 7。</p>
+<img src="/posts/3144417380/28.png" class="post-image">
+</li>
+<li>
+<p>选择安装语言为简体中文。</p>
+<img src="/posts/3144417380/29.png" class="post-image">
+</li>
+<li>
+<p>设置日期和时间  选择亚洲/上海。</p>
+<img src="/posts/3144417380/30.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/31.png" class="post-image">
+<ul>
+<li>
+<p>设置软件选择。</p>
+<img src="/posts/3144417380/32.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/33.png" class="post-image">
+<ul>
+<li>
+<p>设置安装位置,即进行分区。</p>
+<img src="/posts/3144417380/34.png" class="post-image">
+</li>
+<li>
+<p>选择我要配置分区,然后点左上角完成进入分区界面。</p>
+<img src="/posts/3144417380/35.png" class="post-image">
+</li>
+<li>
+<p>第一个分区: /boot 引导分区,建议给1G。</p>
+<img src="/posts/3144417380/36.png" class="post-image">
+</li>
+<li>
+<p>修改设备类型为标准分区,文件系统为ext4。</p>
+<img src="/posts/3144417380/37.png" class="post-image">
+</li>
+<li>
+<p>第二个分区 swap 交换分区，建议设置与内存大小一致 2G。</p>
+<img src="/posts/3144417380/38.png" class="post-image">
+</li>
+<li>
+<p>修改设备类型为标准分区,文件系统为swap。</p>
+<img src="/posts/3144417380/39.png" class="post-image">
+</li>
+<li>
+<p>第三个分区 / , 剩余的磁盘大小全部分配。 /为linux文件系统的根目录。</p>
+<img src="/posts/3144417380/40.png" class="post-image">
+</li>
+<li>
+<p>修改设备类型为标准分区,文件系统为ext4。</p>
+<img src="/posts/3144417380/41.png" class="post-image">
+</li>
+<li>
+<p>确认最终分区后的情况,点击左上角完成即可。</p>
+<img src="/posts/3144417380/42.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/43.png" class="post-image">
+<ul>
+<li>
+<p>关闭KDUMP。</p>
+<img src="/posts/3144417380/44.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/45.png" class="post-image">
+<ul>
+<li>
+<p>配置网络和主机名(可选,也可在安装好后进入到系统中配置)。</p>
+<img src="/posts/3144417380/46.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/47.png" class="post-image">
+<ul>
+<li>
+<p>配置ROOT密码。Linux会默认提供一个超级管理员用户，就是root。 类似于Windows的admin用户。</p>
+<img src="/posts/3144417380/48.png" class="post-image">
+<img src="/posts/3144417380/49.png" class="post-image">
+</li>
+<li>
+<p>等待安装完成，预估10分钟左右。</p>
+<img src="/posts/3144417380/50.png" class="post-image">
+</li>
+<li>
+<p>安装完成，重启虚拟机。</p>
+<img src="/posts/3144417380/51.png" class="post-image">
+</li>
+</ul>
+<h2 id="配置网络IP和网关">配置网络IP和网关</h2>
+<ul>
+<li>
+<p>查看网络IP和网关。VMware点击编辑选择虚拟网络编辑器。</p>
+</li>
+<li>
+<p>点击更改配置。</p>
+<img src="/posts/3144417380/61.jpg" class="post-image">
+</li>
+<li>
+<p>选择NAT模式，注意⼦⽹IP前三位与NAT设置的⽹关IP⼀致。</p>
+<img src="/posts/3144417380/62.jpg" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/63.jpg" class="post-image">
+<ul>
+<li>
+<p>点击DHCP设置，⼦⽹IP前三位与DHCP设置的起始IP、结束IP⼀致。</p>
+<img src="/posts/3144417380/64.jpg" class="post-image">
+</li>
+<li>
+<p>打开Linux虚拟机的ifcfg-ens33⽂件，修改配置。进入虚拟机，输入以下命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysconfig/network-scripts/ifcfg-ens33</span><br></pre></td></tr></table></figure>
+<img src="/posts/3144417380/65.jpg" class="post-image">
+<p>BOOTPROTO改为静态static。IP的配置方法none|static|bootp|dhcp（引导时不使用协议|静态分配IP|BOOTP协议|DHCP协议）。</p>
+<p>ONBOOT改为yes开启⾃动启⽤⽹络连接。系统启动的时候网络接口是否有效（yes/no）。</p>
+<p>添加IP地址IPADDR，网关GATEWAY，子网掩码NETMASK，域名解析器DNS1。</p>
+<p>IPADDR可以改为你⾃⼰设置的ip (ip可以通过命令ip addr来获得)。</p>
+</li>
+<li>
+<p>执行service network restart 重启网络。</p>
+<img src="/posts/3144417380/66.jpg" class="post-image">
+</li>
+<li>
+<p>ping外网是否连通</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping baidu.com</span><br></pre></td></tr></table></figure>
+<img src="/posts/3144417380/67.jpg" class="post-image">
+</li>
+<li>
+<p>关闭防火墙</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">systemctl status firewalld.service 查看firewall状态</span><br><span class="line">systemctl stop firewalld.service 停⽌firewall</span><br><span class="line">systemctl disable firewalld.service 禁⽌firewall开机启动</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>配置yum源（默认的系统YUM源，需要连接国外apache网站，网速比较慢，可以修改关联的网络YUM源为国内镜像的网站，比如网易163,aliyun等）。</p>
+<img src="/posts/3144417380/68.jpg" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/69.jpg" class="post-image">
+<br>
+  <img src="/posts/3144417380/70.jpg" class="post-image">
+<p>清理一下缓存，缓存新数据。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>安裝常用软件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y epel-release</span><br><span class="line">yum install -y psmisc nc net-tools rsync vim lrzsz ntp libzstd openssl-static tree iotop git</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>克隆hadoop需要的3台主机（一定关机了，完整克隆）。</p>
+<img src="/posts/3144417380/71.png" class="post-image">
+</li>
+</ul>
+<br>
+  <img src="/posts/3144417380/72.png" class="post-image">
+<br>
+  <img src="/posts/3144417380/73.png" class="post-image">
+<br>
+  <img src="/posts/3144417380/74.png" class="post-image">
+<br>
+  <img src="/posts/3144417380/75.png" class="post-image">
+<br>
+  <img src="/posts/3144417380/76.png" class="post-image">
+<p>克隆出来两个虚拟机名为linux02,linux03,然后分别启动，修改 ifcfg-ens33 这个文件中的 IPADDR 为192.168.80.122，192.168.80.123。</p>
+<ul>
+<li>
+<p>修改本机以及网络配置hostname</p>
+<p>修改配置文件 /etc/hostname ,保存并退出。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/hostname</span><br><span class="line"># 进入vi，删除旧主机名，输入新主机名，Esc后冒号 wq退出保存</span><br></pre></td></tr></table></figure>
+<p>分别打开三个虚拟机，通过 vi /etc/sysconfig/network 打开 network 编辑,分别输入对应的ip地址和hostname。</p>
+<img src="/posts/3144417380/77.jpg" class="post-image">
+<p>示例:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">　　NETWORK=yes</span><br><span class="line"></span><br><span class="line">　　RORWARD_IPV4=yes</span><br><span class="line"></span><br><span class="line">　　HOSTNAME=deep.openarch.com</span><br><span class="line"></span><br><span class="line">　　GAREWAY=0.0.0.0</span><br><span class="line"></span><br><span class="line">　　GATEWAYDEV=</span><br><span class="line"></span><br><span class="line">　　NETWORK=yes/no    网络是否被配置；</span><br><span class="line"></span><br><span class="line">　　FORWARD_IPV4=yes/no   是否开启IP转发功能</span><br><span class="line"></span><br><span class="line">　　HOSTNAME=hostname   hostname表示服务器的主机名</span><br></pre></td></tr></table></figure>
+<p>最后重启生效。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reboot</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>配置IP映射</p>
+</li>
+</ul>
+<p>分别打开三个虚拟机，通过 vi /etc/hosts 打开 hosts 编辑。</p>
+  <img src="/posts/3144417380/78.jpg" class="post-image">
+<p>三个虚拟机编辑内容是一致的。</p>
+<ul>
+<li>
+<p>修改window主机的IP映射</p>
+<img src="/posts/3144417380/79.png" class="post-image">
+<p>编辑内容与虚拟机是一致的。</p>
+</li>
+<li>
+<p>虚拟机互相访问免密</p>
+<img src="/posts/3144417380/80.png" class="post-image">
+</li>
+</ul>
+<br>
+<p>ssh-keygen -t rsa	（三个回车）</p>
+  <img src="/posts/3144417380/81.png" class="post-image">
+<br>
+<p>ssh-copy-id linux01; ssh-copy-id linux02; ssh-copy-id linux03</p>
+  <img src="/posts/3144417380/82.png" class="post-image">
+<br>
+<p>ssh linux01; ssh linux02; ssh linux03</p>
+  <img src="/posts/3144417380/83.png" class="post-image">
+<ul>
+<li>
+<p>虚拟机同步时间</p>
+<ol>
+<li>
+<p>每个虚拟机都安装ntpdate工具</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install ntp ntpdate</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>每个虚拟机都设置系统时间与网络时间同步</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ntpdate cn.pool.ntp.org</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li>
+<p>修改克隆环境的账号密码</p>
+<ol>
+<li>知道root用户密码时</li>
+</ol>
+<blockquote>
+<p>修改root用户密码</p>
+</blockquote>
+<p>在root用户登录的情况下，执行以下指令，进入密码修改界面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">passwd</span><br><span class="line"># passwd命令后不加用户名，表示修改当前用户的密码</span><br><span class="line">输入新密码即可，无需重启Linux系统。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>修改普通用户密码（普通用户账号密码登录时，只能修改自己的密码）</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">more /etc/passwd  #查看当前所有用户，自己创建的用户，在最后</span><br><span class="line">passwd es  #更改用户 es 的密码</span><br><span class="line">#输入新的密码</span><br><span class="line">#root用户登录时，运行passwd 命令，可以设置或修改任何用户的密码。</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>知道一个普通用户的账号密码</li>
+</ol>
+<blockquote>
+<p>在普通用户登录的情况下，修改root用户密码</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo passwd root  # 会要求输入普通用户的密码</span><br><span class="line">输入后，会显示“enter new Unix password”</span><br><span class="line">这就是修改root用户密码，输入并确认密码后，即成功修改root用户密码</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>修改普通用户自己的密码</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">passwd // 进入修改密码界面，输入新密码即可</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>忘记所有用户密码,修改root密码</li>
+</ol>
+<blockquote>
+<p>重启Centos环境,在开机过程中，快速按下键盘上的方向键↑和↓。</p>
+</blockquote>
+  <img src="/posts/3144417380/84.png" class="post-image">
+<blockquote>
+<p>使用↑和↓将选择行设置为第一行（背景高亮即为选中），按下键盘上的e，进入编辑模式。</p>
+</blockquote>
+<blockquote>
+<p>将光标一直移动到 LANG=en_US.UTF-8 后面，空格，再追加init=/bin/sh。这里特别注意，需要写在UTF-8后，保持在同一行，并注意空格。有些虚拟机由于屏幕太小，会自动添加\换行，这个是正常的</p>
+</blockquote>
+  <img src="/posts/3144417380/85.png" class="post-image">
+<blockquote>
+<p>按下CTRL+X进行引导启动,成功后进入该界面。</p>
+</blockquote>
+  <img src="/posts/3144417380/86.png" class="post-image">
+<blockquote>
+<p>设置密码,执行命令</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">1、挂载根目录</span><br><span class="line">mount -o remount, rw /</span><br><span class="line"></span><br><span class="line">2、选择要修改密码的用户名，这里选择root用户进行修改，可以更换为你要修改的用户</span><br><span class="line">passwd root</span><br><span class="line"></span><br><span class="line">3、输入2次一样的新密码，注意输入密码的时候屏幕上不会有字符出现。输入完成点回车。</span><br><span class="line">如果输入的密码太简单，会提示警告（BAD PASSWORD：Thepassword fails the dictionary check - it is too simplistic/systematic），可以无视它，继续输入密码，不过建议还是设置比较复杂一些的密码，以保证安全性</span><br><span class="line"></span><br><span class="line">4、如果已经开启了SElinux，则需要输入以下命令</span><br><span class="line">touch /.autorelabel</span><br><span class="line"></span><br><span class="line">5、最后输入以下命令重启系统即可</span><br><span class="line">exec /sbin/init</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/3144417380/">https://raoweijiapng.gitee.io/posts/3144417380/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/VMware-Workstation/">VMware-Workstation</a><a class="post-meta__tags" href="/tags/CentOS/">CentOS</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/3144417379/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Apache Hadoop的完全分布式集群搭建</div></div></a></div><div class="next-post pull-right"><a href="/posts/2042334067/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Apache Hadoop的重要组成</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#VMware-Workstation%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">VMware Workstation安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS%E5%AE%89%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">CentOS安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9CIP%E5%92%8C%E7%BD%91%E5%85%B3"><span class="toc-number">3.</span> <span class="toc-text">配置网络IP和网关</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1374871441/" title="Impala安装错误问题">Impala安装错误问题</a><time datetime="2022-06-27T14:05:29.000Z" title="发表于 2022-06-27 22:05:29">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2559104384/" title="Impala安装与⼊⻔案例">Impala安装与⼊⻔案例</a><time datetime="2022-06-27T08:46:00.000Z" title="发表于 2022-06-27 16:46:00">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/762060305/" title="Impala概述">Impala概述</a><time datetime="2022-06-27T08:32:19.000Z" title="发表于 2022-06-27 16:32:19">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3793835697/" title="Sqoop常用命令及参数">Sqoop常用命令及参数</a><time datetime="2022-06-27T07:39:14.000Z" title="发表于 2022-06-27 15:39:14">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4171003358/" title="Sqoop应用案例">Sqoop应用案例</a><time datetime="2022-06-27T00:42:49.000Z" title="发表于 2022-06-27 08:42:49">2022-06-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

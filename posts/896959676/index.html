@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Hive-HQL之DDL命令 | WeiJia_Rao</title><meta name="keywords" content="Hive,HQL"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="DDL主要是用在定义、修改数据库对象的结构或数据类型。 DDL（data definition language）： 主要的命令有CREATE、ALTER、DROP等。 官方文档：https:&#x2F;&#x2F;cwiki.apache.org&#x2F;confluence&#x2F;display&#x2F;Hive&#x2F;LanguageManual+DDL        Hive有一个默认的数据库default，在操作HQL时，如果不明确的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive-HQL之DDL命令">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/896959676/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="DDL主要是用在定义、修改数据库对象的结构或数据类型。 DDL（data definition language）： 主要的命令有CREATE、ALTER、DROP等。 官方文档：https:&#x2F;&#x2F;cwiki.apache.org&#x2F;confluence&#x2F;display&#x2F;Hive&#x2F;LanguageManual+DDL        Hive有一个默认的数据库default，在操作HQL时，如果不明确的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-06-18T12:19:57.000Z">
+<meta property="article:modified_time" content="2022-06-22T03:02:53.822Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Hive">
+<meta property="article:tag" content="HQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/896959676/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hive-HQL之DDL命令',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-06-22 11:02:53'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Hive-HQL之DDL命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-06-18T12:19:57.000Z" title="发表于 2022-06-18 20:19:57">2022-06-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-06-22T03:02:53.822Z" title="更新于 2022-06-22 11:02:53">2022-06-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Hadoop/">Hadoop</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Hive-HQL之DDL命令"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>DDL主要是用在定义、修改数据库对象的结构或数据类型。</p>
+<p>DDL（data definition language）： 主要的命令有CREATE、ALTER、DROP等。 官方文档：<a target="_blank" rel="noopener" href="https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL">https://cwiki.apache.org/confluence/display/Hive/LanguageManual+DDL</a></p>
+  <img src="/posts/896959676/1.jpg" class="post-image">
+  <br>
+<blockquote>
+<p>Hive有一个默认的数据库default，在操作HQL时，如果不明确的指定要使用哪个库，则使用默认数据库。</p>
+</blockquote>
+<blockquote>
+<p>Hive的数据库名、表名均不区分大小写；名字不能使用数字开头；不能使用关键字，尽量不使用特殊符号；</p>
+</blockquote>
+<h1>数据库操作</h1>
+<h2 id="创建数据库">创建数据库</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE (DATABASE|SCHEMA) [IF NOT EXISTS] database_name</span><br><span class="line">[COMMENT database_comment]</span><br><span class="line">[LOCATION hdfs_path]</span><br><span class="line">[MANAGEDLOCATION hdfs_path]</span><br><span class="line">[WITH DBPROPERTIES (property_name=property_value, ...)];</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-- 创建数据库，在HDFS上存储路径为 /user/hive/warehouse/*.db</span><br><span class="line">hive (default)&gt; create database mydb;</span><br><span class="line">hive (default)&gt; dfs -ls /user/hive/warehouse;</span><br><span class="line"></span><br><span class="line">-- 避免数据库已经存在时报错，使用 if not exists 进行判断【标准写法】</span><br><span class="line">hive (default)&gt; create database if not exists mydb;</span><br><span class="line"></span><br><span class="line">-- 创建数据库。添加备注，指定数据库在存放位置</span><br><span class="line">hive (default)&gt; create database if not exists mydb2 comment &#x27;this is mydb2&#x27; location &#x27;/user/hive/mydb2.db&#x27;;</span><br></pre></td></tr></table></figure>
+<h2 id="查看数据库">查看数据库</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-- 查看所有数据库</span><br><span class="line">show database;</span><br><span class="line"></span><br><span class="line"> -- 查看数据库信息</span><br><span class="line"> desc database mydb2;</span><br><span class="line"> desc database extended mydb2;</span><br><span class="line"> describe database extended mydb2;</span><br></pre></td></tr></table></figure>
+<h2 id="使用数据库">使用数据库</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; use mydb;</span><br></pre></td></tr></table></figure>
+<h2 id="删除数据库">删除数据库</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 删除一个空数据库</span><br><span class="line">drop database databasename;</span><br><span class="line"></span><br><span class="line">-- 如果数据库不为空，使用 cascade 强制删除</span><br><span class="line">drop database databasename cascade;</span><br></pre></td></tr></table></figure>
+<h1>表操作</h1>
+<h2 id="创建表">创建表</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">create [external] table [IF NOT EXISTS] table_name</span><br><span class="line">[(colName colType [comment &#x27;comment&#x27;], ...)]</span><br><span class="line">[comment table_comment]</span><br><span class="line">[partition by (colName colType [comment col_comment], ...)]</span><br><span class="line">[clustered BY (colName, colName, ...) [sorted by (col_name [ASC|DESC], ...)] into num_buckets buckets]</span><br><span class="line">[row format row_format]</span><br><span class="line">[stored as file_format]</span><br><span class="line">[LOCATION hdfs_path]</span><br><span class="line">[TBLPROPERTIES (property_name=property_value, ...)]</span><br><span class="line">[AS select_statement];</span><br><span class="line"></span><br><span class="line">CREATE [TEMPORARY] [EXTERNAL] TABLE [IF NOT EXISTS] [db_name.]table_name</span><br><span class="line">LIKE existing_table_or_view_name</span><br><span class="line">[LOCATION hdfs_path];</span><br></pre></td></tr></table></figure>
+<ol>
+<li>
+<p>CREATE TABLE。按给定名称创建表，如果表已经存在则抛出异常。可使用if not exists 规避。</p>
+</li>
+<li>
+<p>EXTERNAL关键字。创建外部表，否则创建的是内部表(管理表)。删除内部表时，数据和表的定义同时被删除；删除外部表时，仅仅删除了表的定义，数据保留；在生产环境中，多使用外部表；</p>
+</li>
+<li>
+<p>comment。表的注释。</p>
+</li>
+<li>
+<p>partition by。对表中数据进行分区，指定表的分区字段。</p>
+</li>
+<li>
+<p>clustered by。创建分桶表，指定分桶字段。</p>
+</li>
+<li>
+<p>sorted by。对桶中的一个或多个列排序，较少使用。</p>
+</li>
+<li>
+<p>存储子句。</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ROW FORMAT DELIMITED</span><br><span class="line">[FIELDS TERMINATED BY char]</span><br><span class="line">[COLLECTION ITEMS TERMINATED BY char]</span><br><span class="line">[MAP KEYS TERMINATED BY char]</span><br><span class="line">[LINES TERMINATED BY char] | SERDE serde_name</span><br><span class="line">[WITH SERDEPROPERTIES (property_name=property_value, property_name=property_value, ...)]</span><br></pre></td></tr></table></figure>
+<p>建表时可指定 SerDe 。如果没有指定 ROW FORMAT 或者 ROW FORMAT DELIMITED，将会使用默认的 SerDe。建表时还需要为表指定列，在指定列的同时也会指定自定义的SerDe。Hive通过 SerDe 确定表的具体的列的数据。SerDe是 Serialize/Deserilize 的简称， hive使用Serde进行行对象的序列与反序列化。</p>
+<ol start="8">
+<li>
+<p>stored as SEQUENCEFILE|TEXTFILE|RCFILE。如果文件数据是纯文本，可以使用 STORED AS TEXTFILE（缺省）；如果数据需要压缩，使用 STORED AS SEQUENCEFILE（二进制序列文件）。</p>
+</li>
+<li>
+<p>LOCATION。表在HDFS上的存放位置。</p>
+</li>
+<li>
+<p>TBLPROPERTIES。定义表的属性。</p>
+</li>
+<li>
+<p>AS。后面可以接查询语句，表示根据后面的查询结果创建表。可复制结构和数据，但表结构可能发生变化，如分区会缺失。</p>
+</li>
+<li>
+<p>LIKE。like 表名，允许用户复制现有的表结构，但是不复制数据。</p>
+</li>
+</ol>
+<h2 id="内部表-外部表">内部表 &amp; 外部表</h2>
+<p>在创建表的时候，可指定表的类型。表有两种类型，分别是内部表(管理表)、外部表。</p>
+<p>默认情况下，创建内部表。如果要创建外部表，需要使用关键字 external ；在删除内部表时，表的定义(元数据)和数据同时被删除；在删除外部表时，仅删除表的定义，数据被保留；在生产环境中，多使用外部表</p>
+<h3 id="内部表">内部表</h3>
+<blockquote>
+<p>如t1.dat文件内容</p>
+</blockquote>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2;zhangsan;book,TV,code;beijing:chaoyang,shagnhai:pudong</span><br><span class="line">3;lishi;book,code;nanjing:jiangning,taiwan:taibei</span><br><span class="line">4;wangwu;music,book;heilongjiang:haerbin</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">-- 创建内部表</span><br><span class="line">create table t1(</span><br><span class="line">  id int,</span><br><span class="line">  name string,</span><br><span class="line">  hobby array&lt;string&gt;,</span><br><span class="line">  addr map&lt;string, string&gt;</span><br><span class="line">)</span><br><span class="line">row format delimited fields terminated by &quot;;&quot;</span><br><span class="line">collection items terminated by &quot;,&quot;</span><br><span class="line">map keys terminated by &quot;:&quot;;</span><br><span class="line"></span><br><span class="line">-- 显示表的定义，显示的信息较少</span><br><span class="line">desc t1;</span><br><span class="line"></span><br><span class="line">-- 显示表的定义，显示的信息多，格式友好</span><br><span class="line">desc formatted t1;</span><br><span class="line"></span><br><span class="line">-- 加载数据</span><br><span class="line">load data local inpath &#x27;/home/hadoop/data/t1.dat&#x27; into table t1;</span><br><span class="line"></span><br><span class="line">-- 查询数据</span><br><span class="line">select * from t1;</span><br><span class="line"></span><br><span class="line">-- 查询数据文件</span><br><span class="line">dfs -ls /user/hive/warehouse/mydb.db/t1;</span><br><span class="line"></span><br><span class="line">-- 删除表。表和数据同时被删除</span><br><span class="line">drop table t1;</span><br><span class="line"></span><br><span class="line">-- 再次查询数据文件，已经被删除</span><br><span class="line">dfs -ls /user/hive/warehouse/mydb.db/t1;</span><br></pre></td></tr></table></figure>
+<h3 id="外部表">外部表</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">-- 创建外部表</span><br><span class="line">create external table t2(</span><br><span class="line">  id int,</span><br><span class="line">  name string,</span><br><span class="line">  hobby array&lt;string&gt;,</span><br><span class="line">  addr map&lt;string, string&gt;</span><br><span class="line">)</span><br><span class="line">row format delimited fields terminated by &quot;;&quot;</span><br><span class="line">collection items terminated by &quot;,&quot;</span><br><span class="line">map keys terminated by &quot;:&quot;;</span><br><span class="line"></span><br><span class="line">-- 显示表的定义</span><br><span class="line">desc formatted t2;</span><br><span class="line"></span><br><span class="line">-- 加载数据</span><br><span class="line">load data local inpath &#x27;/home/hadoop/data/t1.dat&#x27; into table t2;</span><br><span class="line"></span><br><span class="line">-- 查询数据</span><br><span class="line">select * from t2;</span><br><span class="line"></span><br><span class="line">-- 删除表。表删除了，目录仍然存在</span><br><span class="line">drop table t2;</span><br><span class="line"></span><br><span class="line">-- 再次查询数据文件，仍然存在</span><br><span class="line">dfs -ls /user/hive/warehouse/mydb.db/t2;</span><br></pre></td></tr></table></figure>
+<h3 id="内部表与外部表的转换">内部表与外部表的转换</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-- 内部表转外部表</span><br><span class="line">alter table t1 set tblproperties(&#x27;EXTERNAL&#x27;=&#x27;TRUE&#x27;);</span><br><span class="line"></span><br><span class="line">-- 查询表信息，是否转换成功</span><br><span class="line">desc formatted t1;</span><br><span class="line"></span><br><span class="line">-- 外部表转内部表。EXTERNAL 大写，false 不区分大小</span><br><span class="line">alter table t1 set tblproperties(&#x27;EXTERNAL&#x27;=&#x27;FALSE&#x27;);</span><br><span class="line"></span><br><span class="line">-- 查询表信息，是否转换成功</span><br><span class="line">desc formatted t1;</span><br></pre></td></tr></table></figure>
+<h2 id="分区表">分区表</h2>
+<p>Hive在执行查询时，一般会扫描整个表的数据。由于表的数据量大，全表扫描消耗时间长、效率低。而有时候，查询只需要扫描表中的一部分数据即可，Hive引入了分区表的概念，将表的数据存储在不同的子目录中，每一个子目录对应一个分区。只查询部分分区数据时，可避免全表扫描，提高查询效率。</p>
+<p>在实际中，通常根据时间、地区等信息进行分区。</p>
+<h3 id="分区表创建">分区表创建</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-- 创建表</span><br><span class="line">create table if not exists t3(</span><br><span class="line">  id int ,</span><br><span class="line">  name string ,</span><br><span class="line">  hobby array&lt;string&gt; ,</span><br><span class="line">  addr map&lt;String,string&gt;</span><br><span class="line">)</span><br><span class="line">partitioned by (dt string)</span><br><span class="line">row format delimited fields terminated by &#x27;;&#x27;</span><br><span class="line">collection items terminated by &#x27;,&#x27;</span><br><span class="line">map keys terminated by &#x27;:&#x27;;</span><br><span class="line"></span><br><span class="line">-- 加载数据。</span><br><span class="line">load data local inpath &quot;/home/hadoop/data/t1.dat&quot; into table t3partition(dt=&quot;2020-06-01&quot;);</span><br><span class="line">load data local inpath &quot;/home/hadoop/data/t1.dat&quot; into table t3partition(dt=&quot;2020-06-02&quot;);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>备注：分区字段不是表中已经存在的数据，可以将分区字段看成伪列</strong></p>
+</blockquote>
+<h3 id="查看分区">查看分区</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show partitions t3;</span><br></pre></td></tr></table></figure>
+<h3 id="新增分区">新增分区</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-- 增加一个分区，不加载数据</span><br><span class="line">alter table t3 add partition(dt=&#x27;2020-06-03&#x27;);</span><br><span class="line"></span><br><span class="line">-- 增加多个分区，不加载数据</span><br><span class="line">alter table t3 add partition(dt=&#x27;2020-06-05&#x27;) partition(dt=&#x27;2020-06-06&#x27;);</span><br><span class="line"></span><br><span class="line">-- 增加多个分区。准备数据</span><br><span class="line">hdfs dfs -cp /user/hive/warehouse/mydb.db/t3/dt=2020-06-01 /user/hive/warehouse/mydb.db/t3/dt=2020-06-07</span><br><span class="line">hdfs dfs -cp /user/hive/warehouse/mydb.db/t3/dt=2020-06-01 /user/hive/warehouse/mydb.db/t3/dt=2020-06-08</span><br><span class="line"></span><br><span class="line">-- 增加多个分区。加载数据</span><br><span class="line">alter table t3 add partition(dt=&#x27;2020-06-07&#x27;) location &#x27;/user/hive/warehouse/mydb.db/t3/dt=2020-06-07&#x27; partition(dt=&#x27;2020-06-08&#x27;) location &#x27;/user/hive/warehouse/mydb.db/t3/dt=2020-06-08&#x27;;</span><br><span class="line"></span><br><span class="line">-- 查询数据</span><br><span class="line">select * from t3;</span><br></pre></td></tr></table></figure>
+<h3 id="修改分区的hdfs路径">修改分区的hdfs路径</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table t3 partition(dt=&#x27;2020-06-01&#x27;) set location &#x27;/user/hive/warehouse/t3/dt=2020-06-03&#x27;;</span><br></pre></td></tr></table></figure>
+<h3 id="删除分区">删除分区</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-- 可以删除一个或多个分区，用逗号隔开</span><br><span class="line">alter table t3 drop partition(dt=&#x27;2020-06-03&#x27;), partition(dt=&#x27;2020-06-04&#x27;);</span><br></pre></td></tr></table></figure>
+<h2 id="分桶表">分桶表</h2>
+<p>当单个的分区或者表的数据量过大，分区不能更细粒度的划分数据，就需要使用分桶技术将数据划分成更细的粒度。将数据按照指定的字段进行分成多个桶中去，即将数据按照字段进行划分，数据按照字段划分到多个文件当中去。</p>
+<p>分桶的原理：MR中：key.hashCode % reductTask；Hive中：分桶字段.hashCode % 分桶个数</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">-- 测试数据</span><br><span class="line">1 java 90</span><br><span class="line">1 c 78</span><br><span class="line">1 python 91</span><br><span class="line">1 hadoop 80</span><br><span class="line">2 java 75</span><br><span class="line">2 c 76</span><br><span class="line">2 python 80</span><br><span class="line">2 hadoop 93</span><br><span class="line">3 java 98</span><br><span class="line">3 c 74</span><br><span class="line">3 python 89</span><br><span class="line">3 hadoop 91</span><br><span class="line">5 java 93</span><br><span class="line">6 c 76</span><br><span class="line">7 python 87</span><br><span class="line">8 hadoop 88</span><br></pre></td></tr></table></figure>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">-- 创建分桶表</span><br><span class="line">create table course(</span><br><span class="line">  id int,</span><br><span class="line">  name string,</span><br><span class="line">  score int</span><br><span class="line">)</span><br><span class="line">clustered by (id) into 3 buckets</span><br><span class="line">row format delimited fields terminated by &quot;\t&quot;;</span><br><span class="line"></span><br><span class="line">-- 创建普通表</span><br><span class="line">create table course_common(</span><br><span class="line">  id int,</span><br><span class="line">  name string,</span><br><span class="line">  score int</span><br><span class="line">)</span><br><span class="line">row format delimited fields terminated by &quot;\t&quot;;</span><br><span class="line"></span><br><span class="line">-- 普通表加载数据</span><br><span class="line">load data local inpath &#x27;/home/hadoop/data/course.dat&#x27; into table course_common;</span><br><span class="line"></span><br><span class="line">-- 通过 insert ... select ... 给桶表加载数据</span><br><span class="line">insert into table course select * from course_common;</span><br><span class="line">-- 观察分桶数据。数据按照：(分区字段.hashCode) % (分桶数) 进行分区</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>备注</strong>：</p>
+<blockquote>
+<p>分桶规则：分桶字段.hashCode % 分桶数<br>
+分桶表加载数据时，使用 insert… select … 方式进行<br>
+网上有资料说要使用分区表需要设置 hive.enforce.bucketing=true，那是Hive1.x 以前的版本；Hive 2.x 中，删除了该参数，始终可以分桶；</p>
+</blockquote>
+</blockquote>
+<h2 id="修改表-删除表">修改表 &amp; 删除表</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- 修改表名。</span><br><span class="line">alter table course_common rename to course_common1;</span><br><span class="line"></span><br><span class="line">-- 修改列名。</span><br><span class="line">alter table course_common1 change column id cid int;</span><br><span class="line"></span><br><span class="line">-- 修改字段类型。</span><br><span class="line">alter table course_common1 change column cid cid string;</span><br><span class="line">-- The following columns have types incompatible with the existing columns in their respective positions</span><br><span class="line">-- 修改字段数据类型时，要满足数据类型转换的要求。如int可以转为string，但是 string不能转为int</span><br><span class="line"></span><br><span class="line">-- 增加字段。</span><br><span class="line">add columns alter table course_common1 add columns (common string);</span><br><span class="line"></span><br><span class="line">-- 删除字段：replace columns</span><br><span class="line">-- 这里仅仅只是在元数据中删除了字段，并没有改动hdfs上的数据文件</span><br><span class="line">alter table course_common1 replace columns( id string, cname string, score int);</span><br><span class="line"></span><br><span class="line">-- 删除表</span><br><span class="line">drop table course_common1;</span><br></pre></td></tr></table></figure>
+<h1>DDL命令小结</h1>
+<blockquote>
+<p>主要对象：数据库、表</p>
+</blockquote>
+<blockquote>
+<p>表的分类：</p>
+<blockquote>
+<p>内部表。删除表时，同时删除元数据和表数据<br>
+外部表。删除表时，仅删除元数据，保留表中数据；生产环境多使用外部表<br>
+分区表。按照分区字段将表中的数据放置在不同的目录中，提高SQL查询的性能<br>
+分桶表。按照分桶字段，将表中数据分开。 分桶字段.hashCode % 分桶数据</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>主要命令：create、alter 、drop</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/896959676/">https://raoweijiapng.gitee.io/posts/896959676/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Hive/">Hive</a><a class="post-meta__tags" href="/tags/HQL/">HQL</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/2788551312/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Hive-HQL之数据操作</div></div></a></div><div class="next-post pull-right"><a href="/posts/1981205084/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Hive数据类型与文本文件数据格式</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/708419479/" title="Hive-HQL之DML命令"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-21</div><div class="title">Hive-HQL之DML命令</div></div></a></div><div><a href="/posts/19774451/" title="Hive-HQL之DQL命令"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-19</div><div class="title">Hive-HQL之DQL命令</div></div></a></div><div><a href="/posts/2788551312/" title="Hive-HQL之数据操作"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-18</div><div class="title">Hive-HQL之数据操作</div></div></a></div><div><a href="/posts/2770917943/" title="Hive-HQL之系统内置函数"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-20</div><div class="title">Hive-HQL之系统内置函数</div></div></a></div><div><a href="/posts/3189962398/" title="Hive-HQL之窗口函数"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-20</div><div class="title">Hive-HQL之窗口函数</div></div></a></div><div><a href="/posts/4245368638/" title="Hive-HQL之自定义函数"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-06-20</div><div class="title">Hive-HQL之自定义函数</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">256</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">52</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">数据库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">创建数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.2.</span> <span class="toc-text">查看数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.3.</span> <span class="toc-text">使用数据库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.4.</span> <span class="toc-text">删除数据库</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">表操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%A1%A8"><span class="toc-number">2.1.</span> <span class="toc-text">创建表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E8%A1%A8-%E5%A4%96%E9%83%A8%E8%A1%A8"><span class="toc-number">2.2.</span> <span class="toc-text">内部表 &amp; 外部表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E8%A1%A8"><span class="toc-number">2.2.1.</span> <span class="toc-text">内部表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E8%A1%A8"><span class="toc-number">2.2.2.</span> <span class="toc-text">外部表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E8%A1%A8%E4%B8%8E%E5%A4%96%E9%83%A8%E8%A1%A8%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.2.3.</span> <span class="toc-text">内部表与外部表的转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8"><span class="toc-number">2.3.</span> <span class="toc-text">分区表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%A1%A8%E5%88%9B%E5%BB%BA"><span class="toc-number">2.3.1.</span> <span class="toc-text">分区表创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%88%86%E5%8C%BA"><span class="toc-number">2.3.2.</span> <span class="toc-text">查看分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%A2%9E%E5%88%86%E5%8C%BA"><span class="toc-number">2.3.3.</span> <span class="toc-text">新增分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%88%86%E5%8C%BA%E7%9A%84hdfs%E8%B7%AF%E5%BE%84"><span class="toc-number">2.3.4.</span> <span class="toc-text">修改分区的hdfs路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%88%86%E5%8C%BA"><span class="toc-number">2.3.5.</span> <span class="toc-text">删除分区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%A1%B6%E8%A1%A8"><span class="toc-number">2.4.</span> <span class="toc-text">分桶表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%A1%A8-%E5%88%A0%E9%99%A4%E8%A1%A8"><span class="toc-number">2.5.</span> <span class="toc-text">修改表 &amp; 删除表</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">DDL命令小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1374871441/" title="Impala安装错误问题">Impala安装错误问题</a><time datetime="2022-06-27T14:05:29.000Z" title="发表于 2022-06-27 22:05:29">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2559104384/" title="Impala安装与⼊⻔案例">Impala安装与⼊⻔案例</a><time datetime="2022-06-27T08:46:00.000Z" title="发表于 2022-06-27 16:46:00">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/762060305/" title="Impala概述">Impala概述</a><time datetime="2022-06-27T08:32:19.000Z" title="发表于 2022-06-27 16:32:19">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3793835697/" title="Sqoop常用命令及参数">Sqoop常用命令及参数</a><time datetime="2022-06-27T07:39:14.000Z" title="发表于 2022-06-27 15:39:14">2022-06-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4171003358/" title="Sqoop应用案例">Sqoop应用案例</a><time datetime="2022-06-27T00:42:49.000Z" title="发表于 2022-06-27 08:42:49">2022-06-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="true"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
