@@ -1,0 +1,501 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>HBase内部原理 | WeiJia_Rao</title><meta name="keywords" content="HBase"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="HBase读数据流程        首先从zk找到meta表的region位置，然后读取meta表中的数据，meta表中存储了用户表的region信息  启动zkCli.sh ,查看 ls &#x2F;hbase   1234567891011121314151617181920[root@Linux121 ~]# &#x2F;opt&#x2F;lagou&#x2F;servers&#x2F;zookeeper-3.4.14&#x2F;bin&#x2F;zkCli.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase内部原理">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/2702186349/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="HBase读数据流程        首先从zk找到meta表的region位置，然后读取meta表中的数据，meta表中存储了用户表的region信息  启动zkCli.sh ,查看 ls &#x2F;hbase   1234567891011121314151617181920[root@Linux121 ~]# &#x2F;opt&#x2F;lagou&#x2F;servers&#x2F;zookeeper-3.4.14&#x2F;bin&#x2F;zkCli.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-07-04T01:17:38.000Z">
+<meta property="article:modified_time" content="2022-07-04T02:47:27.100Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="HBase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/2702186349/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'HBase内部原理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-07-04 10:47:27'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">271</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">HBase内部原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-04T01:17:38.000Z" title="发表于 2022-07-04 09:17:38">2022-07-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-07-04T02:47:27.100Z" title="更新于 2022-07-04 10:47:27">2022-07-04</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Hadoop/">Hadoop</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="HBase内部原理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="HBase读数据流程">HBase读数据流程</h2>
+  <img src="/posts/2702186349/1.jpg" class="post-image">
+  <br>
+<ol>
+<li>首先从zk找到meta表的region位置，然后读取meta表中的数据，meta表中存储了用户表的region信息</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://xn--zkCli-r96hg5g.sh">启动zkCli.sh</a> ,查看 ls /hbase</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@Linux121 ~]# /opt/lagou/servers/zookeeper-3.4.14/bin/zkCli.sh</span><br><span class="line"></span><br><span class="line">[zk: localhost:2181(CONNECTED) 1] ls /hbase</span><br><span class="line">[replication, meta-region-server, rs, splitWAL, backup-masters, table-lock, flush-table-proc, region-in-transition, online-snapshot, master, switch, running, recovering-regions, draining, namespace, hbaseid, table]</span><br><span class="line"></span><br><span class="line">[zk: localhost:2181(CONNECTED) 2] get /hbase/meta-region-server</span><br><span class="line">�regionserver:16020n�Y&#125;MM sPBUF</span><br><span class="line">                                                                                                                                              Linux123�&#125;�����0</span><br><span class="line">cZxid = 0x400000059</span><br><span class="line">ctime = Mon Jul 04 01:31:35 WEST 2022</span><br><span class="line">mZxid = 0x400000059</span><br><span class="line">mtime = Mon Jul 04 01:31:35 WEST 2022</span><br><span class="line">pZxid = 0x400000059</span><br><span class="line">cversion = 0</span><br><span class="line">dataVersion = 0</span><br><span class="line">aclVersion = 0</span><br><span class="line">ephemeralOwner = 0x0</span><br><span class="line">dataLength = 61</span><br><span class="line">numChildren = 0</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+  <img src="/posts/2702186349/2.jpg" class="post-image">
+  <br>
+  <img src="/posts/2702186349/3.jpg" class="post-image">
+  <br>
+<ol start="2">
+<li>
+<p>根据要查询的namespace、表名和rowkey信息。找到写入数据对应的region信息</p>
+</li>
+<li>
+<p>找到这个region对应的regionServer，然后发送请求</p>
+</li>
+<li>
+<p>查找对应的region</p>
+</li>
+<li>
+<p>先从memstore查找数据，如果没有，再从BlockCache上读取</p>
+</li>
+</ol>
+<p>HBase上Regionserver的内存分为两个部分；一部分作为Memstore，主要用来写；另外一部分作为BlockCache，主要用于读数据；</p>
+<ol start="6">
+<li>如果BlockCache中也没有找到，再到StoreFile上进行读取</li>
+</ol>
+<p>从storeFile中读取到数据之后，不是直接把结果数据返回给客户端，而是把数据先写入到BlockCache中，目的是为了加快后续的查询；然后在返回结果给客户端。</p>
+<h2 id="HBase写数据流程">HBase写数据流程</h2>
+  <img src="/posts/2702186349/4.jpg" class="post-image">
+  <br>
+<ol>
+<li>
+<p>首先从zk找到meta表的region位置，然后读取meta表中的数据，meta表中存储了用户表的 region 信息</p>
+</li>
+<li>
+<p>根据namespace、表名和rowkey信息。找到写入数据对应的region信息</p>
+</li>
+<li>
+<p>找到这个region对应的regionServer，然后发送请求</p>
+</li>
+<li>
+<p>把数据分别写到HLog（write ahead log）和memstore各一份</p>
+</li>
+<li>
+<p>memstore达到阈值后把数据刷到磁盘，生成storeFile文件</p>
+</li>
+<li>
+<p>删除HLog中的历史数据</p>
+</li>
+</ol>
+<h2 id="HBase的flush-刷写-及compact-合并-机制">HBase的flush(刷写)及compact(合并)机制</h2>
+<h3 id="Flush机制">Flush机制</h3>
+<ul>
+<li>
+<p>当memstore的大小超过这个值的时候，会flush到磁盘,默认为128M</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.hregion.memstore.flush.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>134217728<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>当memstore中的数据时间超过1小时，会flush到磁盘</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.regionserver.optionalcacheflushinterval<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>3600000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>HregionServer的全局memstore的大小，超过该大小会触发flush到磁盘的操作,默认是堆大小的40%</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.regionserver.global.memstore.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>0.4<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>手动flush</p>
+</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase(main):032:0&gt; flush tableName</span><br></pre></td></tr></table></figure>
+<h3 id="阻塞机制">阻塞机制</h3>
+<p>以上介绍的是Store中memstore数据刷写磁盘的标准，但是Hbase中是周期性的检查是否满足以上标准满足则进行刷写，但是如果在下次检查到来之前，数据疯狂写入Memstore中，会出现什么问题呢？</p>
+<p>会触发阻塞机制，此时无法写入数据到Memstore，数据无法写入Hbase集群。</p>
+<ul>
+<li>
+<p>memstore中数据达到512MB</p>
+<ul>
+<li>
+<p>计算公式：hbase.hregion.memstore.flush.size*hbase.hregion.memstore…block.multiplier</p>
+</li>
+<li>
+<p>hbase.hregion.memstore.flush.size刷写的阀值，默认是 134217728，即128MB。</p>
+</li>
+<li>
+<p>hbase.hregion.memstore.block.multiplier是一个倍数，默认 是4。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>RegionServer全部memstore达到规定值</p>
+<ul>
+<li>
+<p>hbase.regionserver.global.memstore.size.lower.limit是0.95，</p>
+</li>
+<li>
+<p>hbase.regionserver.global.memstore.size是0.4，</p>
+</li>
+<li>
+<p>堆内存总共是 16G,触发刷写的阈值是：6.08GB,触发阻塞的阈值是：6.4GB</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Compact合并机制">Compact合并机制</h3>
+<p>在hbase中主要存在两种类型的compac合并</p>
+<ul>
+<li>
+<p><strong>minor compact 小合并</strong></p>
+<ul>
+<li>
+<p><strong>在将Store中多个HFile(StoreFile)合并为一个HFile</strong></p>
+<p>这个过程中，删除和更新的数据仅仅只是做了标记，并没有物理移除，这种合并的触发频率很高。</p>
+</li>
+<li>
+<p><strong>minor compact文件选择标准由以下几个参数共同决定</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--待合并文件数据必须大于等于下面这个值--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.hstore.compaction.min<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>3<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--待合并文件数据必须小于等于下面这个值--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.hstore.compaction.max<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>10<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--默认值为128m, 表示文件大小小于该值的store file 一定会加入到minor compaction的store file中 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.hstore.compaction.min.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>134217728<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--默认值为LONG.MAX_VALUE， 表示文件大小大于该值的store file 一定会被minor compaction排除--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.hstore.compaction.max.size<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>9223372036854775807<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>触发条件</strong></p>
+<ul>
+<li>
+<p><strong>memstore flush</strong></p>
+<p>在进行memstore flush前后都会进行判断是否触发compact</p>
+</li>
+<li>
+<p><strong>定期检查线程</strong></p>
+<p>周期性检查是否需要进行compaction操作,由参数：hbase.server.thread.wakefrequency决定，默认值是10000 millseconds</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>major compact 大合并</strong></p>
+<ul>
+<li>
+<p><strong>合并Store中所有的HFile为一个HFile</strong></p>
+<p>这个过程有删除标记的数据会被真正移除，同时超过单元格maxVersion的版本记录也会被删除。合并频率比较低，默认7天执行一次，并且性能消耗非常大，建议生产关闭(设置为0)，在应用空闲时间手动触发。一般可以是手动控制进行合并，防止出现在业务高峰期。</p>
+</li>
+<li>
+<p><strong>major compaction触发时间条件</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--默认值为7天进行一次大合并，--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.hregion.majorcompaction<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>604800000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p><strong>手动触发</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">##使用major_compact命令</span><br><span class="line">hbase(main):032:0&gt; major_compact tableName</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Region-拆分机制">Region 拆分机制</h2>
+<p>Region中存储的是大量的rowkey数据 ,当Region中的数据条数过多的时候,直接影响查询效率.当Region过大的时候.HBase会拆分Region , 这也是Hbase的一个优点 .</p>
+  <img src="/posts/2702186349/5.jpg" class="post-image">
+  <br>
+<h3 id="拆分策略">拆分策略</h3>
+<ul>
+<li>
+<ol>
+<li>ConstantSizeRegionSplitPolicy</li>
+</ol>
+<p>0.94版本前默认切分策略</p>
+<p>当region大小大于某个阈值(hbase.hregion.max.filesize=10G)之后就会触发切分，一个region等 分为2个region。</p>
+<p>但是在生产线上这种切分策略却有相当大的弊端：切分策略对于大表和小表没有明显的区分。阈值 (hbase.hregion.max.filesize)设置较大对大表比较友好，但是小表就有可能不会触发分裂，极端情况 下可能就1个，这对业务来说并不是什么好事。如果设置较小则对小表友好，但一个大表就会在整个集群产生 大量的region，这对于集群的管理、资源使用、failover来说都不是一件好事。</p>
+</li>
+<li>
+<ol start="2">
+<li>IncreasingToUpperBoundRegionSplitPolicy</li>
+</ol>
+<p>0.94版本~2.0版本默认切分策略</p>
+<p>切分策略稍微有点复杂，总体看和ConstantSizeRegionSplitPolicy思路相同，一个region大小大于设 置阈值就会触发切分。但是这个阈值并不像ConstantSizeRegionSplitPolicy是一个固定的值，而是会 在一定条件下不断调整，调整规则和region所属表在当前regionserver上的region个数有关系.</p>
+<p>region split的计算公式是：regioncount^3 * 128M * 2，当region达到该size的时候进行split</p>
+<p>例如：<br>
+第一次split：1^3 * 256 = 256MB<br>
+第二次split：2^3 * 256 = 2048MB<br>
+第三次split：3^3 * 256 = 6912MB<br>
+第四次split：4^3 * 256 = 16384MB &gt; 10GB，因此取较小的值10GB 后面每次split的size都是10GB了</p>
+</li>
+<li>
+<ol start="3">
+<li>SteppingSplitPolicy</li>
+</ol>
+<p>2.0版本默认切分策略</p>
+<p>这种切分策略的切分阈值又发生了变化，相比 IncreasingToUpperBoundRegionSplitPolicy 简单了 一些，依然和待分裂region所属表在当前regionserver上的region个数有关系，如果region个数等于 1，切分阈值为flush size * 2，否则为MaxRegionFileSize。这种切分策略对于大集群中的大表、小表会比IncreasingToUpperBoundRegionSplitPolicy 更加友好，小表不会再产生大量的小region，而是 适可而止。</p>
+</li>
+<li>
+<ol start="4">
+<li>KeyPrefixRegionSplitPolicy</li>
+</ol>
+<p>根据rowKey的前缀对数据进行分组，这里是指定rowKey的前多少位作为前缀，比如rowKey都是16位的，指 定前5位是前缀，那么前5位相同的rowKey在进行region split的时候会分到相同的region中。</p>
+</li>
+<li>
+<ol start="5">
+<li>DelimitedKeyPrefixRegionSplitPolicy</li>
+</ol>
+<p>保证相同前缀的数据在同一个region中，例如rowKey的格式为：userid_eventtype_eventid，指定的 delimiter为 _ ，则split的的时候会确保userid相同的数据在同一个region中。</p>
+</li>
+<li>
+<ol start="6">
+<li>DisabledRegionSplitPolicy</li>
+</ol>
+<p>不启用自动拆分, 需要指定手动拆分</p>
+</li>
+</ul>
+<h3 id="RegionSplitPolicy的应用">RegionSplitPolicy的应用</h3>
+<p>Region拆分策略可以全局统一配置，也可以为单独的表指定拆分策略。</p>
+<ul>
+<li>
+<ol>
+<li>通过hbase-site.xml全局统一配置(对hbase所有表生效)</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hbase.regionserver.region.split.policy<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.hbase.regionserver.IncreasingToUpperBoundRegionSplitPolicy<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<ol start="2">
+<li>通过Java API为单独的表指定Region拆分策略</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HTableDescriptor</span> <span class="variable">tableDesc</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HTableDescriptor</span>(<span class="string">&quot;test1&quot;</span>);</span><br><span class="line">tableDesc.setValue(HTableDescriptor.SPLIT_POLICY, IncreasingToUpperBoundRegionSplitPolicy.class.getName());</span><br><span class="line">tableDesc.addFamily(<span class="keyword">new</span> <span class="title class_">HColumnDescriptor</span>(Bytes.toBytes(<span class="string">&quot;cf1&quot;</span>)));</span><br><span class="line">admin.createTable(tableDesc);</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<ol start="3">
+<li>通过HBase Shell为单个表指定Region拆分策略</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase&gt; create &#x27;test2&#x27;, &#123;METADATA =&gt; &#123;&#x27;SPLIT_POLICY&#x27; =&gt; &#x27;org.apache.hadoop.hbase.regionserver.IncreasingToUpperBoundRegionSplitPolicy&#x27;&#125;&#125;, &#123;NAME =&gt; &#x27;cf1&#x27;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="HBase表的预分区-region">HBase表的预分区(region)</h2>
+<h3 id="为何要预分区？">为何要预分区？</h3>
+<p>当一个table刚被创建的时候，Hbase默认的分配一个region给table。也就是说这个时候，所有的读写请求都会访问到同一个regionServer的同一个region中，这个时候就达不到负载均衡的效果了，集群中的其他regionServer就可能会处于比较空闲的状态。解决这个问题可以用pre-splitting,在创建table的时候就配置好，生成多个region。</p>
+<ul>
+<li>
+<p>增加数据读写效率</p>
+</li>
+<li>
+<p>负载均衡，防止数据倾斜</p>
+</li>
+<li>
+<p>方便集群容灾调度region</p>
+</li>
+<li>
+<p>每一个region维护着startRow与endRowKey，如果加入的数据符合某个region维护的rowKey范围，则该数据交给这个region维护</p>
+</li>
+</ul>
+<h3 id="手动指定预分区">手动指定预分区</h3>
+<p>shell命令创建表指定预分区</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase&gt; create &#x27;person&#x27;,&#x27;info1&#x27;,&#x27;info2&#x27;,SPLITS =&gt; [&#x27;1000&#x27;,&#x27;2000&#x27;,&#x27;3000&#x27;]</span><br></pre></td></tr></table></figure>
+<p>分区规则创建于文件中,然后shell命令创建表指定预分区使用该文件</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@Linux121 ~]# vim split.txt</span><br><span class="line"></span><br><span class="line">aaa</span><br><span class="line">bbb</span><br><span class="line">ccc</span><br><span class="line">ddd</span><br><span class="line"></span><br><span class="line">hbase&gt; create &#x27;student&#x27;,&#x27;info&#x27;,SPLITS_FILE =&gt; &#x27;/root/hbase/split.txt&#x27;</span><br></pre></td></tr></table></figure>
+<h2 id="Region-合并">Region 合并</h2>
+<p>Region的合并不是为了性能，而是出于维护的目的。</p>
+<h3 id="通过Merge类冷合并Region">通过Merge类冷合并Region</h3>
+<ul>
+<li>
+<p>需要先关闭hbase集群</p>
+</li>
+<li>
+<p>需求：需要把student表中的2个region数据进行合并：</p>
+<p>student,1593244870695.10c2df60e567e73523a633f20866b4b5.</p>
+<p>student,1000,1593244870695.0a4c3ff30a98f79ff6c1e4cc927b3d0d.</p>
+<p>这里通过org.apache.hadoop.hbase.util.Merge类来实现，不需要进入hbase shell，直接执行（需要先关闭hbase集群）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hbase org.apache.hadoop.hbase.util.Merge student \ student,,1595256696737.fc3eff4765709e66a8524d3c3ab42d59. \ student,aaa,1595256696737.1d53d6c1ce0c1bed269b16b6514131d0.</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>成功后观察界面：<a target="_blank" rel="noopener" href="http://linux123:16030/">http://linux123:16030/</a></p>
+<img src="/posts/2702186349/6.jpg" class="post-image">
+<br>
+</li>
+</ul>
+<h3 id="通过online-merge热合并Region">通过online_merge热合并Region</h3>
+<ul>
+<li>
+<p>不需要关闭hbase集群，在线进行合并</p>
+<p>与冷合并不同的是，online_merge的传参是Region的hash值，而Region的hash值就是Region名称的最后那段在两个.之间的字符串部分。</p>
+<p>需求：需要把lagou_s表中的2个region数据进行合并：<br>
+student,1587392159085.9ca8689901008946793b8d5fa5898e06. <br>
+student,aaa,1587392159085.601d5741608cedb677634f8f7257e000.</p>
+<p>需要进入hbase shell：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">merge_region &#x27;c8bc666507d9e45523aebaffa88ffdd6&#x27;,&#x27;02a9dfdf6ff42ae9f0524a3d8f4c7777&#x27;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>成功后观察界面：<a target="_blank" rel="noopener" href="http://linux123:16030/">http://linux123:16030/</a></p>
+<img src="/posts/2702186349/6.jpg" class="post-image">
+<br>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/2702186349/">https://raoweijiapng.gitee.io/posts/2702186349/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/HBase/">HBase</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/3826824609/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">HBase安装与shell基本操作</div></div></a></div><div class="next-post pull-right"><a href="/posts/1206228065/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">HBase的Java客户端应用和优化</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/3826824609/" title="HBase安装与shell基本操作"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-02</div><div class="title">HBase安装与shell基本操作</div></div></a></div><div><a href="/posts/317275785/" title="HBase简介与数据模型"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-02</div><div class="title">HBase简介与数据模型</div></div></a></div><div><a href="/posts/1206228065/" title="HBase的Java客户端应用和优化"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-07-04</div><div class="title">HBase的Java客户端应用和优化</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">271</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">32</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase%E8%AF%BB%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">HBase读数据流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase%E5%86%99%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">HBase写数据流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase%E7%9A%84flush-%E5%88%B7%E5%86%99-%E5%8F%8Acompact-%E5%90%88%E5%B9%B6-%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">HBase的flush(刷写)及compact(合并)机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flush%E6%9C%BA%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text">Flush机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%BB%E5%A1%9E%E6%9C%BA%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">阻塞机制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Compact%E5%90%88%E5%B9%B6%E6%9C%BA%E5%88%B6"><span class="toc-number">3.3.</span> <span class="toc-text">Compact合并机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Region-%E6%8B%86%E5%88%86%E6%9C%BA%E5%88%B6"><span class="toc-number">4.</span> <span class="toc-text">Region 拆分机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%86%E5%88%86%E7%AD%96%E7%95%A5"><span class="toc-number">4.1.</span> <span class="toc-text">拆分策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RegionSplitPolicy%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">4.2.</span> <span class="toc-text">RegionSplitPolicy的应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HBase%E8%A1%A8%E7%9A%84%E9%A2%84%E5%88%86%E5%8C%BA-region"><span class="toc-number">5.</span> <span class="toc-text">HBase表的预分区(region)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BD%95%E8%A6%81%E9%A2%84%E5%88%86%E5%8C%BA%EF%BC%9F"><span class="toc-number">5.1.</span> <span class="toc-text">为何要预分区？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E6%8C%87%E5%AE%9A%E9%A2%84%E5%88%86%E5%8C%BA"><span class="toc-number">5.2.</span> <span class="toc-text">手动指定预分区</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Region-%E5%90%88%E5%B9%B6"><span class="toc-number">6.</span> <span class="toc-text">Region 合并</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87Merge%E7%B1%BB%E5%86%B7%E5%90%88%E5%B9%B6Region"><span class="toc-number">6.1.</span> <span class="toc-text">通过Merge类冷合并Region</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87online-merge%E7%83%AD%E5%90%88%E5%B9%B6Region"><span class="toc-number">6.2.</span> <span class="toc-text">通过online_merge热合并Region</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1206228065/" title="HBase的Java客户端应用和优化">HBase的Java客户端应用和优化</a><time datetime="2022-07-04T02:48:38.000Z" title="发表于 2022-07-04 10:48:38">2022-07-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2702186349/" title="HBase内部原理">HBase内部原理</a><time datetime="2022-07-04T01:17:38.000Z" title="发表于 2022-07-04 09:17:38">2022-07-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3826824609/" title="HBase安装与shell基本操作">HBase安装与shell基本操作</a><time datetime="2022-07-02T10:31:15.000Z" title="发表于 2022-07-02 18:31:15">2022-07-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/317275785/" title="HBase简介与数据模型">HBase简介与数据模型</a><time datetime="2022-07-02T10:09:40.000Z" title="发表于 2022-07-02 18:09:40">2022-07-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3506399266/" title="Hadoop的HA">Hadoop的HA</a><time datetime="2022-07-02T08:44:28.000Z" title="发表于 2022-07-02 16:44:28">2022-07-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
