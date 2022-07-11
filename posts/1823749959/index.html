@@ -1,0 +1,864 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Redis数据类型选择和应用场景 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Redis是一个Key-Value的存储系统，使用ANSI C语言编写。   key的类型是字符串。   value的数据类型有：   常用的：string字符串类型、list列表类型、set集合类型、sortedset（zset）有序集合类型、hash类型。   不常见的：bitmap位图类型、geo地理位置类型。   Redis5.0新增一种：stream类型      注意：Redis中命令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis数据类型选择和应用场景">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/1823749959/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="Redis是一个Key-Value的存储系统，使用ANSI C语言编写。   key的类型是字符串。   value的数据类型有：   常用的：string字符串类型、list列表类型、set集合类型、sortedset（zset）有序集合类型、hash类型。   不常见的：bitmap位图类型、geo地理位置类型。   Redis5.0新增一种：stream类型      注意：Redis中命令">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-07-08T08:34:50.000Z">
+<meta property="article:modified_time" content="2022-07-08T10:08:21.268Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/1823749959/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis数据类型选择和应用场景',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-07-08 18:08:21'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">281</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">56</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">34</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis数据类型选择和应用场景</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-08T08:34:50.000Z" title="发表于 2022-07-08 16:34:50">2022-07-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-07-08T10:08:21.268Z" title="更新于 2022-07-08 18:08:21">2022-07-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Redis/">Redis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis数据类型选择和应用场景"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Redis是一个Key-Value的存储系统，使用ANSI C语言编写。</p>
+<ul>
+<li>
+<p>key的类型是字符串。</p>
+</li>
+<li>
+<p>value的数据类型有：</p>
+<ul>
+<li>
+<p>常用的：string字符串类型、list列表类型、set集合类型、sortedset（zset）有序集合类型、hash类型。</p>
+</li>
+<li>
+<p>不常见的：bitmap位图类型、geo地理位置类型。</p>
+</li>
+<li>
+<p>Redis5.0新增一种：stream类型</p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>注意：Redis中命令是忽略大小写，（set SET），key是不忽略大小写的 （NAME name）</p>
+</blockquote>
+<h2 id="Redis的Key的设计">Redis的Key的设计</h2>
+<ol>
+<li>
+<p>用:分割</p>
+</li>
+<li>
+<p>把表名转换为key前缀, 比如: user:</p>
+</li>
+<li>
+<p>第二段放置主键值</p>
+</li>
+<li>
+<p>第三段放置列名</p>
+</li>
+</ol>
+<p>比如：用户表user, 转换为redis的key-value存储</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">userid</th>
+<th style="text-align:center">username</th>
+<th style="text-align:center">password</th>
+<th style="text-align:center">email</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">zhangf</td>
+<td style="text-align:center">111111</td>
+<td style="text-align:center"><a href="mailto:zhangf@lagou.com">zhangf@lagou.com</a></td>
+</tr>
+</tbody>
+</table>
+<p>username 的 key： user:9:username</p>
+<p>email 的 key user:9:email</p>
+<p>表示明确：看key知道意思,不易被覆盖</p>
+<h2 id="string字符串类型">string字符串类型</h2>
+<p>Redis的String能表达3种值的类型：字符串、整数、浮点数 100.01 是个六位的串</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">set</td>
+<td style="text-align:left">set key value</td>
+<td style="text-align:left">赋值</td>
+</tr>
+<tr>
+<td style="text-align:left">get</td>
+<td style="text-align:left">get key</td>
+<td style="text-align:left">取值</td>
+</tr>
+<tr>
+<td style="text-align:left">getset</td>
+<td style="text-align:left">getset key value</td>
+<td style="text-align:left">取值并赋值</td>
+</tr>
+<tr>
+<td style="text-align:left">setnx</td>
+<td style="text-align:left">setnx key value</td>
+<td style="text-align:left">当key不存在时才用赋值 <br> set key value NX PX 3000 原子操作，px 设置毫秒数</td>
+</tr>
+<tr>
+<td style="text-align:left">append</td>
+<td style="text-align:left">append key value</td>
+<td style="text-align:left">向尾部追加值</td>
+</tr>
+<tr>
+<td style="text-align:left">strlen</td>
+<td style="text-align:left">strlen key</td>
+<td style="text-align:left">获取字符串长度</td>
+</tr>
+<tr>
+<td style="text-align:left">incr</td>
+<td style="text-align:left">incr key</td>
+<td style="text-align:left">递增数字</td>
+</tr>
+<tr>
+<td style="text-align:left">incrby</td>
+<td style="text-align:left">incrby key increment</td>
+<td style="text-align:left">增加指定的整数</td>
+</tr>
+<tr>
+<td style="text-align:left">decr</td>
+<td style="text-align:left">decr key</td>
+<td style="text-align:left">递减数字</td>
+</tr>
+<tr>
+<td style="text-align:left">decrby</td>
+<td style="text-align:left">decrby key decrement</td>
+<td style="text-align:left">减少指定的整数</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>key和命令是字符串</p>
+</li>
+<li>
+<p>普通的赋值</p>
+</li>
+<li>
+<p>incr用于乐观锁,incr：递增数字，可用于实现乐观锁 watch(事务)</p>
+</li>
+<li>
+<p>setnx用于分布式锁,当value不存在时采用赋值，可用于实现分布式锁</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># set</span><br><span class="line">127.0.0.1:6379&gt; set age 18 NX PX 10000 #如果不存在赋值 有效期10秒</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; set age 20 NX #赋值失败</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; get age #age失效</span><br><span class="line">(nil)</span><br><span class="line">127.0.0.1:6379&gt; set age 30 NX PX 10000 #赋值成功</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get age</span><br><span class="line">&quot;30&quot;</span><br><span class="line"></span><br><span class="line"># setnx:</span><br><span class="line">127.0.0.1:6379&gt; setnx name zhangf #如果name不存在赋值</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setnx name zhaoyun #再次赋值失败</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line">&quot;zhangf&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="list列表类型">list列表类型</h2>
+<p>list列表类型可以存储有序、可重复的元素</p>
+<p>获取头部或尾部附近的记录是极快的</p>
+<p>list的元素个数最多为2^32-1个（40亿）</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">lpush</td>
+<td style="text-align:left">lpush key v1 v2 v3 …</td>
+<td style="text-align:left">从左侧插入列表</td>
+</tr>
+<tr>
+<td style="text-align:left">lpop</td>
+<td style="text-align:left">lpop key</td>
+<td style="text-align:left">从列表左侧取出</td>
+</tr>
+<tr>
+<td style="text-align:left">rpush</td>
+<td style="text-align:left">rpush key v1 v2 v3 …</td>
+<td style="text-align:left">从右侧插入列表</td>
+</tr>
+<tr>
+<td style="text-align:left">rpop</td>
+<td style="text-align:left">rpop key</td>
+<td style="text-align:left">从列表右侧取出</td>
+</tr>
+<tr>
+<td style="text-align:left">lpushx</td>
+<td style="text-align:left">lpushx key value</td>
+<td style="text-align:left">将值插入到列表头部</td>
+</tr>
+<tr>
+<td style="text-align:left">rpushx</td>
+<td style="text-align:left">rpushx key value</td>
+<td style="text-align:left">将值插入到列表尾部</td>
+</tr>
+<tr>
+<td style="text-align:left">blpop</td>
+<td style="text-align:left">blpop key timeout</td>
+<td style="text-align:left">从列表左侧取出，当列表为空时阻塞，可以设置最大阻塞时间，单位为秒</td>
+</tr>
+<tr>
+<td style="text-align:left">brpop</td>
+<td style="text-align:left">blpop key timeout</td>
+<td style="text-align:left">从列表右侧取出，当列表为空时阻塞，可以设置最大阻塞时间，单位为秒</td>
+</tr>
+<tr>
+<td style="text-align:left">llen</td>
+<td style="text-align:left">llen key</td>
+<td style="text-align:left">获得列表中元素个数</td>
+</tr>
+<tr>
+<td style="text-align:left">lindex</td>
+<td style="text-align:left">lindex key index</td>
+<td style="text-align:left">获得列表中下标为index的元素 index从0开始</td>
+</tr>
+<tr>
+<td style="text-align:left">lrange</td>
+<td style="text-align:left">lrange key start end</td>
+<td style="text-align:left">返回列表中指定区间的元素，区间通过start和end指定</td>
+</tr>
+<tr>
+<td style="text-align:left">lrem</td>
+<td style="text-align:left">lrem key count value</td>
+<td style="text-align:left">删除列表中与value相等的元素 <br> 当count&gt;0时， lrem会从列表左边开始删除; <br> 当count&lt;0时，lrem会从列表后边开始删除;<br>当count=0时， lrem删除所有值为value的元素</td>
+</tr>
+<tr>
+<td style="text-align:left">lset</td>
+<td style="text-align:left">lset key index value</td>
+<td style="text-align:left">将列表index位置的元素设置成value的值</td>
+</tr>
+<tr>
+<td style="text-align:left">ltrim</td>
+<td style="text-align:left">ltrim key start end</td>
+<td style="text-align:left">对列表进行修剪，只保留start到end区间</td>
+</tr>
+<tr>
+<td style="text-align:left">rpoplpush</td>
+<td style="text-align:left">rpoplpush key1 key2</td>
+<td style="text-align:left">从key1列表右侧弹出并插入到key2列表左侧</td>
+</tr>
+<tr>
+<td style="text-align:left">brpoplpush</td>
+<td style="text-align:left">brpoplpush key1 key2</td>
+<td style="text-align:left">从key1列表右侧弹出并插入到key2列表左侧，会阻塞</td>
+</tr>
+<tr>
+<td style="text-align:left">linsert</td>
+<td style="text-align:left">linsert key BEFORE/AFTER pivot value</td>
+<td style="text-align:left">将value插入到列表，且位于值pivot之前或之后</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>作为栈或队列使用,列表有序可以作为栈和队列使用</p>
+</li>
+<li>
+<p>可用于各种列表，比如用户列表、商品列表、评论列表等。</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpush list:1 1 2 3 4 5 3</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; lrange list:1 0 -1</span><br><span class="line">1) &quot;5&quot;</span><br><span class="line">2) &quot;4&quot;</span><br><span class="line">3) &quot;3&quot;</span><br><span class="line">4) &quot;2&quot;</span><br><span class="line">5) &quot;1&quot;</span><br><span class="line">127.0.0.1:6379&gt; lpop list:1 # 从0开始</span><br><span class="line">&quot;5&quot;</span><br><span class="line">127.0.0.1:6379&gt; rpop list:1</span><br><span class="line">&quot;1&quot;</span><br><span class="line">127.0.0.1:6379&gt; lindex list:1 1</span><br><span class="line">&quot;3&quot;</span><br><span class="line">127.0.0.1:6379&gt; lrange list:1 0 -1</span><br><span class="line">1) &quot;4&quot;</span><br><span class="line">2) &quot;3&quot;</span><br><span class="line">3) &quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; lindex list:1 1</span><br><span class="line">&quot;3&quot;</span><br><span class="line">127.0.0.1:6379&gt; rpoplpush list:1 list:2</span><br><span class="line">&quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; lrange list:2 0 -1</span><br><span class="line">1) &quot;2&quot;</span><br><span class="line">127.0.0.1:6379&gt; lrange list:1 0 -1</span><br><span class="line">1) &quot;4&quot;</span><br><span class="line">2) &quot;3&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="set集合类型">set集合类型</h2>
+<p>Set：无序、唯一元素</p>
+<p>集合中最大的成员数为 2^32 - 1</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">sadd</td>
+<td style="text-align:left">sadd key mem1 mem2 …</td>
+<td style="text-align:left">为集合添加新成员</td>
+</tr>
+<tr>
+<td style="text-align:left">srem</td>
+<td style="text-align:left">srem key mem1 mem2 …</td>
+<td style="text-align:left">删除集合中指定成员</td>
+</tr>
+<tr>
+<td style="text-align:left">smembers</td>
+<td style="text-align:left">smembers key</td>
+<td style="text-align:left">获得集合中所有元素</td>
+</tr>
+<tr>
+<td style="text-align:left">spop</td>
+<td style="text-align:left">spop key</td>
+<td style="text-align:left">返回集合中一个随机元素，并将该元素删除</td>
+</tr>
+<tr>
+<td style="text-align:left">srandmember</td>
+<td style="text-align:left">srandmember key</td>
+<td style="text-align:left">返回集合中一个随机元素，不会删除该元素</td>
+</tr>
+<tr>
+<td style="text-align:left">scard</td>
+<td style="text-align:left">scard key</td>
+<td style="text-align:left">获得集合中元素的数量</td>
+</tr>
+<tr>
+<td style="text-align:left">sismember</td>
+<td style="text-align:left">sismember key member</td>
+<td style="text-align:left">判断元素是否在集合内</td>
+</tr>
+<tr>
+<td style="text-align:left">sinter</td>
+<td style="text-align:left">sinter key1 key2 key3</td>
+<td style="text-align:left">求多集合的交集</td>
+</tr>
+<tr>
+<td style="text-align:left">sdiff</td>
+<td style="text-align:left">sdiff key1 key2 key3</td>
+<td style="text-align:left">求多集合的差集</td>
+</tr>
+<tr>
+<td style="text-align:left">sunion</td>
+<td style="text-align:left">sunion key1 key2 key3</td>
+<td style="text-align:left">求多集合的并集</td>
+</tr>
+</tbody>
+</table>
+<p>适用于不能重复的且不需要顺序的数据结构</p>
+<p>比如：关注的用户，还可以通过spop进行随机抽奖</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd set:1 a b c d</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; smembers set:1</span><br><span class="line">1) &quot;d&quot;</span><br><span class="line">2) &quot;b&quot;</span><br><span class="line">3) &quot;a&quot;</span><br><span class="line">4) &quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; srandmember set:1</span><br><span class="line">&quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; srandmember set:1</span><br><span class="line">&quot;b&quot;</span><br><span class="line">127.0.0.1:6379&gt; sadd set:2 b c r f</span><br><span class="line">(integer) 4</span><br><span class="line">127.0.0.1:6379&gt; sinter set:1 set:2</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;c&quot;</span><br><span class="line">127.0.0.1:6379&gt; spop set:1</span><br><span class="line">&quot;d&quot;</span><br><span class="line">127.0.0.1:6379&gt; smembers set:1</span><br><span class="line">1) &quot;b&quot;</span><br><span class="line">2) &quot;a&quot;</span><br><span class="line">3) &quot;c&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="sortedset有序集合类型">sortedset有序集合类型</h2>
+<p>SortedSet(ZSet) 有序集合： 元素本身是无序不重复的,每个元素关联一个分数(score),可按分数排序，分数可重复</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">zadd</td>
+<td style="text-align:left">zadd key score1 member1 score2 member2 …</td>
+<td style="text-align:left">为有序集合添加新成员</td>
+</tr>
+<tr>
+<td style="text-align:left">zrem</td>
+<td style="text-align:left">zrem key mem1 mem2 …</td>
+<td style="text-align:left">删除有序集合中指定成员</td>
+</tr>
+<tr>
+<td style="text-align:left">zcard</td>
+<td style="text-align:left">zcard key</td>
+<td style="text-align:left">获得有序集合中的元素数量</td>
+</tr>
+<tr>
+<td style="text-align:left">zcount</td>
+<td style="text-align:left">zcount key min max</td>
+<td style="text-align:left">返回集合中score值在[min,max]区间的元素数量</td>
+</tr>
+<tr>
+<td style="text-align:left">zincrby</td>
+<td style="text-align:left">zincrby key increment member</td>
+<td style="text-align:left">在集合的member分值上加increment</td>
+</tr>
+<tr>
+<td style="text-align:left">zscore</td>
+<td style="text-align:left">zscore key member</td>
+<td style="text-align:left">获得集合中member的分值</td>
+</tr>
+<tr>
+<td style="text-align:left">zrank</td>
+<td style="text-align:left">zrank key member</td>
+<td style="text-align:left">获得集合中member的排名（按分值从小到大）</td>
+</tr>
+<tr>
+<td style="text-align:left">zrevrank</td>
+<td style="text-align:left">zrevrank key member</td>
+<td style="text-align:left">获得集合中member的排名（按分值从大到小）</td>
+</tr>
+<tr>
+<td style="text-align:left">zrange</td>
+<td style="text-align:left">zrange key start end</td>
+<td style="text-align:left">获得集合中指定区间成员，按分数递增排序</td>
+</tr>
+<tr>
+<td style="text-align:left">zrevrange</td>
+<td style="text-align:left">zrevrange key start end</td>
+<td style="text-align:left">获得集合中指定区间成员，按分数递减排序</td>
+</tr>
+</tbody>
+</table>
+<p>由于可以按照分值排序，所以适用于各种排行榜。比如：点击排行榜、销量排行榜、关注排行榜等。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; zadd hit:1 100 item1 20 item2 45 item3</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; zcard hit:1</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; zscore hit:1 item3</span><br><span class="line">&quot;45&quot;</span><br><span class="line">127.0.0.1:6379&gt; zrevrange hit:1 0 -1</span><br><span class="line">1) &quot;item1&quot;</span><br><span class="line">2) &quot;item3&quot;</span><br><span class="line">3) &quot;item2&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="hash类型（散列表）">hash类型（散列表）</h2>
+<p>Redis hash 是一个 string 类型的 field 和 value 的映射表，它提供了字段和字段值的映射。</p>
+<p>每个 hash 可以存储 2^32 - 1 键值对（40多亿）。</p>
+  <img src="/posts/1823749959/1.jpg" class="post-image">
+  <br>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">hset</td>
+<td style="text-align:left">hset key field value</td>
+<td style="text-align:left">赋值，不区别新增或修改</td>
+</tr>
+<tr>
+<td style="text-align:left">hmset</td>
+<td style="text-align:left">hmset key field1 value1 field2 value2</td>
+<td style="text-align:left">批量赋值</td>
+</tr>
+<tr>
+<td style="text-align:left">hsetnx</td>
+<td style="text-align:left">hsetnx key field value</td>
+<td style="text-align:left">赋值，如果filed存在则不操作</td>
+</tr>
+<tr>
+<td style="text-align:left">hexists</td>
+<td style="text-align:left">hexists key filed</td>
+<td style="text-align:left">查看某个field是否存在</td>
+</tr>
+<tr>
+<td style="text-align:left">hget</td>
+<td style="text-align:left">hget key field</td>
+<td style="text-align:left">获取一个字段值</td>
+</tr>
+<tr>
+<td style="text-align:left">hmget</td>
+<td style="text-align:left">hmget key field1 field2 …</td>
+<td style="text-align:left">获取多个字段值</td>
+</tr>
+<tr>
+<td style="text-align:left">hgetall</td>
+<td style="text-align:left">hgetall key</td>
+<td style="text-align:left">获取所有字段值</td>
+</tr>
+<tr>
+<td style="text-align:left">hdel</td>
+<td style="text-align:left">hdel key field1 field2…</td>
+<td style="text-align:left">删除指定字段</td>
+</tr>
+<tr>
+<td style="text-align:left">hincrby</td>
+<td style="text-align:left">hincrby key field increment</td>
+<td style="text-align:left">指定字段自增increment</td>
+</tr>
+<tr>
+<td style="text-align:left">hlen</td>
+<td style="text-align:left">hlen key</td>
+<td style="text-align:left">获得字段数量</td>
+</tr>
+</tbody>
+</table>
+<p>对象的存储 ，表数据的映射</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hmset user:001 username zhangfei password 111 age 23 sex M</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hgetall user:001</span><br><span class="line">1) &quot;username&quot;</span><br><span class="line">2) &quot;zhangfei&quot;</span><br><span class="line">3) &quot;password&quot;</span><br><span class="line">4) &quot;111&quot;</span><br><span class="line">5) &quot;age&quot;</span><br><span class="line">6) &quot;23&quot;</span><br><span class="line">7) &quot;sex&quot;</span><br><span class="line">8) &quot;M&quot;</span><br><span class="line">127.0.0.1:6379&gt; hget user:001 username</span><br><span class="line">&quot;zhangfei&quot;</span><br><span class="line">127.0.0.1:6379&gt; hincrby user:001 age 1</span><br><span class="line">(integer) 24</span><br><span class="line">127.0.0.1:6379&gt; hlen user:001</span><br><span class="line">(integer) 4</span><br></pre></td></tr></table></figure>
+<h2 id="bitmap位图类型">bitmap位图类型</h2>
+<p>bitmap是进行位操作的</p>
+<p>通过一个bit位来表示某个元素对应的值或者状态,其中的key就是对应元素本身。</p>
+<p>bitmap本身会极大的节省储存空间。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">setbit</td>
+<td style="text-align:left">setbit key offset value</td>
+<td style="text-align:left">设置key在offset处的bit值(只能是0或者1)</td>
+</tr>
+<tr>
+<td style="text-align:left">getbit</td>
+<td style="text-align:left">getbit key offset</td>
+<td style="text-align:left">获得key在offset处的bit值</td>
+</tr>
+<tr>
+<td style="text-align:left">bitcount</td>
+<td style="text-align:left">bitcount key</td>
+<td style="text-align:left">获得key的bit位为1的个数</td>
+</tr>
+<tr>
+<td style="text-align:left">bitpos</td>
+<td style="text-align:left">bitpos key value</td>
+<td style="text-align:left">返回第一个被设置为bit值的索引值</td>
+</tr>
+<tr>
+<td style="text-align:left">bitop</td>
+<td style="text-align:left">bitop and[or/xor/not] destkey key [key …]</td>
+<td style="text-align:left">对多个key 进行逻辑运算后存入destkey 中</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>用户每月签到，用户id为key ， 日期作为偏移量 1表示签到</p>
+</li>
+<li>
+<p>统计活跃用户, 日期为key，用户id为偏移量 1表示活跃</p>
+</li>
+<li>
+<p>查询用户在线状态， 日期为key，用户id为偏移量 1表示在线</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setbit user:sign:1000 20200101 1 #id为1000的用户20200101签到</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit user:sign:1000 20200103 1 #id为1000的用户20200103签到</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; getbit user:sign:1000 20200101 #获得id为1000的用户20200101签到状态 1 表示签到</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; getbit user:sign:1000 20200102 #获得id为1000的用户20200102签到状态 0表示未签到</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitcount user:sign:1000 # 获得id为1000的用户签到次数</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; bitpos user:sign:1000 1 #id为1000的用户第一次签到的日期</span><br><span class="line">(integer) 20200101</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; setbit 20200201 1000 1 #20200201的1000号用户上线</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit 20200202 1001 1 #20200202的1000号用户上线</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; setbit 20200201 1002 1 #20200201的1002号用户上线</span><br><span class="line">(integer) 0</span><br><span class="line">127.0.0.1:6379&gt; bitcount 20200201 #20200201的上线用户有2个</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; bitop or desk1 20200201 20200202 #合并20200201的用户和20200202上线了的用户</span><br><span class="line">(integer) 126</span><br><span class="line">127.0.0.1:6379&gt; bitcount desk1 #统计20200201和20200202都上线的用户个数</span><br><span class="line">(integer) 3</span><br></pre></td></tr></table></figure>
+<h2 id="geo地理位置类型">geo地理位置类型</h2>
+<p>geo是Redis用来处理位置信息的。在Redis3.2中正式使用。主要是利用了Z阶曲线、Base32编码和geohash算法</p>
+<h3 id="Z阶曲线">Z阶曲线</h3>
+<p>在x轴和y轴上将十进制数转化为二进制数，采用x轴和y轴对应的二进制数依次交叉后得到一个六位数编码。把数字从小到大依次连起来的曲线称为Z阶曲线，Z阶曲线是把多维转换成一维的一种方法。</p>
+  <img src="/posts/1823749959/2.jpg" class="post-image">
+  <br>
+<h3 id="Base32编码">Base32编码</h3>
+<p>Base32这种数据编码机制，主要用来把二进制数据编码成可见的字符串，其编码规则是：任意给定一个二进制数据，以5个位(bit)为一组进行切分(base64以6个位(bit)为一组)，对切分而成的每个组进行编码得到1个可见字符。</p>
+<p>Base32编码表字符集中的字符总数为32个（0-9、b-z去掉a、i、l、o），这也是Base32名字的由来。</p>
+  <img src="/posts/1823749959/3.jpg" class="post-image">
+  <br>
+<h3 id="geohash算法">geohash算法</h3>
+<p>Gustavo在2008年2月上线了geohash.org网站。</p>
+<p>Geohash是一种地理位置信息编码方法。</p>
+<p>经过geohash映射后，地球上任意位置的经纬度坐标可以表示成一个较短的字符串。可以方便的存储在数据库中，附在邮件上，以及方便的使用在其他服务中。以北京的坐标举例，[39.928167,116.389550]可以转换成 wx4g0s8q3jf9 。</p>
+<p>Redis中经纬度使用52位的整数进行编码，放进zset中，zset的value元素是key，score是GeoHash的52位整数值。</p>
+<p>在使用Redis进行Geo查询时，其内部对应的操作其实只是zset(skiplist)的操作。通过zset的score进行排序就可以得到坐标附近的其它元素，通过将score还原成坐标值就可以得到元素的原始坐标。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">geoadd</td>
+<td style="text-align:left">geoadd key 经度 纬度 成员名称1 经度1 纬度1 成员名称2 经度2 纬度 2 …</td>
+<td style="text-align:left">添加地理坐标</td>
+</tr>
+<tr>
+<td style="text-align:left">geohash</td>
+<td style="text-align:left">geohash key 成员名称1 成员名称2…</td>
+<td style="text-align:left">返回标准的 geohash串</td>
+</tr>
+<tr>
+<td style="text-align:left">geopos</td>
+<td style="text-align:left">geopos key 成员名称1 成员名称2…</td>
+<td style="text-align:left">返回成员经纬度</td>
+</tr>
+<tr>
+<td style="text-align:left">geodist</td>
+<td style="text-align:left">geodist key 成员1 成员2 单位</td>
+<td style="text-align:left">计算成员间距离</td>
+</tr>
+<tr>
+<td style="text-align:left">georadiusbymember</td>
+<td style="text-align:left">georadiusbymember key 成员 值 单位 count 数 asc[desc]</td>
+<td style="text-align:left">根据成员查找附近的成员</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>记录地理位置</p>
+</li>
+<li>
+<p>计算距离</p>
+</li>
+<li>
+<p>查找&quot;附近的人&quot;</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; geoadd user:addr 116.31 40.05 zhangf 116.38 39.88 zhaoyun 116.47 40.00 diaochan #添加用户地址 zhangf、zhaoyun、diaochan的经纬度</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; geohash user:addr zhangf diaochan #获得zhangf和diaochan的geohash码</span><br><span class="line">1) &quot;wx4eydyk5m0&quot;</span><br><span class="line">2) &quot;wx4gd3fbgs0&quot;</span><br><span class="line">127.0.0.1:6379&gt; geopos user:addr zhaoyun #获得zhaoyun的经纬度</span><br><span class="line">1) 1) &quot;116.38000041246414185&quot;</span><br><span class="line">   2) &quot;39.88000114172373145&quot;</span><br><span class="line">127.0.0.1:6379&gt; geodist user:addr zhangf diaochan #计算zhangf到diaochan的距离,单位是m</span><br><span class="line">&quot;14718.6972&quot;</span><br><span class="line">127.0.0.1:6379&gt; geodist user:addr zhangf diaochan km #计算zhangf到diaochan的距离, 单位是km</span><br><span class="line">&quot;14.7187&quot;</span><br><span class="line">127.0.0.1:6379&gt; geodist user:addr zhangf zhaoyun km</span><br><span class="line">&quot;19.8276&quot;</span><br><span class="line">127.0.0.1:6379&gt; georadiusbymember user:addr zhangf 20 km withcoord withdist count 3 asc # 获得距离zhangf20km以内的按由近到远的顺序排出前三名的成员名称、距离及经纬度 #withcoord ： 获得经纬度 withdist：获得距离 withhash：获得geohash码</span><br><span class="line">1) 1) &quot;zhangf&quot;</span><br><span class="line">   2) &quot;0.0000&quot;</span><br><span class="line">   3) 1) &quot;116.31000012159347534&quot;</span><br><span class="line">      2) &quot;40.04999982043828055&quot;</span><br><span class="line">2) 1) &quot;diaochan&quot;</span><br><span class="line">   2) &quot;14.7187&quot;</span><br><span class="line">   3) 1) &quot;116.46999925374984741&quot;</span><br><span class="line">      2) &quot;39.99999991084916218&quot;</span><br><span class="line">3) 1) &quot;zhaoyun&quot;</span><br><span class="line">   2) &quot;19.8276&quot;</span><br><span class="line">   3) 1) &quot;116.38000041246414185&quot;</span><br><span class="line">      2) &quot;39.88000114172373145&quot;</span><br></pre></td></tr></table></figure>
+<h2 id="stream数据流类型">stream数据流类型</h2>
+<p>stream是Redis5.0后新增的数据结构，用于可持久化的消息队列。</p>
+<p>几乎满足了消息队列具备的全部内容，包括：</p>
+<ul>
+<li>
+<p>消息ID的序列化生成</p>
+</li>
+<li>
+<p>消息遍历</p>
+</li>
+<li>
+<p>消息的阻塞和非阻塞读取</p>
+</li>
+<li>
+<p>消息的分组消费</p>
+</li>
+<li>
+<p>未完成消息的处理</p>
+</li>
+<li>
+<p>消息队列监控</p>
+</li>
+</ul>
+<p>每个Stream都有唯一的名称，它就是Redis的key，首次使用 xadd 指令追加消息时自动创建。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">命令名称</th>
+<th style="text-align:left">命令格式</th>
+<th style="text-align:left">命令描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">xadd</td>
+<td style="text-align:left">xadd key id &lt;*&gt; field1 value1…</td>
+<td style="text-align:left">将指定消息数据追加到指定队列(key)中，*表示最新生成的id（当前时间+序列号）</td>
+</tr>
+<tr>
+<td style="text-align:left">xread</td>
+<td style="text-align:left">xread [COUNT count] [BLOCK milliseconds] STREAMS key [key …] ID [ID …]</td>
+<td style="text-align:left">从消息队列中读取，COUNT：读取条数，BLOCK：阻塞读（默认不阻塞）key：队列名称 id：消息id</td>
+</tr>
+<tr>
+<td style="text-align:left">xrange</td>
+<td style="text-align:left">xrange key start end [COUNT]</td>
+<td style="text-align:left">读取队列中给定ID范围的消息 COUNT：返回消息条数（消息id从小到大）</td>
+</tr>
+<tr>
+<td style="text-align:left">xrevrange</td>
+<td style="text-align:left">xrevrange key start end [COUNT]</td>
+<td style="text-align:left">读取队列中给定ID范围的消息 COUNT：返回消息条数（消息id从大到小）</td>
+</tr>
+<tr>
+<td style="text-align:left">xdel</td>
+<td style="text-align:left">xdel key id</td>
+<td style="text-align:left">删除队列的消息</td>
+</tr>
+<tr>
+<td style="text-align:left">xgroup</td>
+<td style="text-align:left">xgroup create key groupname id</td>
+<td style="text-align:left">创建一个新的消费组</td>
+</tr>
+<tr>
+<td style="text-align:left">xgroup</td>
+<td style="text-align:left">xgroup destory key groupname</td>
+<td style="text-align:left">删除指定消费组</td>
+</tr>
+<tr>
+<td style="text-align:left">xgroup</td>
+<td style="text-align:left">xgroup delconsumer key groupname cname</td>
+<td style="text-align:left">删除指定消费组中的某个消费者</td>
+</tr>
+<tr>
+<td style="text-align:left">xgroup</td>
+<td style="text-align:left">xgroup setid key id</td>
+<td style="text-align:left">修改指定消息的最大id</td>
+</tr>
+<tr>
+<td style="text-align:left">xreadgroup</td>
+<td style="text-align:left">xreadgroup group groupname consumer COUNT streams key</td>
+<td style="text-align:left">从队列中的消费组中创建消费者并消费数据（consumer不存在则创建）</td>
+</tr>
+</tbody>
+</table>
+<p>消息队列的使用</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; xadd topic:001 * name zhangfei age 23</span><br><span class="line">&quot;1591151905088-0&quot;</span><br><span class="line">127.0.0.1:6379&gt; xadd topic:001 * name zhaoyun age 24 name diaochan age 16</span><br><span class="line">&quot;1591151912113-0&quot;</span><br><span class="line">127.0.0.1:6379&gt; xrange topic:001 - +</span><br><span class="line">1) 1) &quot;1591151905088-0&quot;</span><br><span class="line">   2) 1) &quot;name&quot;</span><br><span class="line">      2) &quot;zhangfei&quot;</span><br><span class="line">      3) &quot;age&quot;</span><br><span class="line">      4) &quot;23&quot;</span><br><span class="line">2) 1) &quot;1591151912113-0&quot;</span><br><span class="line">   2) 1) &quot;name&quot;</span><br><span class="line">      2) &quot;zhaoyun&quot;</span><br><span class="line">      3) &quot;age&quot;</span><br><span class="line">       4) &quot;24&quot;</span><br><span class="line">       5) &quot;name&quot;</span><br><span class="line">       6) &quot;diaochan&quot;</span><br><span class="line">       7) &quot;age&quot;</span><br><span class="line">       8) &quot;16&quot;</span><br><span class="line">127.0.0.1:6379&gt; xread COUNT 1 streams topic:001 0</span><br><span class="line">1) 1) &quot;topic:001&quot;</span><br><span class="line">   2) 1) 1) &quot;1591151905088-0&quot;</span><br><span class="line">      2) 1) &quot;name&quot;</span><br><span class="line">         2) &quot;zhangfei&quot;</span><br><span class="line">         3) &quot;age&quot;</span><br><span class="line">         4) &quot;23&quot;</span><br><span class="line"></span><br><span class="line">#创建的group1</span><br><span class="line">127.0.0.1:6379&gt; xgroup create topic:001 group1 0</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"># 创建cus1加入到group1消费 没有被消费过的消息 消费第一条</span><br><span class="line">127.0.0.1:6379&gt; xreadgroup group group1 cus1 count 1 streams topic:001 &gt;</span><br><span class="line">1) 1) &quot;topic:001&quot;</span><br><span class="line">   2) 1) 1) &quot;1591151905088-0&quot;</span><br><span class="line">      2) 1) &quot;name&quot;</span><br><span class="line">         2) &quot;zhangfei&quot;</span><br><span class="line">         3) &quot;age&quot;</span><br><span class="line">         4) &quot;23&quot;</span><br><span class="line"></span><br><span class="line">#继续消费第二条</span><br><span class="line">127.0.0.1:6379&gt; xreadgroup group group1 cus1 count 1 streams topic:001 &gt;</span><br><span class="line">1) 1) &quot;topic:001&quot;</span><br><span class="line">   2) 1) 1) &quot;1591151912113-0&quot;</span><br><span class="line">      2) 1) &quot;name&quot;</span><br><span class="line">      2) &quot;zhaoyun&quot;</span><br><span class="line">      3) &quot;age&quot;</span><br><span class="line">      4) &quot;24&quot;</span><br><span class="line">      5) &quot;name&quot;</span><br><span class="line">      6) &quot;diaochan&quot;</span><br><span class="line">      7) &quot;age&quot;</span><br><span class="line">      8) &quot;16&quot;</span><br><span class="line"></span><br><span class="line">#没有可消费</span><br><span class="line">127.0.0.1:6379&gt; xreadgroup group group1 cus1 count 1 streams topic:001 &gt;</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/1823749959/">https://raoweijiapng.gitee.io/posts/1823749959/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/1127801151/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Redis客户端访问</div></div></a></div><div class="next-post pull-right"><a href="/posts/2317098143/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Redis发布与订阅以及事务</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">281</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">56</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">34</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E7%9A%84Key%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">Redis的Key的设计</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#string%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">string字符串类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#list%E5%88%97%E8%A1%A8%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">list列表类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#set%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">set集合类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sortedset%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">sortedset有序集合类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#hash%E7%B1%BB%E5%9E%8B%EF%BC%88%E6%95%A3%E5%88%97%E8%A1%A8%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">hash类型（散列表）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bitmap%E4%BD%8D%E5%9B%BE%E7%B1%BB%E5%9E%8B"><span class="toc-number">7.</span> <span class="toc-text">bitmap位图类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#geo%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">8.</span> <span class="toc-text">geo地理位置类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Z%E9%98%B6%E6%9B%B2%E7%BA%BF"><span class="toc-number">8.1.</span> <span class="toc-text">Z阶曲线</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Base32%E7%BC%96%E7%A0%81"><span class="toc-number">8.2.</span> <span class="toc-text">Base32编码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#geohash%E7%AE%97%E6%B3%95"><span class="toc-number">8.3.</span> <span class="toc-text">geohash算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#stream%E6%95%B0%E6%8D%AE%E6%B5%81%E7%B1%BB%E5%9E%8B"><span class="toc-number">9.</span> <span class="toc-text">stream数据流类型</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3733232463/" title="Redis慢查询日志与监视器">Redis慢查询日志与监视器</a><time datetime="2022-07-11T03:36:17.000Z" title="发表于 2022-07-11 11:36:17">2022-07-11</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2644259631/" title="Redis与Lua脚本">Redis与Lua脚本</a><time datetime="2022-07-08T11:27:00.000Z" title="发表于 2022-07-08 19:27:00">2022-07-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2317098143/" title="Redis发布与订阅以及事务">Redis发布与订阅以及事务</a><time datetime="2022-07-08T10:08:40.000Z" title="发表于 2022-07-08 18:08:40">2022-07-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1823749959/" title="Redis数据类型选择和应用场景">Redis数据类型选择和应用场景</a><time datetime="2022-07-08T08:34:50.000Z" title="发表于 2022-07-08 16:34:50">2022-07-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1127801151/" title="Redis客户端访问">Redis客户端访问</a><time datetime="2022-07-08T03:44:26.000Z" title="发表于 2022-07-08 11:44:26">2022-07-08</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
