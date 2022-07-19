@@ -1,0 +1,455 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Redis事件处理机制 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Redis服务器是典型的事件驱动系统。 MVC : java 上层调下层 事件驱动： js Redis将事件分为两大类：文件事件和时间事件。 文件事件 文件事件即Socket的读写事件，也就是IO事件。 file descriptor （文件描述符） 客户端的连接、命令请求、数据回复、连接断开 socket 套接字（socket）是一个抽象层，应用程序可以通过它发送或接收数据。 Reactor R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis事件处理机制">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/3234641583/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="Redis服务器是典型的事件驱动系统。 MVC : java 上层调下层 事件驱动： js Redis将事件分为两大类：文件事件和时间事件。 文件事件 文件事件即Socket的读写事件，也就是IO事件。 file descriptor （文件描述符） 客户端的连接、命令请求、数据回复、连接断开 socket 套接字（socket）是一个抽象层，应用程序可以通过它发送或接收数据。 Reactor R">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-07-14T10:01:18.000Z">
+<meta property="article:modified_time" content="2022-07-15T01:29:43.640Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/3234641583/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Redis事件处理机制',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-07-15 09:29:43'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">294</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">56</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">34</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Redis事件处理机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-14T10:01:18.000Z" title="发表于 2022-07-14 18:01:18">2022-07-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-07-15T01:29:43.640Z" title="更新于 2022-07-15 09:29:43">2022-07-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Redis/">Redis</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Redis事件处理机制"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>Redis服务器是典型的事件驱动系统。</p>
+<p>MVC : java 上层调下层</p>
+<p>事件驱动： js</p>
+<p>Redis将事件分为两大类：文件事件和时间事件。</p>
+<h2 id="文件事件">文件事件</h2>
+<p>文件事件即Socket的读写事件，也就是IO事件。 file descriptor （文件描述符）</p>
+<p>客户端的连接、命令请求、数据回复、连接断开</p>
+<h3 id="socket">socket</h3>
+<p>套接字（socket）是一个抽象层，应用程序可以通过它发送或接收数据。</p>
+<h3 id="Reactor">Reactor</h3>
+<p>Redis事件处理机制采用单线程的Reactor模式，属于I/O多路复用的一种常见模式。</p>
+<p>IO多路复用( I/O multiplexing ）指的通过单个线程管理多个Socket。</p>
+<p>Reactor pattern(反应器设计模式)是一种为处理并发服务请求，并将请求提交到 一个或者多个服务处理</p>
+<p>程序的事件设计模式。</p>
+<p>Reactor模式是事件驱动的</p>
+<p>有一个或多个并发输入源（文件事件）</p>
+<p>有一个Service Handler</p>
+<p>有多个Request Handlers</p>
+<p>这个Service Handler会同步的将输入的请求（Event）多路复用的分发给相应的Request Handler</p>
+  <img src="/posts/3234641583/1.jpg" class="post-image">
+  <br>
+  <img src="/posts/3234641583/2.jpg" class="post-image">
+  <br>
+<p>Handle：I/O操作的基本文件句柄，在linux下就是fd（文件描述符）</p>
+<p>Synchronous Event Demultiplexer ：同步事件分离器，阻塞等待Handles中的事件发生。（系统）</p>
+<p>Reactor: 事件分派器，负责事件的注册，删除以及对所有注册到事件分派器的事件进行监控， 当事件发生时会调用Event Handler接口来处理事件。</p>
+<p>Event Handler: 事件处理器接口，这里需要Concrete Event Handler来实现该接口</p>
+<p>Concrete Event Handler：真实的事件处理器，通常都是绑定了一个handle，实现对可读事件 进行读取或对可写事件进行写入的操作。</p>
+  <img src="/posts/3234641583/3.jpg" class="post-image">
+  <br>
+<p>主程序向事件分派器（Reactor）注册要监听的事件</p>
+<p>Reactor调用OS提供的事件处理分离器，监听事件（wait）</p>
+<p>当有事件产生时，Reactor将事件派给相应的处理器来处理 handle_event()</p>
+<h3 id="4种IO多路复用模型与选择">4种IO多路复用模型与选择</h3>
+<p>select，poll，epoll、kqueue都是IO多路复用的机制。</p>
+<p>I/O多路复用就是通过一种机制，一个进程可以监视多个描述符（socket），一旦某个描述符就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作。</p>
+<h4 id="select">select</h4>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int select (int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);</span><br></pre></td></tr></table></figure>
+<p>select 函数监视的文件描述符分3类，分别是: writefds, readfds, exceptfds</p>
+<p>调用后select函数会阻塞，直到有描述符就绪（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，可以通过遍历fd列表，来找到就绪的描述符。</p>
+<p>优点</p>
+<p>select目前几乎在所有的平台上支持，其良好跨平台支持也是它的一个优点。</p>
+<p>缺点</p>
+<p>单个进程打开的文件描述是有一定限制的，它由FD_SETSIZE设置，默认值是1024，采用数组存储另外在检查数组中是否有文件描述需要读写时，采用的是线性扫描的方法，即不管这些socket是不是活跃的，都轮询一遍，所以效率比较低</p>
+<h4 id="poll">poll</h4>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int poll (struct pollfd *fds, unsigned int nfds, int timeout);</span><br><span class="line"></span><br><span class="line">struct pollfd &#123;</span><br><span class="line">  int fd; //文件描述符</span><br><span class="line">  short events; //要监视的事件</span><br><span class="line">  short revents; //实际发生的事件</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>poll使用一个 pollfd的指针实现，pollfd结构包含了要监视的event和发生的event，不再使用select“参 数-值”传递的方式。</p>
+<p>优点：</p>
+<p>采样链表的形式存储，它监听的描述符数量没有限制，可以超过select默认限制的1024大小</p>
+<p>缺点：</p>
+<p>在检查链表中是否有文件描述需要读写时，采用的是线性扫描的方法，即不管这些socket是不是活跃的，都轮询一遍，所以效率比较低。</p>
+<h4 id="epoll">epoll</h4>
+<p>epoll是在linux2.6内核中提出的，是之前的select和poll的增强版本。</p>
+<p>相对于select和poll来说，epoll更加灵活，没有描述符限制。</p>
+<p>epoll使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int epoll_create(int size)</span><br></pre></td></tr></table></figure>
+<p>创建一个epoll的句柄。自从linux2.6.8之后，size参数是被忽略的。需要注意的是，当创建好epoll句柄后，它就是会占用一个fd值，在linux下如果查看/proc/进程id/fd/，是能够看到这个fd的，所以在使用完epoll后，必须调用close()关闭，否则可能导致fd被耗尽。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event)</span><br></pre></td></tr></table></figure>
+<p>poll的事件注册函数，它不同于select()是在监听事件时告诉内核要监听什么类型的事件，而是在这里先注册要监听的事件类型。</p>
+<p>第一个参数是epoll_create()的返回值。</p>
+<p>第二个参数表示动作，用三个宏来表示：</p>
+<p>EPOLL_CTL_ADD：注册新的fd到epfd中；</p>
+<p>EPOLL_CTL_MOD：修改已经注册的fd的监听事件；</p>
+<p>EPOLL_CTL_DEL：从epfd中删除一个fd；</p>
+<p>第三个参数是需要监听的fd。</p>
+<p>第四个参数是告诉内核需要监听什么事</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int epoll_wait(int epfd, struct epoll_event * events, int maxevents, int timeout);</span><br></pre></td></tr></table></figure>
+<p>等待内核返回的可读写事件，最多返回maxevents个事件。</p>
+<p>优点：</p>
+<p>epoll 没有最大并发连接的限制，上限是最大可以打开文件的数目，举个例子,在1GB内存的机器上大约是10万左右</p>
+<p>效率提升， epoll 最大的优点就在于它只管你“活跃”的连接 ，而跟连接总数无关，因此在实际的网络环境 中， epoll 的效率就会远远高于 select 和 poll 。</p>
+<p>epoll使用了共享内存，不用做内存拷贝</p>
+<h4 id="kqueue">kqueue</h4>
+<p>kqueue 是 unix 下的一个IO多路复用库。最初是2000年Jonathan Lemon在FreeBSD系统上开发的一个高性能的事件通知接口。注册一批socket描述符到 kqueue 以后，当其中的描述符状态发生变化时，kqueue 将一次性通知应用程序哪些描述符可读、可写或出错了。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">struct kevent &#123;</span><br><span class="line">  uintptr_t ident; //是事件唯一的 key，在 socket() 使用中，它是 socket 的 fd 句柄</span><br><span class="line">  int16_t filter; //是事件的类型(EVFILT_READ socket 可读事件EVFILT_WRITE socket 可 写事件)</span><br><span class="line">  uint16_t flags; //操作方式</span><br><span class="line">  uint32_t fflags;</span><br><span class="line">  intptr_t data; //数据长度</span><br><span class="line">  void *udata; //数据</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>优点：</p>
+<p>能处理大量数据，性能较高</p>
+<h3 id="文件事件分派器">文件事件分派器</h3>
+<p>在redis中，对于文件事件的处理采用了Reactor模型。采用的是epoll的实现方式。</p>
+  <img src="/posts/3234641583/4.jpg" class="post-image">
+  <br>
+<p>Redis在主循环中统一处理文件事件和时间事件，信号事件则由专门的handler来处理。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">void aeMain(aeEventLoop *eventLoop) &#123;</span><br><span class="line">  eventLoop-&gt;stop = 0;</span><br><span class="line">  while (!eventLoop-&gt;stop) &#123;</span><br><span class="line">    //循环监听事件</span><br><span class="line">    // 阻塞之前的处理</span><br><span class="line">    if (eventLoop-&gt;beforesleep != NULL) eventLoop-&gt;beforesleep(eventLoop);</span><br><span class="line">    // 事件处理，第二个参数决定处理哪类事件</span><br><span class="line">    aeProcessEvents(eventLoop, AE_ALL_EVENTS|AE_CALL_AFTER_SLEEP);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="事件处理器">事件处理器</h3>
+<ul>
+<li>
+<p>连接处理函数 acceptTCPHandler</p>
+<p>当客户端向 Redis 建立 socket时，aeEventLoop 会调用 acceptTcpHandler 处理函数，服务器会为每个链接创建一个 Client 对象，并创建相应文件事件来监听socket的可读事件，并指定事件处理函数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 当客户端建立链接时进行的eventloop处理函数 networking.c</span><br><span class="line">void acceptTcpHandler(aeEventLoop *el, int fd, void *privdata, int mask) &#123;</span><br><span class="line">  ....</span><br><span class="line">  // 层层调用，最后在anet.c 中 anetGenericAccept 方法中调用 socket 的 accept 方法</span><br><span class="line">  cfd = anetTcpAccept(server.neterr, fd, cip, sizeof(cip), &amp;cport);</span><br><span class="line">  if (cfd == ANET_ERR) &#123;</span><br><span class="line">    if (errno != EWOULDBLOCK) serverLog(LL_WARNING, &quot;Accepting client connection: %s&quot;, server.neterr);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  serverLog(LL_VERBOSE,&quot;Accepted %s:%d&quot;, cip, cport);</span><br><span class="line">  /*** 进行socket 建立连接后的处理 */</span><br><span class="line">  acceptCommonHandler(cfd,0,cip);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>请求处理函数 readQueryFromClient</p>
+<p>当客户端通过 socket 发送来数据后，Redis 会调用 readQueryFromClient 方法,readQueryFromClient方法会调用 read 方法从 socket 中读取数据到输入缓冲区中，然后判断其大小是否大于系统设置的client_max_querybuf_len，如果大于，则向 Redis返回错误信息，并关闭 client。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 处理从client中读取客户端的输入缓冲区内容。</span><br><span class="line">void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) &#123;</span><br><span class="line">  client *c = (client*) privdata; .</span><br><span class="line">  ...</span><br><span class="line">  if (c-&gt;querybuf_peak &lt; qblen) c-&gt;querybuf_peak = qblen;</span><br><span class="line">  c-&gt;querybuf = sdsMakeRoomFor(c-&gt;querybuf, readlen);</span><br><span class="line">  // 从 fd 对应的socket中读取到 client 中的 querybuf 输入缓冲区</span><br><span class="line">  nread = read(fd, c-&gt;querybuf+qblen, readlen);</span><br><span class="line">  ....</span><br><span class="line">  // 如果大于系统配置的最大客户端缓存区大小，也就是配置文件中的client-query-buffer- limit</span><br><span class="line">  if (sdslen(c-&gt;querybuf) &gt; server.client_max_querybuf_len) &#123;</span><br><span class="line">    sds ci = catClientInfoString(sdsempty(),c), bytes = sdsempty();</span><br><span class="line">    // 返回错误信息，并且关闭client</span><br><span class="line">    bytes = sdscatrepr(bytes,c-&gt;querybuf,64);</span><br><span class="line">    serverLog(LL_WARNING,&quot;Closing client that reached max query buffer length: %s (qbuf initial bytes: %s)&quot;, ci, bytes);</span><br><span class="line">    sdsfree(ci);</span><br><span class="line">    sdsfree(bytes);</span><br><span class="line">    freeClient(c);</span><br><span class="line">    return;</span><br><span class="line">  &#125;</span><br><span class="line">  if (!(c-&gt;flags &amp; CLIENT_MASTER)) &#123;</span><br><span class="line">    // processInputBuffer 处理输入缓冲区</span><br><span class="line">    processInputBuffer(c);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    // 如果client是master的连接</span><br><span class="line">    size_t prev_offset = c-&gt;reploff;</span><br><span class="line">    processInputBuffer(c);</span><br><span class="line">    // 判断是否同步偏移量发生变化，则通知到后续的slave</span><br><span class="line">    size_t applied = c-&gt;reploff - prev_offset;</span><br><span class="line">    if (applied) &#123;</span><br><span class="line">      replicationFeedSlavesFromMasterStream(server.slaves, c-&gt;pending_querybuf, applied);</span><br><span class="line">      sdsrange(c-&gt;pending_querybuf,applied,-1);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>命令回复处理器 sendReplyToClient</p>
+<p>sendReplyToClient函数是Redis的命令回复处理器，这个处理器负责将服务器执行命令后得到的命令回复通过套接字返回给客户端。</p>
+<p>1、将outbuf内容写入到套接字描述符并传输到客户端</p>
+<p>2、aeDeleteFileEvent 用于删除 文件写事件</p>
+</li>
+</ul>
+<h2 id="时间事件">时间事件</h2>
+<p>时间事件分为定时事件与周期事件：</p>
+<p>一个时间事件主要由以下三个属性组成：</p>
+<p>id(全局唯一id)</p>
+<p>when (毫秒时间戳，记录了时间事件的到达时间)</p>
+<p>timeProc（时间事件处理器，当时间到达时，Redis就会调用相应的处理器来处理事件）</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/* Time event structure ** 时间事件结构 */</span><br><span class="line">typedef struct aeTimeEvent &#123;</span><br><span class="line">  // 时间事件的唯一标识符</span><br><span class="line">  long id; /* time event identifier. */</span><br><span class="line">  // 事件的到达时间，存贮的是UNIX的时间戳</span><br><span class="line">  long when_sec; /* seconds */</span><br><span class="line">  long when_ms; /* milliseconds */</span><br><span class="line">  // 事件处理函数，当到达指定时间后调用该函数处理对应的问题</span><br><span class="line">  aeTimeProc *timeProc;</span><br><span class="line">  // 事件释放函数</span><br><span class="line">  aeEventFinalizerProc *finalizerProc;</span><br><span class="line">  // 多路复用库的私有数据</span><br><span class="line">  void *clientData;</span><br><span class="line">  // 指向下个时间事件结构，形成链表</span><br><span class="line">  struct aeTimeEvent *next;</span><br><span class="line">&#125; aeTimeEvent;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>serverCron</p>
+<p>时间事件的最主要的应用是在redis服务器需要对自身的资源与配置进行定期的调整，从而确保服务器的长久运行，这些操作由redis.c中的serverCron函数实现。</p>
+<p>该时间事件主要进行以下操作：</p>
+<ul>
+<li>
+<ol>
+<li>更新redis服务器各类统计信息，包括时间、内存占用、数据库占用等情况。</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>清理数据库中的过期键值对。</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>关闭和清理连接失败的客户端。</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>尝试进行aof和rdb持久化操作。</li>
+</ol>
+</li>
+<li>
+<ol start="5">
+<li>如果服务器是主服务器，会定期将数据向从服务器做同步操作。</li>
+</ol>
+</li>
+<li>
+<ol start="6">
+<li>如果处于集群模式，对集群定期进行同步与连接测试操作。</li>
+</ol>
+</li>
+</ul>
+<p>redis服务器开启后，就会周期性执行此函数，直到redis服务器关闭为止。默认每秒执行10次，平均100毫秒执行一次，可以在redis配置文件的hz选项，调整该函数每秒执行的次数。</p>
+</li>
+<li>
+<p>server.hz</p>
+<p>serverCron在一秒内执行的次数 ， 在redis/conf中可以配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hz 10 #100毫秒一次</span><br></pre></td></tr></table></figure>
+<p>比如：server.hz是100，也就是servreCron的执行间隔是10ms</p>
+</li>
+<li>
+<p>run_with_period</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define run_with_period(_ms_) \</span><br><span class="line">if ((_ms_ &lt;= 1000/server.hz) || !(server.cronloops%((_ms_)/(1000/server.hz))))</span><br></pre></td></tr></table></figure>
+<p>定时任务执行都是在10毫秒的基础上定时处理自己的任务(run_with_period(ms))，即调用run_with_period(ms)[ms是指多长时间执行一次，单位是毫秒]来确定自己是否需要执行。</p>
+<p>返回1表示执行。</p>
+<p>假如有一些任务需要每500ms执行一次，就可以在serverCron中用run_with_period(500)把每500ms需要执行一次的工作控制起来。</p>
+</li>
+</ul>
+<h3 id="定时事件">定时事件</h3>
+<p>定时事件：让一段程序在指定的时间之后执行一次</p>
+<p>aeTimeProc（时间处理器）的返回值是AE_NOMORE</p>
+<p>该事件在达到后删除，之后不会再重复。</p>
+<h3 id="周期性事件">周期性事件</h3>
+<p>周期性事件：让一段程序每隔指定时间就执行一次</p>
+<p>aeTimeProc（时间处理器）的返回值不是AE_NOMORE</p>
+<p>当一个时间事件到达后，服务器会根据时间处理器的返回值，对时间事件的 when 属性进行更新，让这个事件在一段时间后再次达到。</p>
+<p>serverCron就是一个典型的周期性事件。</p>
+<h2 id="aeEventLoop">aeEventLoop</h2>
+<p>aeEventLoop 是整个事件驱动的核心，Redis自己的事件处理机制</p>
+<p>它管理着文件事件表和时间事件列表，</p>
+<p>不断地循环处理着就绪的文件事件和到期的时间事件。</p>
+  <img src="/posts/3234641583/5.jpg" class="post-image">
+  <br>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">typedef struct aeEventLoop &#123;</span><br><span class="line">  //最大文件描述符的值</span><br><span class="line">  int maxfd; /* highest file descriptor currently registered */</span><br><span class="line">  //文件描述符的最大监听数</span><br><span class="line">  int setsize; /* max number of file descriptors tracked */</span><br><span class="line">  //用于生成时间事件的唯一标识id</span><br><span class="line">  long long timeEventNextId;</span><br><span class="line">  //用于检测系统时间是否变更（判断标准 now&lt;lastTime）</span><br><span class="line">  time_t lastTime; /* Used to detect system clock skew */</span><br><span class="line">  //注册的文件事件</span><br><span class="line">  aeFileEvent *events; /* Registered events */</span><br><span class="line">  //已就绪的事件</span><br><span class="line">  aeFiredEvent *fired; /* Fired events */</span><br><span class="line">  //注册要使用的时间事件</span><br><span class="line">  aeTimeEvent *timeEventHead;</span><br><span class="line">  //停止标志，1表示停止</span><br><span class="line">  int stop;</span><br><span class="line">  //这个是处理底层特定API的数据，对于epoll来说，该结构体包含了epoll fd和epoll_event</span><br><span class="line">  void *apidata; /* This is used for polling API specific data */</span><br><span class="line">  //在调用processEvent前（即如果没有事件则睡眠），调用该处理函数 a</span><br><span class="line">  eBeforeSleepProc *beforesleep;</span><br><span class="line">  //在调用aeApiPoll后，调用该函数</span><br><span class="line">  aeBeforeSleepProc *aftersleep;</span><br><span class="line">&#125; aeEventLoop;</span><br></pre></td></tr></table></figure>
+<h3 id="初始化">初始化</h3>
+<p>Redis 服务端在其初始化函数 initServer 中，会创建事件管理器 aeEventLoop 对象。</p>
+<p>函数 aeCreateEventLoop 将创建一个事件管理器，主要是初始化 aeEventLoop 的各个属性值，比如events 、 fired 、 timeEventHead 和 apidata ：</p>
+<ul>
+<li>
+<p>首先创建 aeEventLoop 对象。</p>
+</li>
+<li>
+<p>初始化注册的文件事件表、就绪文件事件表。 events 指针指向注册的文件事件表、 fired 指针指向就绪文件事件表。表的内容在后面添加具体事件时进行初变更。</p>
+</li>
+<li>
+<p>初始化时间事件列表，设置 timeEventHead 和 timeEventNextId 属性。</p>
+</li>
+<li>
+<p>调用 aeApiCreate 函数创建 epoll 实例，并初始化 apidata 。</p>
+</li>
+</ul>
+<h3 id="stop">stop</h3>
+<p>停止标志，1表示停止，初始化为0。</p>
+<h3 id="文件事件-events-fired-apidata">文件事件: events, fired, apidata</h3>
+<p>aeFileEvent 结构体为已经注册并需要监听的事件的结构体。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">typedef struct aeFileEvent &#123;</span><br><span class="line">  // 监听事件类型掩码，</span><br><span class="line">  // 值可以是 AE_READABLE 或 AE_WRITABLE ，</span><br><span class="line">  // 或者 AE_READABLE | AE_WRITABLE</span><br><span class="line">  int mask; /* one of AE_(READABLE|WRITABLE) */</span><br><span class="line">  // 读事件处理器</span><br><span class="line">  aeFileProc *rfileProc;</span><br><span class="line">  // 写事件处理器</span><br><span class="line">  aeFileProc *wfileProc;</span><br><span class="line">  // 多路复用库的私有数据</span><br><span class="line">  void *clientData;</span><br><span class="line">&#125; aeFileEvent;</span><br></pre></td></tr></table></figure>
+<p>aeFiredEvent：已就绪的文件事件</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">typedef struct aeFiredEvent &#123;</span><br><span class="line">  // 已就绪文件描述符</span><br><span class="line">  int fd;</span><br><span class="line">  // 事件类型掩码，</span><br><span class="line">  // 值可以是 AE_READABLE 或 AE_WRITABLE</span><br><span class="line">  // 或者是两者的或</span><br><span class="line">  int mask;</span><br><span class="line">&#125; aeFiredEvent;</span><br></pre></td></tr></table></figure>
+<p>apidata：</p>
+<p>在ae创建的时候，会被赋值为aeApiState结构体，结构体的定义如下：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">typedef struct aeApiState &#123;</span><br><span class="line">  // epoll_event 实例描述符</span><br><span class="line">  int epfd;</span><br><span class="line">  // 事件槽</span><br><span class="line">  struct epoll_event *events;</span><br><span class="line">&#125; aeApiState;</span><br></pre></td></tr></table></figure>
+<p>这个结构体是为了epoll所准备的数据结构。redis可以选择不同的io多路复用方法。因此 apidata 是个void类型，根据不同的io多路复用库来选择不同的实现</p>
+<p>ae.c里面使用如下的方式来决定系统使用的机制:</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#ifdef HAVE_EVPORT</span><br><span class="line">#include &quot;ae_evport.c&quot;</span><br><span class="line">#else</span><br><span class="line">  #ifdef HAVE_EPOLL</span><br><span class="line">  #include &quot;ae_epoll.c&quot;</span><br><span class="line">  #else</span><br><span class="line">    #ifdef HAVE_KQUEUE</span><br><span class="line">    #include &quot;ae_kqueue.c&quot;</span><br><span class="line">    #else</span><br><span class="line">      #include &quot;ae_select.c&quot;</span><br><span class="line">    #endif</span><br><span class="line">  #endif</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<h3 id="时间事件-timeEventHead-beforesleep-aftersleep">时间事件: timeEventHead, beforesleep, aftersleep</h3>
+<p>aeTimeEvent结构体为时间事件，Redis 将所有时间事件都放在一个无序链表中，每次 Redis 会遍历整个链表，查找所有已经到达的时间事件，并且调用相应的事件处理器。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">typedef struct aeTimeEvent &#123;</span><br><span class="line">  /* 全局唯一ID */</span><br><span class="line">  long long id;</span><br><span class="line">  /* time event identifier. */</span><br><span class="line">  /* 秒精确的UNIX时间戳，记录时间事件到达的时间*/</span><br><span class="line">  long when_sec;</span><br><span class="line">  /* seconds */ /</span><br><span class="line">  * 毫秒精确的UNIX时间戳，记录时间事件到达的时间*/</span><br><span class="line">  long when_ms;</span><br><span class="line">  /* milliseconds */ /* 时间处理器 */</span><br><span class="line">  aeTimeProc *timeProc;</span><br><span class="line">  /* 事件结束回调函数，析构一些资源*/</span><br><span class="line">  aeEventFinalizerProc *finalizerProc;</span><br><span class="line">  /* 私有数据 */</span><br><span class="line">  void *clientData;</span><br><span class="line">  /* 前驱节点 */</span><br><span class="line">  struct aeTimeEvent *prev;</span><br><span class="line">  /* 后继节点 */</span><br><span class="line">  struct aeTimeEvent *next;</span><br><span class="line">&#125; aeTimeEvent;</span><br></pre></td></tr></table></figure>
+<p>beforesleep 对象是一个回调函数，在 redis-server 初始化时已经设置好了。</p>
+<p>功能：</p>
+<p>检测集群状态</p>
+<p>随机释放已过期的键</p>
+<p>在数据同步复制阶段取消客户端的阻塞</p>
+<p>处理输入数据，并且同步副本信息</p>
+<p>处理非阻塞的客户端请求</p>
+<p>AOF持久化存储策略，类似于mysql的bin log</p>
+<p>使用挂起的输出缓冲区处理写入</p>
+<p><strong>aftersleep</strong>对象是一个回调函数，在IO多路复用与IO事件处理之间被调用</p>
+<h2 id="aeMain">aeMain</h2>
+<p>aeMain 函数其实就是一个封装的 while 循环，循环中的代码会一直运行直到 eventLoop 的 stop 被设置为1(true)。它会不停尝试调用 aeProcessEvents 对可能存在的多种事件进行处理，而aeProcessEvents 就是实际用于处理事件的函数。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">void aeMain(aeEventLoop *eventLoop) &#123;</span><br><span class="line">  eventLoop-&gt;stop = 0; while (!eventLoop-&gt;stop) &#123;</span><br><span class="line">    if (eventLoop-&gt;beforesleep != NULL) eventLoop-&gt;beforesleep(eventLoop);</span><br><span class="line">    aeProcessEvents(eventLoop, AE_ALL_EVENTS);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>aemain函数中，首先调用Beforesleep。这个方法在Redis每次进入sleep/wait去等待监听的端口发生I/O事件之前被调用。当有事件发生时，调用aeProcessEvent进行处理。</p>
+<h2 id="aeProcessEvent">aeProcessEvent</h2>
+<p>首先计算距离当前时间最近的时间事件，以此计算一个超时时间；</p>
+<p>然后调用 aeApiPoll 函数去等待底层的I/O多路复用事件就绪；</p>
+<p>aeApiPoll 函数返回之后，会处理所有已经产生文件事件和已经达到的时间事件。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">int aeProcessEvents(aeEventLoop *eventLoop, int flags) &#123;</span><br><span class="line">  //processed记录这次调度执行了多少事件</span><br><span class="line">  int processed = 0, numevents; if (!(flags &amp; AE_TIME_EVENTS) &amp;&amp; !(flags &amp; AE_FILE_EVENTS)) return 0;</span><br><span class="line">  if (eventLoop-&gt;maxfd != -1 || ((flags &amp; AE_TIME_EVENTS) &amp;&amp; !(flags &amp; AE_DONT_WAIT))) &#123;</span><br><span class="line">    int j;</span><br><span class="line">    aeTimeEvent *shortest = NULL;</span><br><span class="line">    struct timeval tv, *tvp;</span><br><span class="line">    if (flags &amp; AE_TIME_EVENTS &amp;&amp; !(flags &amp; AE_DONT_WAIT))</span><br><span class="line">      //获取最近将要发生的时间事件</span><br><span class="line">      shortest = aeSearchNearestTimer(eventLoop);</span><br><span class="line">    //计算aeApiPoll的超时时间</span><br><span class="line">    if (shortest) &#123;</span><br><span class="line">      long now_sec, now_ms;</span><br><span class="line">      //获取当前时间</span><br><span class="line">      aeGetTime(&amp;now_sec, &amp;now_ms);</span><br><span class="line">      tvp = &amp;tv;</span><br><span class="line">      //计算距离下一次发生时间时间的时间间隔</span><br><span class="line">      long long ms = (shortest-&gt;when_sec - now_sec)*1000 + shortest-&gt;when_ms - now_ms;</span><br><span class="line">      if (ms &gt; 0) &#123;</span><br><span class="line">        tvp-&gt;tv_sec = ms/1000;</span><br><span class="line">        tvp-&gt;tv_usec = (ms % 1000)*1000;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        tvp-&gt;tv_sec = 0;</span><br><span class="line">        tvp-&gt;tv_usec = 0;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      //没有时间事件</span><br><span class="line">      if (flags &amp; AE_DONT_WAIT) &#123;</span><br><span class="line">        //马上返回，不阻塞</span><br><span class="line">        tv.tv_sec = tv.tv_usec = 0;</span><br><span class="line">        tvp = &amp;tv;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        tvp = NULL; //阻塞到文件事件发生</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;//等待文件事件发生，tvp为超时时间，超时马上返回(tvp为0表示马上，为null表示阻塞到 事件发生)</span><br><span class="line"></span><br><span class="line">    numevents = aeApiPoll(eventLoop, tvp);</span><br><span class="line">    for (j = 0; j &lt; numevents; j++) &#123;</span><br><span class="line">      //处理触发的文件事件</span><br><span class="line">      aeFileEvent *fe = &amp;eventLoop-&gt;events[eventLoop-&gt;fired[j].fd];</span><br><span class="line">      int mask = eventLoop-&gt;fired[j].mask;</span><br><span class="line">      int fd = eventLoop-&gt;fired[j].fd;</span><br><span class="line">      int rfired = 0;</span><br><span class="line">      if (fe-&gt;mask &amp; mask &amp; AE_READABLE) &#123;</span><br><span class="line">        rfired = 1;//处理读事件</span><br><span class="line">        fe-&gt;rfileProc(eventLoop,fd,fe-&gt;clientData,mask);</span><br><span class="line">      &#125;</span><br><span class="line">      if (fe-&gt;mask &amp; mask &amp; AE_WRITABLE) &#123;</span><br><span class="line">        if (!rfired || fe-&gt;wfileProc != fe-&gt;rfileProc)</span><br><span class="line">          //处理写事件</span><br><span class="line">          fe-&gt;wfileProc(eventLoop,fd,fe-&gt;clientData,mask);</span><br><span class="line">      &#125;</span><br><span class="line">      processed++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  if (flags &amp; AE_TIME_EVENTS)</span><br><span class="line">    //时间事件调度和执行</span><br><span class="line">    processed += processTimeEvents(eventLoop);</span><br><span class="line">  return processed;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="计算最早时间事件的执行时间，获取文件时间可执行时间">计算最早时间事件的执行时间，获取文件时间可执行时间</h3>
+<p>aeSearchNearestTimer</p>
+<p>aeProcessEvents 都会先 计算最近的时间事件发生所需要等待的时间 ，然后调用 aeApiPoll 方法在这段时间中等待事件的发生，在这段时间中如果发生了文件事件，就会优先处理文件事件，否则就会一直等待，直到最近的时间事件需要触发</p>
+<h3 id="堵塞等待文件事件产生">堵塞等待文件事件产生</h3>
+<p>aeApiPoll 用到了epoll，select，kqueue和evport四种实现方式。</p>
+<h3 id="处理文件事件">处理文件事件</h3>
+<p>rfileProc 和 wfileProc 就是在文件事件被创建时传入的函数指针</p>
+<p>处理读事件：rfileProc</p>
+<p>处理写事件：wfileProc</p>
+<h3 id="处理时间事件">处理时间事件</h3>
+<p>processTimeEvents</p>
+<p>取得当前时间，循环时间事件链表，如果当前时间&gt;=预订执行时间，则执行时间处理函数。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/3234641583/">https://raoweijiapng.gitee.io/posts/3234641583/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/2318209346/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Redis通讯协议</div></div></a></div><div class="next-post pull-right"><a href="/posts/2759942170/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Redis企业架构设计</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">294</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">56</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">34</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">文件事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#socket"><span class="toc-number">1.1.</span> <span class="toc-text">socket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reactor"><span class="toc-number">1.2.</span> <span class="toc-text">Reactor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%E7%A7%8DIO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E6%A8%A1%E5%9E%8B%E4%B8%8E%E9%80%89%E6%8B%A9"><span class="toc-number">1.3.</span> <span class="toc-text">4种IO多路复用模型与选择</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#select"><span class="toc-number">1.3.1.</span> <span class="toc-text">select</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#poll"><span class="toc-number">1.3.2.</span> <span class="toc-text">poll</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#epoll"><span class="toc-number">1.3.3.</span> <span class="toc-text">epoll</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kqueue"><span class="toc-number">1.3.4.</span> <span class="toc-text">kqueue</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6%E5%88%86%E6%B4%BE%E5%99%A8"><span class="toc-number">1.4.</span> <span class="toc-text">文件事件分派器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">1.5.</span> <span class="toc-text">事件处理器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">时间事件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">定时事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%A8%E6%9C%9F%E6%80%A7%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">周期性事件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#aeEventLoop"><span class="toc-number">3.</span> <span class="toc-text">aeEventLoop</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">3.1.</span> <span class="toc-text">初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#stop"><span class="toc-number">3.2.</span> <span class="toc-text">stop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6-events-fired-apidata"><span class="toc-number">3.3.</span> <span class="toc-text">文件事件: events, fired, apidata</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6-timeEventHead-beforesleep-aftersleep"><span class="toc-number">3.4.</span> <span class="toc-text">时间事件: timeEventHead, beforesleep, aftersleep</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#aeMain"><span class="toc-number">4.</span> <span class="toc-text">aeMain</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#aeProcessEvent"><span class="toc-number">5.</span> <span class="toc-text">aeProcessEvent</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%80%E6%97%A9%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6%E7%9A%84%E6%89%A7%E8%A1%8C%E6%97%B6%E9%97%B4%EF%BC%8C%E8%8E%B7%E5%8F%96%E6%96%87%E4%BB%B6%E6%97%B6%E9%97%B4%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%97%B6%E9%97%B4"><span class="toc-number">5.1.</span> <span class="toc-text">计算最早时间事件的执行时间，获取文件时间可执行时间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%B5%E5%A1%9E%E7%AD%89%E5%BE%85%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6%E4%BA%A7%E7%94%9F"><span class="toc-number">5.2.</span> <span class="toc-text">堵塞等待文件事件产生</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6%E4%BA%8B%E4%BB%B6"><span class="toc-number">5.3.</span> <span class="toc-text">处理文件事件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E6%97%B6%E9%97%B4%E4%BA%8B%E4%BB%B6"><span class="toc-number">5.4.</span> <span class="toc-text">处理时间事件</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4201212584/" title="Redis高可用集群与分区">Redis高可用集群与分区</a><time datetime="2022-07-18T08:29:16.000Z" title="发表于 2022-07-18 16:29:16">2022-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3163887720/" title="Redis高可用哨兵模式">Redis高可用哨兵模式</a><time datetime="2022-07-18T02:34:50.000Z" title="发表于 2022-07-18 10:34:50">2022-07-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/786642445/" title="Redis高可用主从复制">Redis高可用主从复制</a><time datetime="2022-07-17T10:56:28.000Z" title="发表于 2022-07-17 18:56:28">2022-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3084363309/" title="阿里Redis使用手册">阿里Redis使用手册</a><time datetime="2022-07-17T09:21:04.000Z" title="发表于 2022-07-17 17:21:04">2022-07-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3484453823/" title="Redis企业分布式锁">Redis企业分布式锁</a><time datetime="2022-07-17T07:57:48.000Z" title="发表于 2022-07-17 15:57:48">2022-07-17</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
