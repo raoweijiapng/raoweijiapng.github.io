@@ -1,0 +1,786 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Kafka特性之一致性保证 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="概念    ⽔位标记  ⽔位或⽔印（watermark）⼀词，表示位置信息，即位移（offset）。Kafka源码中使⽤的名字是⾼⽔位，HW（high watermark）。    副本⻆⾊  Kafka分区使⽤多个副本(replica)提供⾼可⽤。    LEO和HW  每个分区副本对象都有两个重要的属性：LEO和HW。   LEO：即⽇志末端位移(log end offset)，记录了该副本⽇">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka特性之一致性保证">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/3523327287/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="概念    ⽔位标记  ⽔位或⽔印（watermark）⼀词，表示位置信息，即位移（offset）。Kafka源码中使⽤的名字是⾼⽔位，HW（high watermark）。    副本⻆⾊  Kafka分区使⽤多个副本(replica)提供⾼可⽤。    LEO和HW  每个分区副本对象都有两个重要的属性：LEO和HW。   LEO：即⽇志末端位移(log end offset)，记录了该副本⽇">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-07-29T03:32:29.000Z">
+<meta property="article:modified_time" content="2022-07-29T08:17:47.452Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/3523327287/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Kafka特性之一致性保证',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-07-29 16:17:47'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">329</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">35</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Kafka特性之一致性保证</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-07-29T03:32:29.000Z" title="发表于 2022-07-29 11:32:29">2022-07-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-07-29T08:17:47.452Z" title="更新于 2022-07-29 16:17:47">2022-07-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Kafka/">Kafka</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Kafka特性之一致性保证"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="概念">概念</h2>
+<ul>
+<li>
+<ol>
+<li>⽔位标记</li>
+</ol>
+<p>⽔位或⽔印（watermark）⼀词，表示位置信息，即位移（offset）。Kafka源码中使⽤的名字是⾼⽔位，HW（high watermark）。</p>
+</li>
+<li>
+<ol start="2">
+<li>副本⻆⾊</li>
+</ol>
+<p>Kafka分区使⽤多个副本(replica)提供⾼可⽤。</p>
+</li>
+<li>
+<ol start="3">
+<li>LEO和HW</li>
+</ol>
+<p>每个分区副本对象都有两个重要的属性：LEO和HW。</p>
+<ul>
+<li>
+<p>LEO：即⽇志末端位移(log end offset)，记录了该副本⽇志中下⼀条消息的位移值。如果LEO=10，那么表示该副本保存了10条消息，位移值范围是[0, 9]。另外，Leader LEO和Follower LEO的更新是有区别的。</p>
+</li>
+<li>
+<p>HW：即上⾯提到的⽔位值。对于同⼀个副本对象⽽⾔，其HW值不会⼤于LEO值。⼩于等于HW值的所有消息都被认为是“已备份”的（replicated）。Leader副本和Follower副本的HW更新不同。</p>
+</li>
+</ul>
+<img src="/posts/3523327287/6.jpg" class="post-image">
+<br>    
+<p>上图中，HW值是7，表示位移是 0~7 的所有消息都已经处于“已提交状态”（committed），⽽LEO值是14，8~13的消息就是未完全备份（fully replicated）——为什么没有14？LEO指向的是下⼀条消息到来时的位移。</p>
+<p>消费者⽆法消费分区下Leader副本中位移⼤于分区HW的消息。</p>
+</li>
+</ul>
+<h2 id="Follower副本何时更新LEO">Follower副本何时更新LEO</h2>
+<p>Follower副本不停地向Leader副本所在的broker发送FETCH请求，⼀旦获取消息后写⼊⾃⼰的⽇志中进⾏备份。</p>
+<p>那么Follower副本的LEO是何时更新的呢？⾸先我必须⾔明，Kafka有两套Follower副本LEO：</p>
+<ul>
+<li>
+<ol>
+<li>⼀套LEO保存在Follower副本所在Broker的副本管理机中；</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>另⼀套LEO保存在Leader副本所在Broker的副本管理机中。Leader副本机器上保存了所有的follower副本的LEO。</li>
+</ol>
+</li>
+</ul>
+<p>Kafka使⽤前者帮助Follower副本更新其HW值；利⽤后者帮助Leader副本更新其HW。</p>
+<ul>
+<li>
+<ol>
+<li>Follower副本的本地LEO何时更新？</li>
+</ol>
+<p>Follower副本的LEO值就是⽇志的LEO值，每当新写⼊⼀条消息，LEO值就会被更新。当Follower发送FETCH请求后，Leader将数据返回给Follower，此时Follower开始Log写数据，从⽽⾃动更新LEO值。</p>
+</li>
+<li>
+<ol start="2">
+<li>Leader端Follower的LEO何时更新？</li>
+</ol>
+<p>Leader端的Follower的LEO更新发⽣在Leader在处理Follower FETCH请求时。⼀旦Leader接收到Follower发送的FETCH请求，它先从Log中读取相应的数据，给Follower返回数据前，先更新Follower的LEO。</p>
+</li>
+</ul>
+<h2 id="Follower副本何时更新HW">Follower副本何时更新HW</h2>
+<p>Follower更新HW发⽣在其更新LEO之后，⼀旦Follower向Log写完数据，尝试更新⾃⼰的HW值。</p>
+<p>⽐较当前LEO值与FETCH响应中Leader的HW值，取两者的⼩者作为新的HW值。</p>
+<p>即：如果Follower的LEO⼤于Leader的HW，Follower HW值不会⼤于Leader的HW值。</p>
+<h2 id="Leader副本何时更新LEO">Leader副本何时更新LEO</h2>
+<p>和Follower更新LEO相同，Leader写Log时⾃动更新⾃⼰的LEO值。</p>
+<h2 id="Leader副本何时更新HW值">Leader副本何时更新HW值</h2>
+<p>Leader的HW值就是分区HW值，直接影响分区数据对消费者的可⻅性。</p>
+<p>Leader会尝试去更新分区HW的四种情况：</p>
+<ol>
+<li>
+<p>Follower副本成为Leader副本时：Kafka会尝试去更新分区HW。</p>
+</li>
+<li>
+<p>Broker崩溃导致副本被踢出ISR时：检查下分区HW值是否需要更新是有必要的。</p>
+</li>
+<li>
+<p>⽣产者向Leader副本写消息时：因为写⼊消息会更新Leader的LEO，有必要检查HW值是否需要更新。</p>
+</li>
+<li>
+<p>Leader处理Follower FETCH请求时：⾸先从Log读取数据，之后尝试更新分区HW值。</p>
+</li>
+</ol>
+<p>结论：</p>
+<p>当Kafka broker都正常⼯作时，分区HW值的更新时机有两个：</p>
+<ol>
+<li>
+<p>Leader处理PRODUCE请求时</p>
+</li>
+<li>
+<p>Leader处理FETCH请求时。</p>
+</li>
+</ol>
+<p>Leader如何更新⾃⼰的HW值？</p>
+<p>Leader broker上保存了⼀套Follower副本的LEO以及⾃⼰的LEO。当尝试确定分区HW时，它会选出所有满⾜条件的副本，⽐较它们的LEO(包括Leader的LEO)，并选择最⼩的LEO值作为HW值。</p>
+<p>需要满⾜的条件，（⼆选⼀）：</p>
+<ol>
+<li>
+<p>处于ISR中</p>
+</li>
+<li>
+<p>副本LEO落后于Leader LEO的时⻓不⼤于 <a target="_blank" rel="noopener" href="http://replica.lag.time.max.ms">replica.lag.time.max.ms</a> 参数值(默认是10s)</p>
+</li>
+</ol>
+<p>如果Kafka只判断第⼀个条件的话，确定分区HW值时就不会考虑这些未在ISR中的副本，但这些副本已经具备了  “⽴刻进⼊ISR”的资格，因此就可能出现分区HW值越过ISR中副本LEO的情况——不允许。因为分区HW定义就是ISR中所有副本LEO的最⼩值。</p>
+<h2 id="HW和LEO正常更新案例">HW和LEO正常更新案例</h2>
+<p>我们假设有⼀个topic，单分区，副本因⼦是2，即⼀个Leader副本和⼀个Follower副本。我们看下当producer发送⼀条消息时，broker端的副本到底会发⽣什么事情以及分区HW是如何被更新的。</p>
+<ul>
+<li>
+<ol>
+<li>初始状态</li>
+</ol>
+<p>初始时Leader和Follower的HW和LEO都是0(严格来说源代码会初始化LEO为-1，不过这不影响之后的讨论)。Leader中的Remote LEO指的就是Leader端保存的Follower LEO，也被初始化成0。此时，⽣产者没有发送任何消息给Leader，⽽Follower已经开始不断地给Leader发送FETCH请求了，但因为没有数据因此什么都不会发⽣。值得⼀提的是，Follower发送过来的FETCH请求因为⽆数据⽽暂时会被寄存到Leader端的purgatory中，待500ms( <a target="_blank" rel="noopener" href="http://replica.fetch.wait.max.ms">replica.fetch.wait.max.ms</a> 参数)超时后会强制完成。倘若在寄存期间⽣产者发来数据，则Kafka会⾃动唤醒该FETCH请求，让Leader继续处理。</p>
+<img src="/posts/3523327287/7.jpg" class="post-image">
+<br>  
+</li>
+<li>
+<ol start="2">
+<li>Follower发送FETCH请求在Leader处理完PRODUCE请求之后</li>
+</ol>
+<p>producer给该topic分区发送了⼀条消息，此时的状态如下图所示：</p>
+<img src="/posts/3523327287/8.jpg" class="post-image">
+<br>  
+<p>如上图所示，Leader接收到PRODUCE请求主要做两件事情：</p>
+<ol>
+<li>
+<p>把消息写⼊Log，同时⾃动更新Leader⾃⼰的LEO</p>
+</li>
+<li>
+<p>尝试更新Leader HW值。假设此时Follower尚未发送FETCH请求，Leader端保存的Remote LEO依然是0，因此Leader会⽐较它⾃⼰的LEO值和Remote LEO值，发现最⼩值是0，与当前HW值相同，故不会更新分区HW值（仍为0）</p>
+</li>
+</ol>
+<p>PRODUCE请求处理完成后各值如下，Leader端的HW值依然是0，⽽LEO是1，Remote LEO也是0。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>阶段</th>
+<th>旧值</th>
+<th>新值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leader LEO</td>
+<td>PRODUCE处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>写⼊了⼀条数据</td>
+</tr>
+<tr>
+<td>Remote LEO</td>
+<td>PRODUCE处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>还未Fetch</td>
+</tr>
+<tr>
+<td>Leader HW</td>
+<td>PRODUCE处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>min(LeaderLEO=1, RemoteLEO=0)=0</td>
+</tr>
+<tr>
+<td>Follower LEO</td>
+<td>PRODUCE处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>还未Fetch</td>
+</tr>
+<tr>
+<td>Follower HW</td>
+<td>PRODUCE处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>min(LeaderHW=0, FollowerLEO=0)=0</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<ol start="3">
+<li>follower发送了FETCH请求</li>
+</ol>
+<img src="/posts/3523327287/9.jpg" class="post-image">
+<br>  
+<p>本例中当follower发送FETCH请求时，Leader端的处理依次是：</p>
+<ul>
+<li>
+<ol>
+<li>读取Log数据</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>更新remote LEO = 0（为什么是0？ 因为此时Follower还没有写⼊这条消息。Leader如何确认Follower还未写⼊呢？这是通过Follower发来的FETCH请求中的Fetch offset来确定的）</li>
+</ol>
+</li>
+<li>
+<ol start="3">
+<li>尝试更新分区HW：此时Leader LEO = 1，Remote LEO = 0，故分区HW值= min(Leader LEO, Follower Remote LEO) = 0</li>
+</ol>
+</li>
+<li>
+<ol start="4">
+<li>把数据和当前分区HW值（依然是0）发送给Follower副本⽽Follower副本接收到FETCH Response后依次执⾏下列操作：</li>
+</ol>
+<ul>
+<li>
+<ol>
+<li>写⼊本地Log，同时更新Follower⾃⼰管理的 LEO为1</li>
+</ol>
+</li>
+<li>
+<ol start="2">
+<li>更新Follower HW：⽐较本地LEO和 FETCH Response 中的当前Leader HW值，取较⼩者，Follower HW = 0</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<p>此时，第⼀轮FETCH RPC结束，我们会发现虽然Leader和Follower都已经在Log中保存了这条消息，但分区HW值尚未被更新，仍为0。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>阶段</th>
+<th>旧值</th>
+<th>新值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leader LEO</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>写⼊了⼀条数据</td>
+</tr>
+<tr>
+<td>Remote LEO</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>第⼀次fetch中offset为0</td>
+</tr>
+<tr>
+<td>Leader HW</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>min(LeaderLEO=1,RemoteLEO=0)=0</td>
+</tr>
+<tr>
+<td>Follower LEO</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>同步了⼀条数据</td>
+</tr>
+<tr>
+<td>Follower HW</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>min(LeaderHW=0,FollowerLEO=1)=0</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Follower第⼆轮FETCH</p>
+<p>分区HW是在第⼆轮FETCH RPC中被更新的，如下图所示：</p>
+<img src="/posts/3523327287/10.jpg" class="post-image">
+<br>  
+<p>Follower发来了第⼆轮FETCH请求，Leader端接收到后仍然会依次执⾏下列操作：</p>
+<ol>
+<li>
+<p>读取Log数据</p>
+</li>
+<li>
+<p>更新Remote LEO = 1（这次为什么是1了？ 因为这轮FETCH RPC携带的fetch offset是1，那么为什么这轮携带的就是1了呢，因为上⼀轮结束后Follower LEO被更新为1了）</p>
+</li>
+<li>
+<p>尝试更新分区HW：此时leader LEO = 1，Remote LEO = 1，故分区HW值= min(Leader LEO, Follower Remote LEO) = 1。</p>
+</li>
+<li>
+<p>把数据（实际上没有数据）和当前分区HW值（已更新为1）发送给Follower副本作为Response</p>
+</li>
+</ol>
+<p>同样地，Follower副本接收到FETCH response后依次执⾏下列操作：</p>
+<ol>
+<li>
+<p>写⼊本地Log，当然没东⻄可写，Follower LEO也不会变化，依然是1。</p>
+</li>
+<li>
+<p>更新Follower HW：⽐较本地LEO和当前LeaderHW取⼩者。由于都是1，故更新follower HW = 1 。</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>阶段</th>
+<th>旧值</th>
+<th>新值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leader LEO</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>1</td>
+<td>1</td>
+<td>未写⼊新数据</td>
+</tr>
+<tr>
+<td>Remote LEO</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>第2次fetch中offset为1</td>
+</tr>
+<tr>
+<td>Leader HW</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>min(RemoteLEO,LeaderLEO)=1</td>
+</tr>
+<tr>
+<td>Follower LEO</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>1</td>
+<td>1</td>
+<td>未写⼊新数据</td>
+</tr>
+<tr>
+<td>Follower HW</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>第2次fetch resp中的LeaderHW和本地FollowerLEO都是1</td>
+</tr>
+</tbody>
+</table>
+<p>此时消息已经成功地被复制到Leader和Follower的Log中且分区HW是1，表明消费者能够消费offset = 0的消息。</p>
+</li>
+<li>
+<ol start="4">
+<li>FETCH请求保存在purgatory中，PRODUCE请求到来。</li>
+</ol>
+<p>当Leader⽆法⽴即满⾜FECTH返回要求的时候(⽐如没有数据)，那么该FETCH请求被暂存到Leader端的purgatory中（炼狱），待时机成熟尝试再次处理。Kafka不会⽆限期缓存，默认有个超时时间（500ms），⼀旦超时时间已过，则这个请求会被强制完成。当寄存期间还没超时，⽣产者发送PRODUCE请求从⽽使之满⾜了条件以致被唤醒。</p>
+<p>此时，Leader端处理流程如下：</p>
+<ol>
+<li>
+<p>Leader写Log（⾃动更新Leader LEO）</p>
+</li>
+<li>
+<p>尝试唤醒在purgatory中寄存的FETCH请求</p>
+</li>
+<li>
+<p>尝试更新分区HW</p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="HW和LEO异常案例">HW和LEO异常案例</h2>
+<p>Kafka使⽤HW值来决定副本备份的进度，⽽HW值的更新通常需要额外⼀轮FETCH RPC才能完成。但这种设计是有问题的，可能引起的问题包括：</p>
+<ol>
+<li>
+<p>备份数据丢失</p>
+</li>
+<li>
+<p>备份数据不⼀致</p>
+</li>
+</ol>
+<ul>
+<li>
+<ol>
+<li>数据丢失</li>
+</ol>
+<p>使⽤HW值来确定备份进度时其值的更新是在下⼀轮RPC中完成的。如果Follower副本在标记上⽅的的第⼀步与第⼆步之间发⽣崩溃，那么就有可能造成数据的丢失。</p>
+<img src="/posts/3523327287/11.jpg" class="post-image">
+<br>  
+<p>上图中有两个副本：A和B。开始状态是A是Leader。</p>
+<p>假设⽣产者 min.insync.replicas 为1，那么当⽣产者发送两条消息给A后，A写⼊Log，此时Kafka会通知⽣产者这两条消息写⼊成功。</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>阶段</th>
+<th>旧值</th>
+<th>新值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Leader LEO</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>写⼊了⼀条数据</td>
+</tr>
+<tr>
+<td>Remote LEO</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>第⼀次fetch中offset为0</td>
+</tr>
+<tr>
+<td>Leader HW</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>min(LeaderLEO=1,FollowerLEO=0)=0</td>
+</tr>
+<tr>
+<td>Follower LEO</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>同步了⼀条数据</td>
+</tr>
+<tr>
+<td>Follower HW</td>
+<td>PRODUCE和Follower FETCH处理完成</td>
+<td>0</td>
+<td>0</td>
+<td>min(LeaderHW=0, FollowerLEO=1)=0</td>
+</tr>
+<tr>
+<td>Leader LEO</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>1</td>
+<td>2</td>
+<td>写⼊了第⼆条数据</td>
+</tr>
+<tr>
+<td>Remote LEO</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>第2次fetch中offset为1</td>
+</tr>
+<tr>
+<td>Leader HW</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>min(RemoteLEO=1,LeaderLEO=2)=1</td>
+</tr>
+<tr>
+<td>Follower LEO</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>1</td>
+<td>2</td>
+<td>写⼊了第⼆条数据</td>
+</tr>
+<tr>
+<td>Follower HW</td>
+<td>第⼆次Follower FETCH处理完成</td>
+<td>0</td>
+<td>1</td>
+<td>min(LeaderHW=1,FollowerLEO=2)=1</td>
+</tr>
+<tr>
+<td>Leader LEO</td>
+<td>第三次Follower FETCH处理完成</td>
+<td>2</td>
+<td>2</td>
+<td>未写⼊新数据</td>
+</tr>
+<tr>
+<td>Remote LEO</td>
+<td>第三次Follower FETCH处理完成</td>
+<td>1</td>
+<td>2</td>
+<td>第3次fetch中offset为2</td>
+</tr>
+<tr>
+<td>Leader HW</td>
+<td>第三次Follower FETCH处理完成</td>
+<td>1</td>
+<td>2</td>
+<td>min(RemoteLEO=2,LeaderLEO)=2</td>
+</tr>
+<tr>
+<td>Follower LEO</td>
+<td>第三次Follower FETCH处理完成</td>
+<td>2</td>
+<td>2</td>
+<td>未写⼊新数据</td>
+</tr>
+<tr>
+<td>Follower HW</td>
+<td>第三次Follower FETCH处理完成</td>
+<td>1</td>
+<td>2</td>
+<td>第3次fetch resp中的LeaderHW和本地FollowerLEO都是2</td>
+</tr>
+</tbody>
+</table>
+<p>但是在broker端，Leader和Follower的Log虽都写⼊了2条消息且分区HW已经被更新到2，但Follower HW尚未被更新还是1，也就是上⾯标记的第⼆步尚未执⾏，表中最后⼀条未执⾏。</p>
+<p>倘若此时副本B所在的broker宕机，那么重启后B会⾃动把LEO调整到之前的HW值1，故副本B会做⽇志截断(log truncation)，将offset = 1的那条消息从log中删除，并调整LEO = 1。此时follower副本底层log中就只有⼀条消息，即offset = 0的消息！</p>
+<p>B重启之后需要给A发FETCH请求，但若A所在broker机器在此时宕机，那么Kafka会令B成为新的Leader，⽽当A重启回来后也会执⾏⽇志截断，将HW调整回1。这样，offset=1的消息就从两个副本的log中被删除，也就是说这条已经被⽣产者认为发送成功的数据丢失。</p>
+<p>丢失数据的前提是 min.insync.replicas=1 时，⼀旦消息被写⼊Leader端Log即被认为是 committed 。<strong>延迟⼀轮 FETCH RPC 更新HW值的设计使follower HW值是异步延迟更新</strong>，若在这个过程中Leader发⽣变更，那么成为新Leader的Follower的HW值就有可能是过期的，导致⽣产者本是成功提交的消息被删除。</p>
+</li>
+<li>
+<ol start="2">
+<li>Leader和Follower数据离散</li>
+</ol>
+<p>除了可能造成的数据丢失以外，该设计还会造成Leader的Log和Follower的Log数据不⼀致。</p>
+<p>如Leader端记录序列：m1,m2,m3,m4,m5,…；Follower端序列可能是m1,m3,m4,m5,…。</p>
+<img src="/posts/3523327287/12.jpg" class="post-image">
+<br>  
+<p>假设：A是Leader，A的Log写⼊了2条消息，但B的Log只写了1条消息。分区HW更新到2，但B的HW还是1，同时⽣产者 min.insync.replicas 仍然为1。</p>
+<p>假设A和B所在Broker同时宕机，B先重启回来，因此B成为Leader，分区HW = 1。假设此时⽣产者发送了第3条消息(红⾊表示)给B，于是B的log中offset = 1的消息变成了红框表示的消息，同时分区HW更新到2（A还没有回来，就B⼀个副本，故可以直接更新HW⽽不⽤理会A）之后A重启回来，需要执⾏⽇志截断，但发现此时分区HW=2⽽A之前的HW值也是2，故不做任何调整。此后A和B将以这种状态继续正常⼯作。</p>
+<p>显然，这种场景下，A和B的Log中保存在offset = 1的消息是不同的记录，从⽽引发不⼀致的情形出现。</p>
+</li>
+</ul>
+<h2 id="Leader-Epoch使⽤">Leader Epoch使⽤</h2>
+<h3 id="Kafka解决⽅案">Kafka解决⽅案</h3>
+<p>造成上述两个问题的根本原因在于</p>
+<ol>
+<li>
+<p>HW值被⽤于衡量副本备份的成功与否。</p>
+</li>
+<li>
+<p>在出现失败重启时作为⽇志截断的依据。</p>
+</li>
+</ol>
+<p>但HW值的更新是异步延迟的，特别是需要额外的FETCH请求处理流程才能更新，故这中间发⽣的任何崩溃都可能导致HW值的过期。</p>
+<p>Kafka从0.11引⼊了 leader epoch 来取代HW值。Leader端使⽤内存保存Leader的epoch信息，即使出现上⾯的两个场景也能规避这些问题。</p>
+<p>所谓Leader epoch实际上是⼀对值：&lt;epoch, offset&gt;：</p>
+<ol>
+<li>
+<p>epoch表示Leader的版本号，从0开始，Leader变更过1次，epoch+1</p>
+</li>
+<li>
+<p>offset对应于该epoch版本的Leader写⼊第⼀条消息的offset。因此假设有两对值：</p>
+</li>
+</ol>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;0, 0&gt;</span><br><span class="line">&lt;1, 120&gt;</span><br></pre></td></tr></table></figure>
+<p>则表示第⼀个Leader从位移0开始写⼊消息；共写了120条[0, 119]；⽽第⼆个Leader版本号是1，从位移120处开始写⼊消息。</p>
+<ol>
+<li>
+<p>Leader broker中会保存这样的⼀个缓存，并定期地写⼊到⼀个 checkpoint ⽂件中。</p>
+</li>
+<li>
+<p>当Leader写Log时它会尝试更新整个缓存：如果这个Leader⾸次写消息，则会在缓存中增加⼀个条⽬；否则就不做更新。</p>
+</li>
+<li>
+<p>每次副本变为Leader时会查询这部分缓存，获取出对应Leader版本的位移，则不会发⽣数据不⼀致和丢失的情况。</p>
+</li>
+</ol>
+<h3 id="规避数据丢失">规避数据丢失</h3>
+  <img src="/posts/3523327287/13.jpg" class="post-image">
+  <br>
+<p>只需要知道每个副本都引⼊了新的状态来保存⾃⼰当leader时开始写⼊的第⼀条消息的offset以及leader版本。这样在恢复的时候完全使⽤这些信息⽽⾮HW来判断是否需要截断⽇志。</p>
+<h3 id="规避数据不⼀致">规避数据不⼀致</h3>
+  <img src="/posts/3523327287/14.jpg" class="post-image">
+  <br>
+<p>依靠Leader epoch的信息可以有效地规避数据不⼀致的问题。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/3523327287/">https://raoweijiapng.gitee.io/posts/3523327287/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/1649525419/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Kafka特性之控制器和可靠性保证</div></div></a></div><div class="next-post pull-right"><a href="/posts/1714705542/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Kafka特性之消息重复解决和consumer-offsets</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">329</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">35</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Follower%E5%89%AF%E6%9C%AC%E4%BD%95%E6%97%B6%E6%9B%B4%E6%96%B0LEO"><span class="toc-number">2.</span> <span class="toc-text">Follower副本何时更新LEO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Follower%E5%89%AF%E6%9C%AC%E4%BD%95%E6%97%B6%E6%9B%B4%E6%96%B0HW"><span class="toc-number">3.</span> <span class="toc-text">Follower副本何时更新HW</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leader%E5%89%AF%E6%9C%AC%E4%BD%95%E6%97%B6%E6%9B%B4%E6%96%B0LEO"><span class="toc-number">4.</span> <span class="toc-text">Leader副本何时更新LEO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leader%E5%89%AF%E6%9C%AC%E4%BD%95%E6%97%B6%E6%9B%B4%E6%96%B0HW%E5%80%BC"><span class="toc-number">5.</span> <span class="toc-text">Leader副本何时更新HW值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HW%E5%92%8CLEO%E6%AD%A3%E5%B8%B8%E6%9B%B4%E6%96%B0%E6%A1%88%E4%BE%8B"><span class="toc-number">6.</span> <span class="toc-text">HW和LEO正常更新案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HW%E5%92%8CLEO%E5%BC%82%E5%B8%B8%E6%A1%88%E4%BE%8B"><span class="toc-number">7.</span> <span class="toc-text">HW和LEO异常案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Leader-Epoch%E4%BD%BF%E2%BD%A4"><span class="toc-number">8.</span> <span class="toc-text">Leader Epoch使⽤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Kafka%E8%A7%A3%E5%86%B3%E2%BD%85%E6%A1%88"><span class="toc-number">8.1.</span> <span class="toc-text">Kafka解决⽅案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E9%81%BF%E6%95%B0%E6%8D%AE%E4%B8%A2%E5%A4%B1"><span class="toc-number">8.2.</span> <span class="toc-text">规避数据丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E9%81%BF%E6%95%B0%E6%8D%AE%E4%B8%8D%E2%BC%80%E8%87%B4"><span class="toc-number">8.3.</span> <span class="toc-text">规避数据不⼀致</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2010528534/" title="Kafka源码之异步发送模式">Kafka源码之异步发送模式</a><time datetime="2022-08-02T09:30:55.000Z" title="发表于 2022-08-02 17:30:55">2022-08-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3975124759/" title="Kafka源码之同步发送模式">Kafka源码之同步发送模式</a><time datetime="2022-08-02T09:04:54.000Z" title="发表于 2022-08-02 17:04:54">2022-08-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3032297192/" title="Kafka源码之组消费模式">Kafka源码之组消费模式</a><time datetime="2022-08-02T08:17:13.000Z" title="发表于 2022-08-02 16:17:13">2022-08-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1225708635/" title="Kafka源码之分区消费模式">Kafka源码之分区消费模式</a><time datetime="2022-08-02T08:01:40.000Z" title="发表于 2022-08-02 16:01:40">2022-08-02</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/369058944/" title="Kafka源码之DynamicConfigManager">Kafka源码之DynamicConfigManager</a><time datetime="2022-08-02T07:35:18.000Z" title="发表于 2022-08-02 15:35:18">2022-08-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
