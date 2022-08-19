@@ -1,0 +1,477 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>会员活跃度分析之日志数据采集 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="需求分析 会员数据是后期营销的很重要的数据。网店会专门针对会员进行一系列营销活动。 电商会员一般门槛较低，注册网站即可加入。有些电商平台的高级会员具有时效性，需要购买VIP会员卡或一年内消费额达到多少才能成为高级会员。   计算指标： 新增会员：每日新增会员数 活跃会员：每日，每周，每月的活跃会员数 会员留存：1日，2日，3日会员留存数、1日，2日，3日会员留存率   指标口径业务逻辑： 会员：以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="会员活跃度分析之日志数据采集">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/1940892717/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="需求分析 会员数据是后期营销的很重要的数据。网店会专门针对会员进行一系列营销活动。 电商会员一般门槛较低，注册网站即可加入。有些电商平台的高级会员具有时效性，需要购买VIP会员卡或一年内消费额达到多少才能成为高级会员。   计算指标： 新增会员：每日新增会员数 活跃会员：每日，每周，每月的活跃会员数 会员留存：1日，2日，3日会员留存数、1日，2日，3日会员留存率   指标口径业务逻辑： 会员：以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-08-05T02:49:01.000Z">
+<meta property="article:modified_time" content="2022-08-10T09:38:46.456Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/1940892717/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '会员活跃度分析之日志数据采集',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-10 17:38:46'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">360</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">41</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">会员活跃度分析之日志数据采集</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-05T02:49:01.000Z" title="发表于 2022-08-05 10:49:01">2022-08-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-08-10T09:38:46.456Z" title="更新于 2022-08-10 17:38:46">2022-08-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/">数据仓库</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>22分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="会员活跃度分析之日志数据采集"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="需求分析-2">需求分析</h2>
+<p>会员数据是后期营销的很重要的数据。网店会专门针对会员进行一系列营销活动。</p>
+<p>电商会员一般门槛较低，注册网站即可加入。有些电商平台的高级会员具有时效性，需要购买VIP会员卡或一年内消费额达到多少才能成为高级会员。</p>
+<ul>
+<li>
+<p><strong>计算指标：</strong></p>
+<p>新增会员：每日新增会员数</p>
+<p>活跃会员：每日，每周，每月的活跃会员数</p>
+<p>会员留存：1日，2日，3日会员留存数、1日，2日，3日会员留存率</p>
+</li>
+<li>
+<p><strong>指标口径业务逻辑：</strong></p>
+<p><strong>会员</strong>：以设备为判断标准，每个独立设备认为是一个会员。Android系统通常根据IMEI号，IOS系统通常根据OpenUDID 来标识一个独立会员，每部移动设备是一个会员；</p>
+<p><strong>活跃会员</strong>：打开应用的会员即为活跃会员，暂不考虑用户的实际使用情况。一台设备每天多次打开计算为一个活跃会员。在自然周内启动过应用的会员为周活跃会员，同理还有月活跃会员；</p>
+<p><strong>会员活跃率</strong>：一天内活跃会员数与总会员数的比率是日活跃率；还有周活跃率（自然周）、月活跃率（自然月）；</p>
+<p><strong>新增会员</strong>：第一次使用应用的用户，定义为新增会员；卸载再次安装的设备，不会被算作一次新增。新增用户包括日新增会员、周（自然周）新增会员、月（自然月）新增会员；</p>
+<p><strong>留存会员与留存率</strong>：某段时间的新增会员，经过一段时间后，仍继续使用应用认为是留存会员；这部分会员占当时新增会员的比例为留存率。</p>
+</li>
+</ul>
+<p>已知条件：</p>
+<p>1、明确了需求</p>
+<p>2、输入：启动日志（OK）、事件日志</p>
+<p>3、输出：新增会员、活跃会员、留存会员</p>
+<p>4、日志文件、ODS、DWD、DWS、ADS（输出）</p>
+<p>下一步作什么？</p>
+<p>数据采集：日志文件 =&gt; Flume =&gt; HDFS =&gt; ODS</p>
+<h2 id="日志数据采集">日志数据采集</h2>
+<ul>
+<li>
+<p>原始日志数据（一条启动日志）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2020-07-30 14:18:47.339 [main] INFO com.lagou.ecommerce.AppStart - &#123;&quot;app_active&quot;: &#123;&quot;name&quot;:&quot;app_active&quot;,&quot;json&quot;: &#123;&quot;entry&quot;:&quot;1&quot;,&quot;action&quot;:&quot;1&quot;,&quot;error_code&quot;:&quot;0&quot;&#125;,&quot;time&quot;:159611188852 9&#125;,&quot;attr&quot;:&#123;&quot;area&quot;:&quot;泰安&quot;,&quot;uid&quot;:&quot;2F10092A9&quot;,&quot;app_v&quot;:&quot;1.1.13&quot;,&quot;event_type&quot;:&quot;common&quot;,&quot;d evice_id&quot;:&quot;1FB872- 9A1009&quot;,&quot;os_type&quot;:&quot;4.7.3&quot;,&quot;channel&quot;:&quot;DK&quot;,&quot;language&quot;:&quot;chinese&quot;,&quot; brand&quot;:&quot;iphone-9&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>数据采集的流程</p>
+<img src="/posts/1940892717/1.jpg" class="post-image">
+<br>
+<p>选择Flume作为采集日志数据的工具：</p>
+<p>Flume 1.6, 无论是Spooling Directory Source、Exec Source均不能很好的满足动态实时收集的需求</p>
+<p>Flume 1.8+, 提供了一个非常好用的 Taildir Source,使用该source，可以监控多个目录，对目录中新写入的数据进行实时采集</p>
+</li>
+</ul>
+<h3 id="taildir-source配置">taildir source配置</h3>
+<p>taildir Source的特点：</p>
+<ul>
+<li>
+<p>使用正则表达式匹配目录中的文件名</p>
+</li>
+<li>
+<p>监控的文件中，一旦有数据写入，Flume就会将信息写入到指定的Sink</p>
+</li>
+<li>
+<p>高可靠，不会丢失数据</p>
+</li>
+<li>
+<p>不会对跟踪文件有任何处理，不会重命名也不会删除</p>
+</li>
+<li>
+<p>不支持Windows，不能读二进制文件。支持按行读取文本文件</p>
+</li>
+</ul>
+<p>taildir source配置:</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a1.sources.r1.type = TAILDIR</span><br><span class="line">a1.sources.r1.positionFile = /data/lagoudw/conf/startlog_position.json</span><br><span class="line">a1.sources.r1.filegroups = f1</span><br><span class="line">a1.sources.r1.filegroups.f1 = /data/lagoudw/logs/start/.*log</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>positionFile</p>
+<p>配置检查点文件的路径，检查点文件会以 json 格式保存已经读取文件的位置，解决断点续传的问题</p>
+</li>
+<li>
+<p>filegroups</p>
+<p>指定filegroups，可以有多个，以空格分隔（taildir source可同时监控多个目录中的文件）</p>
+</li>
+<li>
+<p>filegroups</p>
+<p>配置每个filegroup的文件绝对路径，文件名可以用正则表达式匹配</p>
+</li>
+</ul>
+<h3 id="hdfs-sink配置">hdfs sink配置</h3>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">a1.sinks.k1.type = hdfs</span><br><span class="line">a1.sinks.k1.hdfs.path = /user/data/logs/start/%Y-%m-%d/</span><br><span class="line">a1.sinks.k1.hdfs.filePrefix = startlog.</span><br><span class="line">a1.sinks.k1.hdfs.fileType = DataStream</span><br><span class="line"></span><br><span class="line"># 配置文件滚动方式（文件大小32M）</span><br><span class="line">a1.sinks.k1.hdfs.rollSize = 33554432</span><br><span class="line">a1.sinks.k1.hdfs.rollCount = 0</span><br><span class="line">a1.sinks.k1.hdfs.rollInterval = 0</span><br><span class="line">a1.sinks.k1.hdfs.idleTimeout = 0</span><br><span class="line">a1.sinks.k1.hdfs.minBlockReplicas = 1</span><br><span class="line"></span><br><span class="line"># 向hdfs上刷新的event的个数</span><br><span class="line">a1.sinks.k1.hdfs.batchSize = 100</span><br><span class="line"></span><br><span class="line"># 使用本地时间</span><br><span class="line">a1.sinks.k1.hdfs.useLocalTimeStamp = true</span><br></pre></td></tr></table></figure>
+<p>HDFS Sink 都会采用滚动生成文件的方式，滚动生成文件的策略有：</p>
+<ul>
+<li>
+<p>基于时间。hdfs.rollInterval 30秒</p>
+</li>
+<li>
+<p>基于文件大小。hdfs.rollSize 1024字节</p>
+</li>
+<li>
+<p>基于event数量。hdfs.rollCount 10个event</p>
+</li>
+<li>
+<p>基于文件空闲时间。hdfs.idleTimeout 0 0，禁用</p>
+</li>
+<li>
+<p>minBlockReplicas。默认值与 hdfs 副本数一致。设为1是为了让 Flume 感知不到hdfs的块复制，此时其他的滚动方式配置（时间间隔、文件大小、events数量）才不会受影响</p>
+</li>
+</ul>
+<h3 id="Agent的配置">Agent的配置</h3>
+<p>创建/data/lagoudw/conf/flume-log2hdfs1.conf</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"># taildir source</span><br><span class="line">a1.sources.r1.type = TAILDIR</span><br><span class="line">a1.sources.r1.positionFile = /data/lagoudw/conf/startlog_position.json</span><br><span class="line">a1.sources.r1.filegroups = f1</span><br><span class="line">a1.sources.r1.filegroups.f1 = /data/lagoudw/logs/start/.*log</span><br><span class="line"></span><br><span class="line"># memorychannel</span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 100000</span><br><span class="line">a1.channels.c1.transactionCapacity = 2000</span><br><span class="line"></span><br><span class="line"># hdfs sink</span><br><span class="line">a1.sinks.k1.type = hdfs</span><br><span class="line">a1.sinks.k1.hdfs.path = /user/data/logs/start/%Y-%m-%d/</span><br><span class="line">a1.sinks.k1.hdfs.filePrefix = startlog.</span><br><span class="line">a1.sinks.k1.hdfs.fileType = DataStream</span><br><span class="line"></span><br><span class="line"># 配置文件滚动方式（文件大小32M）</span><br><span class="line">a1.sinks.k1.hdfs.rollSize = 33554432</span><br><span class="line">a1.sinks.k1.hdfs.rollCount = 0</span><br><span class="line">a1.sinks.k1.hdfs.rollInterval = 0</span><br><span class="line">a1.sinks.k1.hdfs.idleTimeout = 0</span><br><span class="line">a1.sinks.k1.hdfs.minBlockReplicas = 1</span><br><span class="line"></span><br><span class="line"># 向hdfs上刷新的event的个数</span><br><span class="line">a1.sinks.k1.hdfs.batchSize = 1000</span><br><span class="line"></span><br><span class="line"># 使用本地时间</span><br><span class="line">a1.sinks.k1.hdfs.useLocalTimeStamp = true</span><br><span class="line"></span><br><span class="line"># Bind the source and sink to the channel</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+<h3 id="Flume的优化配置">Flume的优化配置</h3>
+<ul>
+<li>
+<p>1、启动agent</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flume-ng agent --conf-file /data/lagoudw/conf/flume- log2hdfs1.conf -name a1 -Dflum e.roog.logger=INFO,console</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>2、向 /data/lagoudw/logs/ 目录中放入日志文件，报错：</p>
+<p>java.lang.OutOfMemoryError: GC overhead limit exceeded</p>
+<img src="/posts/1940892717/2.jpg" class="post-image">
+<br>
+<p>缺省情况下 Flume jvm堆最大分配20m，这个值太小，需要调整。</p>
+</li>
+<li>
+<p>3、解决方案：在 $FLUME_HOME/conf/flume-env.sh 中增加以下内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_OPTS=&quot;-Xms4000m -Xmx4000m - Dcom.sun.management.jmxremote&quot;</span><br><span class="line"></span><br><span class="line"># 要想使配置文件生效，还要在命令行中指定配置文件目录</span><br><span class="line">flume-ng agent --conf /opt/apps/flume-1.9/conf --conf-file /data/lagoudw/conf/flume-log2hdfs1.conf -name a1 - Dflume.root.logger=INFO,console</span><br><span class="line"></span><br><span class="line">flume-ng agent --conf-file /data/lagoudw/conf/flume- log2hdfs1.conf -name a1 -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure>
+<p>Flume内存参数设置及优化：</p>
+<ul>
+<li>
+<p>根据日志数据量的大小，Jvm堆一般要设置为4G或更高</p>
+</li>
+<li>
+<p>-Xms -Xmx 最好设置一致，减少内存抖动带来的性能影响</p>
+</li>
+</ul>
+<p>存在的问题：Flume放数据时，使用本地时间；不理会日志的时间戳</p>
+</li>
+</ul>
+<h3 id="自定义拦截器">自定义拦截器</h3>
+<p>前面 Flume Agent 的配置使用了本地时间，可能导致数据存放的路径不正确。</p>
+<p>要解决以上问题需要使用自定义拦截器。</p>
+<p>agent用于测试自定义拦截器。netcat source =&gt;logger sink</p>
+<p>创建/data/lagoudw/conf/flumetest1.conf</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># a1是agent的名称。source、channel、sink的名称分别为：r1 c1 k1</span><br><span class="line">a1.sources = r1</span><br><span class="line">a1.channels = c1</span><br><span class="line">a1.sinks = k1</span><br><span class="line"></span><br><span class="line"># source</span><br><span class="line">a1.sources.r1.type = netcat</span><br><span class="line">a1.sources.r1.bind = hadoop2</span><br><span class="line">a1.sources.r1.port = 9999</span><br><span class="line">a1.sources.r1.interceptors = i1</span><br><span class="line">a1.sources.r1.interceptors.i1.type = cn.lagou.dw.flume.interceptor.CustomerInterceptor$Builder</span><br><span class="line"></span><br><span class="line"># channel</span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 10000</span><br><span class="line">a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"># sink</span><br><span class="line">a1.sinks.k1.type = logger</span><br><span class="line"></span><br><span class="line"># source、channel、sink之间的关系</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+<p>自定义拦截器的原理：</p>
+<ul>
+<li>
+<p>1、自定义拦截器要集成Flume 的 Interceptor</p>
+</li>
+<li>
+<p>2、Event 分为header 和 body（接收的字符串）</p>
+</li>
+<li>
+<p>3、获取header和body</p>
+</li>
+<li>
+<p>4、从body中获取&quot;time&quot;:1596382570539，并将时间戳转换为字符串 “yyyy-MM-dd”</p>
+</li>
+<li>
+<p>5、将转换后的字符串放置header中</p>
+</li>
+</ul>
+<p>自定义拦截器的实现：</p>
+<ul>
+<li>
+<p>1、获取 event 的 header</p>
+</li>
+<li>
+<p>2、获取 event 的 body</p>
+</li>
+<li>
+<p>3、解析body获取json串</p>
+</li>
+<li>
+<p>4、解析json串获取时间戳</p>
+</li>
+<li>
+<p>5、将时间戳转换为字符串 “yyyy-MM-dd”</p>
+</li>
+<li>
+<p>6、将转换后的字符串放置header中 7、返回event</p>
+</li>
+</ul>
+  <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.flume<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flume-ng-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.23<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-compiler-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">source</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">target</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">descriptorRef</span>&gt;</span>jar-with-dependencies<span class="tag">&lt;/<span class="name">descriptorRef</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">descriptorRefs</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.lagou.dw.flume.interceptor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.compress.utils.Charsets;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Context;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Event;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.event.SimpleEvent;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.interceptor.Interceptor;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"><span class="keyword">import</span> java.time.Instant;</span><br><span class="line"><span class="keyword">import</span> java.time.LocalDateTime;</span><br><span class="line"><span class="keyword">import</span> java.time.ZoneId;</span><br><span class="line"><span class="keyword">import</span> java.time.format.DateTimeFormatter;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomerInterceptor</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">// 逐条处理event</span></span><br><span class="line">    <span class="keyword">public</span> Event <span class="title function_">intercept</span><span class="params">(Event event)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取 event 的 body</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">eventBody</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(event.getBody(), Charsets.UTF_8);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取 event 的 header</span></span><br><span class="line">        Map&lt;String, String&gt; headersMap = event.getHeaders();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 解析body获取json串</span></span><br><span class="line">        String[] bodyArr = eventBody.split(<span class="string">&quot;\\s+&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">jsonStr</span> <span class="operator">=</span> bodyArr[<span class="number">6</span>];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 解析json串获取时间戳</span></span><br><span class="line">            <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> JSON.parseObject(jsonStr);</span><br><span class="line">            <span class="type">String</span> <span class="variable">timestampStr</span> <span class="operator">=</span> jsonObject.getJSONObject(<span class="string">&quot;app_active&quot;</span>).getString(<span class="string">&quot;time&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将时间戳转换为字符串 &quot;yyyy-MM-dd&quot;</span></span><br><span class="line">            <span class="comment">// 将字符串转换为Long</span></span><br><span class="line">            <span class="type">long</span> <span class="variable">timestamp</span> <span class="operator">=</span> Long.parseLong(timestampStr);</span><br><span class="line">            <span class="type">DateTimeFormatter</span> <span class="variable">formatter</span> <span class="operator">=</span> DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line">            <span class="type">Instant</span> <span class="variable">instant</span> <span class="operator">=</span> Instant.ofEpochMilli(timestamp);</span><br><span class="line">            <span class="type">LocalDateTime</span> <span class="variable">localDateTime</span> <span class="operator">=</span> LocalDateTime.ofInstant(instant, ZoneId.systemDefault());</span><br><span class="line">            <span class="type">String</span> <span class="variable">date</span> <span class="operator">=</span> formatter.format(localDateTime);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将转换后的字符串放置header中</span></span><br><span class="line">            headersMap.put(<span class="string">&quot;logtime&quot;</span>, date);</span><br><span class="line">            event.setHeaders(headersMap);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            headersMap.put(<span class="string">&quot;logtime&quot;</span>, <span class="string">&quot;Unknown&quot;</span>);</span><br><span class="line">            event.setHeaders(headersMap);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> event;</span><br><span class="line">    &#125;  </span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Event&gt; <span class="title function_">intercept</span><span class="params">(List&lt;Event&gt; events)</span> &#123;</span><br><span class="line">        List&lt;Event&gt; lstEvent = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Event event: events)&#123;</span><br><span class="line">            <span class="type">Event</span> <span class="variable">outEvent</span> <span class="operator">=</span> intercept(event);</span><br><span class="line">            <span class="keyword">if</span> (outEvent != <span class="literal">null</span>) &#123;</span><br><span class="line">                lstEvent.add(outEvent);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> lstEvent;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">close</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Builder</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span>.Builder &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Interceptor <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">CustomerInterceptor</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(Context context)</span> &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testJunit</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;2020-08-02 18:19:32.959 [main] INFO com.lagou.ecommerce.AppStart - &#123;\&quot;app_active\&quot;: &#123;\&quot;name\&quot;:\&quot;app_active\&quot;,\&quot;json\&quot;: &#123;\&quot;entry\&quot;:\&quot;1\&quot;,\&quot;action\&quot;:\&quot;0\&quot;,\&quot;error_code\&quot;:\&quot;0\&quot;&#125;,\&quot;tim e\&quot;:1596342840284&#125;,\&quot;attr\&quot;:&#123;\&quot;area\&quot;:\&quot;大庆 \&quot;,\&quot;uid\&quot;:\&quot;2F10092A2\&quot;,\&quot;app_v\&quot;:\&quot;1.1.15\&quot;,\&quot;event_type\&quot;: \&quot;common\&quot;,\&quot;device_id\&quot;:\&quot;1FB872- 9A1002\&quot;,\&quot;os_type\&quot;:\&quot;2.8\&quot;,\&quot;channel\&quot;:\&quot;TB\&quot;,\&quot;language\&quot;: \&quot;chinese\&quot;,\&quot;brand\&quot;:\&quot;iphone-8\&quot;&#125;&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">// new Event</span></span><br><span class="line">        <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleEvent</span>();</span><br><span class="line">        event.setHeaders(map);</span><br><span class="line">        event.setBody(str.getBytes(Charsets.UTF_8));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用interceptor处理event</span></span><br><span class="line">        <span class="type">CustomerInterceptor</span> <span class="variable">customerInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CustomerInterceptor</span>();</span><br><span class="line">        <span class="type">Event</span> <span class="variable">outEvent</span> <span class="operator">=</span> customerInterceptor.intercept(event);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 处理结果</span></span><br><span class="line">        Map&lt;String, String&gt; headersMap = outEvent.getHeaders();</span><br><span class="line">        System.out.println(JSON.toJSONString(headersMap));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将程序打包，放在 flume/lib目录下；</p>
+<p>启动Agent测试</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flume-ng agent --conf /opt/apps/flume-1.9/conf --conf-file /data/lagoudw/conf/flumetest1.conf -name a1 - Dflume.roog.logger=INFO,console</span><br></pre></td></tr></table></figure>
+<p><strong>备注：agent、telnet程序在同一节点</strong></p>
+<h3 id="采集启动日志和事件日志">采集启动日志和事件日志</h3>
+<p>本系统中要采集两种日志：启动日志、事件日志，不同的日志放置在不同的目录下。要想一次拿到全部日志需要监控多个目录。</p>
+  <img src="/posts/1940892717/3.jpg" class="post-image">
+  <br>
+<ul>
+<li>
+<p>总体思路</p>
+<p>1、taildir监控多个目录</p>
+<p>2、修改自定义拦截器，不同来源的数据加上不同标志</p>
+<p>3、hdfs sink 根据标志写文件</p>
+</li>
+<li>
+<p>Agent配置</p>
+<p>创建/data/lagoudw/conf/flume-log2hdfs3.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"># taildir source</span><br><span class="line">a1.sources.r1.type = TAILDIR</span><br><span class="line">a1.sources.r1.positionFile = /data/lagoudw/conf/startlog_position.json</span><br><span class="line">a1.sources.r1.filegroups = f1 f2</span><br><span class="line">a1.sources.r1.filegroups.f1 = /data/lagoudw/logs/start/.*log</span><br><span class="line">a1.sources.r1.headers.f1.logtype = start</span><br><span class="line">a1.sources.r1.filegroups.f2 = /data/lagoudw/logs/event/.*log</span><br><span class="line">a1.sources.r1.headers.f2.logtype = event</span><br><span class="line"></span><br><span class="line"># 自定义拦截器</span><br><span class="line">a1.sources.r1.interceptors = i1</span><br><span class="line">a1.sources.r1.interceptors.i1.type = cn.lagou.dw.flume.interceptor.LogTypeInterceptor$Builder</span><br><span class="line"></span><br><span class="line"># memorychannel</span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 100000</span><br><span class="line">a1.channels.c1.transactionCapacity = 2000</span><br><span class="line"></span><br><span class="line"># hdfs sink</span><br><span class="line">a1.sinks.k1.type = hdfs</span><br><span class="line">a1.sinks.k1.hdfs.path = /user/data/logs/%&#123;logtype&#125;/dt=%&#123;logtime&#125;/</span><br><span class="line">a1.sinks.k1.hdfs.filePrefix = startlog.</span><br><span class="line">a1.sinks.k1.hdfs.fileType = DataStream</span><br><span class="line"></span><br><span class="line"># 配置文件滚动方式（文件大小32M）</span><br><span class="line">a1.sinks.k1.hdfs.rollSize = 33554432</span><br><span class="line">a1.sinks.k1.hdfs.rollCount = 0</span><br><span class="line">a1.sinks.k1.hdfs.rollInterval = 0</span><br><span class="line">a1.sinks.k1.hdfs.idleTimeout = 0</span><br><span class="line">a1.sinks.k1.hdfs.minBlockReplicas = 1</span><br><span class="line"></span><br><span class="line"># 向hdfs上刷新的event的个数</span><br><span class="line">a1.sinks.k1.hdfs.batchSize = 1000</span><br><span class="line"></span><br><span class="line"># Bind the source and sink to the channel</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>filegroups</p>
+<p>指定filegroups，可以有多个，以空格分隔（taildir source可同时监控多个目录中的文件）</p>
+</li>
+<li>
+<p>headers.&lt;filegroupName&gt;.&lt;headerKey&gt;</p>
+<p>给 event 增加header key。不同的filegroup，可配置不同的value</p>
+</li>
+</ul>
+</li>
+<li>
+<p>自定义拦截器</p>
+<p>编码完成后打包上传服务器，放置在$FLUME_HOME/lib 下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.lagou.dw.flume.interceptor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONArray;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.compress.utils.Charsets;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Context;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.Event;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.event.SimpleEvent;</span><br><span class="line"><span class="keyword">import</span> org.apache.flume.interceptor.Interceptor;</span><br><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.time.Instant;</span><br><span class="line"><span class="keyword">import</span> java.time.LocalDateTime;</span><br><span class="line"><span class="keyword">import</span> java.time.ZoneId;</span><br><span class="line"><span class="keyword">import</span> java.time.format.DateTimeFormatter;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LogTypeInterceptor</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initialize</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">// 逐条处理event</span></span><br><span class="line">    <span class="keyword">public</span> Event <span class="title function_">intercept</span><span class="params">(Event event)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取 event 的 body</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">eventBody</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">String</span>(event.getBody(), Charsets.UTF_8);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取 event 的 header</span></span><br><span class="line">        Map&lt;String, String&gt; headersMap = event.getHeaders();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 解析body获取json串</span></span><br><span class="line">        String[] bodyArr = eventBody.split(<span class="string">&quot;\\s+&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">jsonStr</span> <span class="operator">=</span> bodyArr[<span class="number">6</span>];</span><br><span class="line">            <span class="comment">// 解析json串获取时间戳</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">timestampStr</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">            <span class="type">JSONObject</span> <span class="variable">jsonObject</span> <span class="operator">=</span> JSON.parseObject(jsonStr);</span><br><span class="line">            <span class="keyword">if</span> (headersMap.getOrDefault(<span class="string">&quot;logtype&quot;</span>, <span class="string">&quot;&quot;</span>).equals(<span class="string">&quot;start&quot;</span>))&#123;</span><br><span class="line">                <span class="comment">// 取启动日志的时间戳</span></span><br><span class="line">                timestampStr = jsonObject.getJSONObject(<span class="string">&quot;app_active&quot;</span>).getString(<span class="string">&quot;time&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (headersMap.getOrDefault(<span class="string">&quot;logtype&quot;</span>, <span class="string">&quot;&quot;</span>).equals(<span class="string">&quot;event&quot;</span>)) &#123;</span><br><span class="line">                <span class="comment">// 取事件日志第一条记录的时间戳</span></span><br><span class="line">                <span class="type">JSONArray</span> <span class="variable">jsonArray</span> <span class="operator">=</span> jsonObject.getJSONArray(<span class="string">&quot;lagou_event&quot;</span>);</span><br><span class="line">                <span class="keyword">if</span> (jsonArray.size() &gt; <span class="number">0</span>)&#123;</span><br><span class="line">                    timestampStr = jsonArray.getJSONObject(<span class="number">0</span>).getString(<span class="string">&quot;time&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 将时间戳转换为字符串 &quot;yyyy-MM-dd&quot;</span></span><br><span class="line">            <span class="comment">// 将字符串转换为Long</span></span><br><span class="line">            <span class="type">long</span> <span class="variable">timestamp</span> <span class="operator">=</span> Long.parseLong(timestampStr);</span><br><span class="line">            <span class="type">DateTimeFormatter</span> <span class="variable">formatter</span> <span class="operator">=</span> DateTimeFormatter.ofPattern(<span class="string">&quot;yyyy-MM-dd&quot;</span>);</span><br><span class="line">            <span class="type">Instant</span> <span class="variable">instant</span> <span class="operator">=</span> Instant.ofEpochMilli(timestamp);</span><br><span class="line">            <span class="type">LocalDateTime</span> <span class="variable">localDateTime</span> <span class="operator">=</span> LocalDateTime.ofInstant(instant, ZoneId.systemDefault());</span><br><span class="line">            <span class="type">String</span> <span class="variable">date</span> <span class="operator">=</span> formatter.format(localDateTime);</span><br><span class="line">            <span class="comment">// 将转换后的字符串放置header中</span></span><br><span class="line">            headersMap.put(<span class="string">&quot;logtime&quot;</span>, date);</span><br><span class="line">            event.setHeaders(headersMap);</span><br><span class="line">        &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            headersMap.put(<span class="string">&quot;logtime&quot;</span>, <span class="string">&quot;Unknown&quot;</span>);</span><br><span class="line">            event.setHeaders(headersMap);</span><br><span class="line">        &#125;   </span><br><span class="line">        <span class="keyword">return</span> event;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Event&gt; <span class="title function_">intercept</span><span class="params">(List&lt;Event&gt; events)</span> &#123;</span><br><span class="line">        List&lt;Event&gt; lstEvent = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Event event: events)&#123;</span><br><span class="line">            <span class="type">Event</span> <span class="variable">outEvent</span> <span class="operator">=</span> intercept(event);</span><br><span class="line">            <span class="keyword">if</span> (outEvent != <span class="literal">null</span>) &#123;</span><br><span class="line">                lstEvent.add(outEvent);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> lstEvent;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">close</span><span class="params">()</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Builder</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span>.Builder &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> Interceptor <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">LogTypeInterceptor</span>();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(Context context)</span> &#123;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">startJunit</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;2020-08-02 18:19:32.959 [main] INFO com.lagou.ecommerce.AppStart - &#123;\&quot;app_active\&quot;: &#123;\&quot;name\&quot;:\&quot;app_active\&quot;,\&quot;json\&quot;: &#123;\&quot;entry\&quot;:\&quot;1\&quot;,\&quot;action\&quot;:\&quot;0\&quot;,\&quot;error_code\&quot;:\&quot;0\&quot;&#125;,\&quot;tim e\&quot;:1596342840284&#125;,\&quot;attr\&quot;:&#123;\&quot;area\&quot;:\&quot;大庆 \&quot;,\&quot;uid\&quot;:\&quot;2F10092A2\&quot;,\&quot;app_v\&quot;:\&quot;1.1.15\&quot;,\&quot;event_type\&quot;: \&quot;common\&quot;,\&quot;device_id\&quot;:\&quot;1FB872- 9A1002\&quot;,\&quot;os_type\&quot;:\&quot;2.8\&quot;,\&quot;channel\&quot;:\&quot;TB\&quot;,\&quot;language\&quot;: \&quot;chinese\&quot;,\&quot;brand\&quot;:\&quot;iphone-8\&quot;&#125;&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">// new Event</span></span><br><span class="line">        <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleEvent</span>();</span><br><span class="line">        map.put(<span class="string">&quot;logtype&quot;</span>, <span class="string">&quot;start&quot;</span>);</span><br><span class="line">        event.setHeaders(map);</span><br><span class="line">        event.setBody(str.getBytes(Charsets.UTF_8));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用interceptor处理event</span></span><br><span class="line">        <span class="type">LogTypeInterceptor</span> <span class="variable">customerInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LogTypeInterceptor</span>();</span><br><span class="line">        <span class="type">Event</span> <span class="variable">outEvent</span> <span class="operator">=</span> customerInterceptor.intercept(event);</span><br><span class="line">        <span class="comment">// 处理结果</span></span><br><span class="line">        Map&lt;String, String&gt; headersMap = outEvent.getHeaders();</span><br><span class="line">        System.out.println(JSON.toJSONString(headersMap));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">eventJunit</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> <span class="string">&quot;2020-08-02 18:20:11.877 [main] INFO com.lagou.ecommerce.AppEvent - &#123;\&quot;lagou_event\&quot;: [&#123;\&quot;name\&quot;:\&quot;goods_detail_loading\&quot;,\&quot;json\&quot;: &#123;\&quot;entry\&quot;:\&quot;1\&quot;,\&quot;goodsid\&quot;:\&quot;0\&quot;,\&quot;loading_time\&quot;:\&quot;93\&quot;,\&quot; action\&quot;:\&quot;3\&quot;,\&quot;staytime\&quot;:\&quot;56\&quot;,\&quot;showtype\&quot;:\&quot;2\&quot;&#125;,\&quot;time \&quot;:1596343881690&#125;,&#123;\&quot;name\&quot;:\&quot;loading\&quot;,\&quot;json\&quot;: &#123;\&quot;loading_time\&quot;:\&quot;15\&quot;,\&quot;action\&quot;:\&quot;3\&quot;,\&quot;loading_type\&quot;:\&quot; 3\&quot;,\&quot;type\&quot;:\&quot;1\&quot;&#125;,\&quot;time\&quot;:1596356988428&#125;, &#123;\&quot;name\&quot;:\&quot;notification\&quot;,\&quot;json\&quot;: &#123;\&quot;action\&quot;:\&quot;1\&quot;,\&quot;type\&quot;:\&quot;2\&quot;&#125;,\&quot;time\&quot;:1596374167278&#125;, &#123;\&quot;name\&quot;:\&quot;favorites\&quot;,\&quot;json\&quot;: &#123;\&quot;course_id\&quot;:1,\&quot;id\&quot;:0,\&quot;userid\&quot;:0&#125;,\&quot;time\&quot;:159635093396 2&#125;],\&quot;attr\&quot;:&#123;\&quot;area\&quot;:\&quot;长治 \&quot;,\&quot;uid\&quot;:\&quot;2F10092A4\&quot;,\&quot;app_v\&quot;:\&quot;1.1.14\&quot;,\&quot;event_type\&quot;: \&quot;common\&quot;,\&quot;device_id\&quot;:\&quot;1FB872- 9A1004\&quot;,\&quot;os_type\&quot;:\&quot;0.5.0\&quot;,\&quot;channel\&quot;:\&quot;QL\&quot;,\&quot;language\ &quot;</span>:\<span class="string">&quot;chinese\&quot;,\&quot;brand\&quot;:\&quot;xiaomi-0\&quot;&#125;&#125;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        Map&lt;String, String&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        <span class="comment">// new Event</span></span><br><span class="line">        <span class="type">Event</span> <span class="variable">event</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleEvent</span>();</span><br><span class="line">        map.put(<span class="string">&quot;logtype&quot;</span>, <span class="string">&quot;event&quot;</span>);</span><br><span class="line">        event.setHeaders(map);</span><br><span class="line">        event.setBody(str.getBytes(Charsets.UTF_8));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 调用interceptor处理event</span></span><br><span class="line">        <span class="type">LogTypeInterceptor</span> <span class="variable">customerInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">LogTypeInterceptor</span>();</span><br><span class="line">        <span class="type">Event</span> <span class="variable">outEvent</span> <span class="operator">=</span> customerInterceptor.intercept(event);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 处理结果</span></span><br><span class="line">        Map&lt;String, String&gt; headersMap = outEvent.getHeaders();</span><br><span class="line">        System.out.println(JSON.toJSONString(headersMap));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<p>启动Agent，拷贝日志，检查HDFS文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># 清理环境</span><br><span class="line">rm -f /data/lagoudw/conf/startlog_position.json</span><br><span class="line">rm -f /data/lagoudw/logs/start/*.log</span><br><span class="line">rm -f /data/lagoudw/logs/event/*.log</span><br><span class="line"></span><br><span class="line"># 启动 Agent</span><br><span class="line">flume-ng agent --conf /opt/apps/flume-1.9.0/conf --conf-file /opt/lagou/servers/flume-1.9.0/conf/flume-log2hdfs3.conf -name a1 -Dflume.root.logger=INFO,console</span><br><span class="line"></span><br><span class="line"># 拷贝日志</span><br><span class="line">cd /data/lagoudw/logs/source</span><br><span class="line">cp event0802.log ../event/</span><br><span class="line">cp start0802.log ../start/</span><br><span class="line"></span><br><span class="line"># 检查HDFS文件</span><br><span class="line">hdfs dfs -ls /user/data/logs/event</span><br><span class="line">hdfs dfs -ls /user/data/logs/start</span><br><span class="line"></span><br><span class="line"># 生产环境中用以下方式启动Agent</span><br><span class="line">nohup flume-ng agent --conf /opt/apps/flume-1.9.0/conf --conf-file /opt/lagou/servers/flume-1.9.0/conf/flume-log2hdfs3.conf -name a1 -Dflume.root.logger=INFO,LOGFILE &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>nohup，该命令允许用户退出帐户/关闭终端之后继续运行相应的进程</p>
+</li>
+<li>
+<p>/dev/null，代表linux的空设备文件，所有往这个文件里面写入的内容都会丢失，俗称黑洞</p>
+</li>
+<li>
+<p>标准输入0，从键盘获得输入 /proc/self/fd/0</p>
+</li>
+<li>
+<p>标准输出1，输出到屏幕（控制台） /proc/self/fd/1</p>
+</li>
+<li>
+<p>错误输出2，输出到屏幕（控制台） /proc/self/fd/2</p>
+</li>
+<li>
+<blockquote>
+<p>/dev/null 标准输出1重定向到 /dev/null 中，此时标准输出不存在，没有任何地方能够找到输出的内容</p>
+</blockquote>
+</li>
+<li>
+<p>2&gt;&amp;1 错误输出将会和标准输出输出到同一个地方</p>
+</li>
+<li>
+<blockquote>
+<p>/dev/null 2&gt;&amp;1 不会输出任何信息到控制台，也不会有任何信息输出到文件中</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="日志数据采集小结">日志数据采集小结</h3>
+<ul>
+<li>
+<p>使用taildir source 监控指定的多个目录，可以给不同目录的日志加上不同header</p>
+</li>
+<li>
+<p>在每个目录中可以使用正则匹配多个文件</p>
+</li>
+<li>
+<p>使用自定义拦截器，主要功能是从json串中获取时间戳，加到event的header中</p>
+</li>
+<li>
+<p>hdfs sink使用event header中的信息写数据（控制写文件的位置）</p>
+</li>
+<li>
+<p>hdfs文件的滚动方式（基于文件大小、基于event数量、基于时间）</p>
+</li>
+<li>
+<p>调节flume jvm内存的分配</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/1940892717/">https://raoweijiapng.gitee.io/posts/1940892717/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/2676414109/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">电商离线数仓设计</div></div></a></div><div class="next-post pull-right"><a href="/posts/927506393/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">会员活跃度分析之ODS建表和数据加载</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">360</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">41</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9C%80%E6%B1%82%E5%88%86%E6%9E%90-2"><span class="toc-number">1.</span> <span class="toc-text">需求分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="toc-number">2.</span> <span class="toc-text">日志数据采集</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#taildir-source%E9%85%8D%E7%BD%AE"><span class="toc-number">2.1.</span> <span class="toc-text">taildir source配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hdfs-sink%E9%85%8D%E7%BD%AE"><span class="toc-number">2.2.</span> <span class="toc-text">hdfs sink配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Agent%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-number">2.3.</span> <span class="toc-text">Agent的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flume%E7%9A%84%E4%BC%98%E5%8C%96%E9%85%8D%E7%BD%AE"><span class="toc-number">2.4.</span> <span class="toc-text">Flume的优化配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8B%A6%E6%88%AA%E5%99%A8"><span class="toc-number">2.5.</span> <span class="toc-text">自定义拦截器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%87%E9%9B%86%E5%90%AF%E5%8A%A8%E6%97%A5%E5%BF%97%E5%92%8C%E4%BA%8B%E4%BB%B6%E6%97%A5%E5%BF%97"><span class="toc-number">2.6.</span> <span class="toc-text">采集启动日志和事件日志</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86%E5%B0%8F%E7%BB%93"><span class="toc-number">2.7.</span> <span class="toc-text">日志数据采集小结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1957530858/" title="数据仓库数据可视化">数据仓库数据可视化</a><time datetime="2022-08-18T12:00:10.000Z" title="发表于 2022-08-18 20:00:10">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1859133978/" title="Griffin简介与安装部署">Griffin简介与安装部署</a><time datetime="2022-08-18T08:21:44.000Z" title="发表于 2022-08-18 16:21:44">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4146301843/" title="Atlas简介与安装部署">Atlas简介与安装部署</a><time datetime="2022-08-17T14:43:16.000Z" title="发表于 2022-08-17 22:43:16">2022-08-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3296979016/" title="Airflow任务集成部署">Airflow任务集成部署</a><time datetime="2022-08-14T13:23:05.000Z" title="发表于 2022-08-14 21:23:05">2022-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2822925631/" title="Airflow简介与安装部署">Airflow简介与安装部署</a><time datetime="2022-08-14T10:29:52.000Z" title="发表于 2022-08-14 18:29:52">2022-08-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

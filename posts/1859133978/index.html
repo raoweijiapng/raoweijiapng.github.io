@@ -1,0 +1,594 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Griffin简介与安装部署 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="为什么要做数据质量监控 garbage in garbage out   1、数据不一致 企业早期没有进行统一规划设计，大部分信息系统是逐步迭代建设的，系统建设时间长短各异，各系统数据标准也不同。企业业务系统更关注业务层面，各个业务系统均有不同的侧重点，各类数据的属性信息设置和要求不统一。另外，由于各系统的相互独立使用，无法及时同步更新相关信息等各种原因造成各系统间的数据不一致，严重影响了各系统间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Griffin简介与安装部署">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/1859133978/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="为什么要做数据质量监控 garbage in garbage out   1、数据不一致 企业早期没有进行统一规划设计，大部分信息系统是逐步迭代建设的，系统建设时间长短各异，各系统数据标准也不同。企业业务系统更关注业务层面，各个业务系统均有不同的侧重点，各类数据的属性信息设置和要求不统一。另外，由于各系统的相互独立使用，无法及时同步更新相关信息等各种原因造成各系统间的数据不一致，严重影响了各系统间">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-08-18T08:21:44.000Z">
+<meta property="article:modified_time" content="2022-08-19T02:17:26.051Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/1859133978/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Griffin简介与安装部署',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-19 10:17:26'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">360</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">41</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Griffin简介与安装部署</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-18T08:21:44.000Z" title="发表于 2022-08-18 16:21:44">2022-08-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-08-19T02:17:26.051Z" title="更新于 2022-08-19 10:17:26">2022-08-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Griffin/">Griffin</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Griffin简介与安装部署"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="为什么要做数据质量监控">为什么要做数据质量监控</h2>
+<p>garbage in garbage out</p>
+<ul>
+<li>
+<p>1、数据不一致</p>
+<p>企业早期没有进行统一规划设计，大部分信息系统是逐步迭代建设的，系统建设时间长短各异，各系统数据标准也不同。企业业务系统更关注业务层面，各个业务系统均有不同的侧重点，各类数据的属性信息设置和要求不统一。另外，由于各系统的相互独立使用，无法及时同步更新相关信息等各种原因造成各系统间的数据不一致，严重影响了各系统间的数据交互和统一识别，基础数据难以共享利用，数据的深层价值也难以体现。</p>
+</li>
+<li>
+<p>2、数据不完整</p>
+<p>由于企业信息系统的孤立使用，各个业务系统或模块按照各自的需要录入数据，没有统一的录入工具和数据出口，业务系统不需要的信息就不录，造成同样的数据在不同的系统有不同的属性信息，数据完整性无法得到保障。</p>
+</li>
+<li>
+<p>3、数据不合规</p>
+<p>没有统一的数据管理平台和数据源头，数据全生命周期管理不完整，同时企业各信息系统的数据录入环节过于简单且手工参与较多，就数据本身而言，缺少是否重复、合法、对错等校验环节，导致各个信息系统的数据不够准确，格式混乱，各类数据难以集成和统一，没有质量控制导致海量数据因质量过低而难以被利用，且没有相应的数据管理流程。</p>
+</li>
+<li>
+<p>4、数据不可控</p>
+<p>海量数据多头管理，缺少专门对数据管理进行监督和控制的组织。企业各单位和部门关注数据的角度不一样，缺少一个组织从全局的视角对数据进行管理，导致无法建立统一的数据管理标准、流程等，相应的数据管理制度、办法等无法得到落实。同时，企业基础数据质量考核体系也尚未建立，无法保障一系列数据标准、规范、制度、流程得到长效执行。</p>
+</li>
+<li>
+<p>5、数据冗余</p>
+<p>各个信息系统针对数据的标准规范不一、编码规则不一、校验标准不一，且部分业务系统针对数据的验证标准严重缺失，造成了企业顶层视角的数据出现“一物多码”、“一码多物”等现象。</p>
+</li>
+</ul>
+<h2 id="数据质量监控方法">数据质量监控方法</h2>
+<ul>
+<li>
+<p>1、设计思路</p>
+<p>数据质量监控的设计要分为4个模块：数据，规则，告警和反馈</p>
+<ul>
+<li>
+<p>1、数据：需要被监控的数据，可能存放在不同的存储引擎中</p>
+</li>
+<li>
+<p>2、规则：值如何设计发现异常的规则，一般而言主要是数值的异常和环比等异常监控方式。也会有一些通过算法来发掘异常数据的方法</p>
+</li>
+<li>
+<p>3、告警：告警是指发告警的动作，这里可以通过微信消息，电话或者短信，邮件</p>
+</li>
+<li>
+<p>4、反馈：反馈是指对告警内容的反馈，比如说收到的告警内容，要有人员回应该告警消息是否是真的异常，是否需要忽略该异常，是否已经处理了该异常。有了反馈机制，整个数据监控才能形成闭环</p>
+</li>
+</ul>
+</li>
+<li>
+<p>2、技术方案</p>
+<ul>
+<li>
+<p>最开始可以先关注核心要监控的内容，比如说准确性，那么就对核心的一些指标做监控即可</p>
+</li>
+<li>
+<p>监控平台尽量不要做太复杂的规则逻辑，尽量只对结果数据进行监控。比如要监控日质量是否波动过大，那么把该计算流程提前，先计算好结果表，最后监控平台只监控结果表是否异常即可</p>
+</li>
+<li>
+<p>多数据源。多数据源的监控有两种方式：针对每个数据源定制实现一部分计算逻辑，也可以通过额外的任务将多数据源中的数据结果通过任务写入一个数据源中，再对该数据源进行监控</p>
+</li>
+<li>
+<p>实时数据监控：区别在于扫描周期的不同，因此在设计的时候可以先以离线为主，但是尽量预留好实时监控的设计</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="Griffin架构">Griffin架构</h2>
+<p>Apache Griffin是一个开源的大数据数据质量解决方案，它支持批处理和流模式两种数据质量检测方式，可以从不同维度（如离线任务执行完毕后检查源端和目标端的数据数量是否一致、源表的数据空值数量等）度量数据资产，从而提升数据的准确度、可信度。</p>
+<p>Griffin主要分为Define、Measure和Analyze三个部分，如下图所示：</p>
+  <img src="/posts/1859133978/1.jpg" class="post-image">
+  <br>
+<p>各部分的职责如下：</p>
+<ul>
+<li>
+<p>Define：主要负责定义数据质量统计的维度，比如数据质量统计的时间跨度、统计的目标（源端和目标端的数据数量是否一致，数据源里某一字段的非空的数量、不重复值的数量、最大值、最小值、top5的值数量等）</p>
+</li>
+<li>
+<p>Measure：主要负责执行统计任务，生成统计结果</p>
+</li>
+<li>
+<p>Analyze：主要负责保存与展示统计结果</p>
+</li>
+</ul>
+<h2 id="编译安装">编译安装</h2>
+<h3 id="相关依赖">相关依赖</h3>
+<p>重点讲解 Griffin，不对依赖组件做过多讲解，所有组件均采用单机模式安装。</p>
+<ul>
+<li>
+<p>JDK (1.8 or later versions)</p>
+</li>
+<li>
+<p>MySQL(version 5.6及以上)</p>
+</li>
+<li>
+<p>Hadoop (2.6.0 or later)</p>
+</li>
+<li>
+<p>Hive (version 2.x)</p>
+</li>
+<li>
+<p>Maven</p>
+</li>
+<li>
+<p>Spark (version 2.2.1)</p>
+</li>
+<li>
+<p>Livy（livy-0.5.0-incubating）</p>
+</li>
+<li>
+<p>ElasticSearch (5.0 or later versions)</p>
+</li>
+</ul>
+<p>备注：</p>
+<ul>
+<li>
+<p>Spark：计算批量、实时指标</p>
+</li>
+<li>
+<p>Livy：为服务提供 RESTful API 调用 Apache Spark</p>
+</li>
+<li>
+<p>ElasticSearch：存储指标数据</p>
+</li>
+<li>
+<p>MySQL：服务元数据</p>
+</li>
+</ul>
+<h3 id="Spark安装">Spark安装</h3>
+<ul>
+<li>
+<p>1、解压缩，设置环境变量 $SPARK_HOME</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf spark-2.2.1-bin-hadoop2.7.tgz</span><br><span class="line">mv spark-2.2.1-bin-hadoop2.7/ /opt/lagou/servers/spark-2.2.1/</span><br><span class="line"></span><br><span class="line"># 设置环境变量</span><br><span class="line">vi /etc/profile</span><br><span class="line"></span><br><span class="line">export SPARK_HOME=/opt/lagou/servers/spark-2.2.1/</span><br><span class="line">export PATH=$PATH:$SPARK_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>2、修改配置文件 $SPARK_HOME/conf/spark-defaults.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd $SPARK_HOME/conf</span><br><span class="line"></span><br><span class="line">cp spark-defaults.conf.template spark-defaults.conf</span><br><span class="line"></span><br><span class="line">vi spark-defaults.conf</span><br><span class="line"></span><br><span class="line">spark.master yarn</span><br><span class="line">spark.eventLog.enabled true</span><br><span class="line">spark.eventLog.dir hdfs://linux121:9000/spark/logs</span><br><span class="line">spark.serializer org.apache.spark.serializer.KryoSerializer</span><br><span class="line">spark.yarn.jars hdfs://linux121:9000/spark/spark_2.2.1_jars/*</span><br></pre></td></tr></table></figure>
+<p>备注：上面的路径要创建</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -mkdir -p /spark/logs</span><br><span class="line">hdfs dfs -mkdir -p /spark/spark_2.2.1_jars</span><br></pre></td></tr></table></figure>
+<p>拷贝 MySQL 驱动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp $HIVE_HOME/lib/mysql-connector-java-5.1.46.jar $SPARK_HOME/jars/</span><br></pre></td></tr></table></figure>
+<p>将 Spark 的 jar 包上传到 hdfs://hadoop1:9000/spark/spark_2.2.1_jars/</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -put /opt/lagou/servers/spark-2.2.1/jars/*.jar /spark/spark_2.2.1_jars/</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>3、<a target="_blank" rel="noopener" href="http://xn--spark-env-477nh9f666h82an66xy9tc.sh">修改配置文件spark-env.sh</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">cd $SPARK_HOME/conf</span><br><span class="line"></span><br><span class="line">cp spark-env.sh.template spark-env.sh</span><br><span class="line"></span><br><span class="line">vi spark-env.sh</span><br><span class="line"></span><br><span class="line">export JAVA_HOME=/opt/lagou/servers/jdk1.8.0_161</span><br><span class="line">export HADOOP_HOME=/opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop</span><br><span class="line">export SPARK_DIST_CLASSPATH=$(hadoop classpath)</span><br><span class="line">export YARN_CONF_DIR=$HADOOP_HOME/etc/hadoop</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>4、yarn-site.xml 添加配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;yarn.nodemanager.vmem-check-enabled&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<p>yarn.nodemanager.vmem-check-enabled：是否检查虚拟内存。</p>
+<p>修改所有节点，并重启yarn服务。</p>
+<p>不添加该配配置启动spark-shell，有如下错误：Yarn application has already ended! It might have been killed or unable to launch application master.</p>
+</li>
+<li>
+<p>5、测试spark</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@Linux122 ~]# spark-shell</span><br><span class="line"></span><br><span class="line">// /wcinput/wc.txt : HDFS上的文件</span><br><span class="line">scala&gt; val lines = sc.textFile(&quot;/wcinput/wc.txt&quot;)</span><br><span class="line">scala&gt; lines.flatMap(_.split(&quot; &quot;)).map((_,1)).reduceByKey(_+_).collect()    </span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Livy安装">Livy安装</h3>
+<ul>
+<li>
+<p>1、解压缩，设置环境变量 $LIVY_HOME</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/software</span><br><span class="line"></span><br><span class="line">unzip livy-0.5.0-incubating-bin.zip</span><br><span class="line"></span><br><span class="line">mv livy-0.5.0-incubating-bin/ ../servers/livy-0.5.0</span><br><span class="line"></span><br><span class="line"># 设置环境变量</span><br><span class="line">vi /etc/profile</span><br><span class="line"></span><br><span class="line">export LIVY_HOME=/opt/lagou/servers/livy-0.5.0</span><br><span class="line">export PATH=$PATH:$LIVY_HOME/bin</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>2、修改配置文件 conf/livy.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">cd $LIVY_HOME/conf</span><br><span class="line"></span><br><span class="line">cp livy.conf.template livy.conf</span><br><span class="line"></span><br><span class="line">vi livy.conf</span><br><span class="line"></span><br><span class="line">livy.server.host = 127.0.0.1</span><br><span class="line">livy.spark.master = yarn</span><br><span class="line">livy.spark.deploy-mode = cluster</span><br><span class="line">livy.repl.enable-hive-context = true</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>3、修改配置文件 conf/livy-env.sh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">cd $LIVY_HOME/conf</span><br><span class="line"></span><br><span class="line">cp livy-env.sh.template livy-env.sh</span><br><span class="line"></span><br><span class="line">vi livy-env.sh</span><br><span class="line"></span><br><span class="line">export SPARK_HOME=/opt/lagou/servers/spark-2.2.1</span><br><span class="line">export HADOOP_HOME=/opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>4、启动服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers/livy-0.5.0</span><br><span class="line"></span><br><span class="line">mkdir logs</span><br><span class="line"></span><br><span class="line">nohup bin/livy-server &amp;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="ES安装">ES安装</h3>
+<ul>
+<li>
+<p>1、解压缩</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf elasticsearch-5.6.0.tar.gz</span><br><span class="line"></span><br><span class="line">mv elasticsearch-5.6.0/ ../servers/</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>2、创建 elasticsearch用户组 及 elasticsearch 用户。不能使用root用户启动ES程序，需要创建单独的用户去启动ES 服务；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># 创建用户组</span><br><span class="line">groupadd elasticsearch</span><br><span class="line"></span><br><span class="line"># 创建用户</span><br><span class="line">useradd elasticsearch -g elasticsearch</span><br><span class="line"></span><br><span class="line"># 修改安装目录的宿主</span><br><span class="line">cd /opt/lagou/servers/</span><br><span class="line">chown -R elasticsearch:elasticsearch elasticsearch-5.6.0/</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>3、修改linux系统文件 /etc/security/limits.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/security/limits.conf</span><br><span class="line"></span><br><span class="line">elasticsearch hard nofile 1000000</span><br><span class="line">elasticsearch soft nofile 1000000</span><br><span class="line">* soft nproc 4096</span><br><span class="line">* hard nproc 4096</span><br></pre></td></tr></table></figure>
+<img src="/posts/1859133978/2.jpg" class="post-image">
+<br>
+</li>
+<li>
+<p>4、修改系统文件 /etc/sysctl.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@Linux122 ~]# vim /etc/sysctl.conf</span><br><span class="line"></span><br><span class="line"># 文件末尾增加：</span><br><span class="line">vm.max_map_count=262144</span><br><span class="line"></span><br><span class="line"># 执行以下命令，修改才能生效</span><br><span class="line">[root@Linux122 ~]# sysctl -p</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>5、修改es配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/elasticsearch-5.6.0/config/elasticsearch.yml  </span><br><span class="line"></span><br><span class="line">network.host: 0.0.0.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/elasticsearch-5.6.0/config/jvm.options</span><br><span class="line"></span><br><span class="line"># jvm内存的分配，原来都是2g，修改为1g</span><br><span class="line">-Xms1g</span><br><span class="line">-Xmx1g</span><br></pre></td></tr></table></figure>
+<img src="/posts/1859133978/3.jpg" class="post-image">
+<br>
+</li>
+<li>
+<p>6、启动ES服务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">  # 到ES安装目录下，执行命令(-d表示后台启动)</span><br><span class="line">  su elasticsearch</span><br><span class="line"></span><br><span class="line">  cd /opt/lagou/servers/elasticsearch-5.6.0/</span><br><span class="line">  bin/elasticsearch -d</span><br><span class="line">  ```  </span><br><span class="line"></span><br><span class="line">  在浏览器中检查：http://linux122:9200/</span><br><span class="line"></span><br><span class="line">  &#123;% asset_img post-image 4.jpg %&#125;</span><br><span class="line">  &lt;br&gt;</span><br><span class="line"></span><br><span class="line">- 7、在ES里创建griffin索引  </span><br><span class="line"></span><br><span class="line">  ```SHELL</span><br><span class="line">  # linux122 为 ES 服务所在节点</span><br><span class="line">  curl -XPUT http://linux122:9200/griffin -d &#x27;</span><br><span class="line">  &#123;</span><br><span class="line">      &quot;aliases&quot;: &#123;&#125;,</span><br><span class="line">      &quot;mappings&quot;: &#123;</span><br><span class="line">          &quot;accuracy&quot;: &#123;</span><br><span class="line">              &quot;properties&quot;: &#123;</span><br><span class="line">                  &quot;name&quot;: &#123;</span><br><span class="line">                      &quot;fields&quot;: &#123;</span><br><span class="line">                          &quot;keyword&quot;: &#123;</span><br><span class="line">                              &quot;ignore_above&quot;: 256,</span><br><span class="line">                              &quot;type&quot;: &quot;keyword&quot;</span><br><span class="line">                          &#125;</span><br><span class="line">                      &#125;,</span><br><span class="line">                      &quot;type&quot;: &quot;text&quot;</span><br><span class="line">                  &#125;,</span><br><span class="line">                  &quot;tmst&quot;: &#123;</span><br><span class="line">                      &quot;type&quot;: &quot;date&quot;</span><br><span class="line">                  &#125;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;settings&quot;: &#123;</span><br><span class="line">          &quot;index&quot;: &#123;</span><br><span class="line">              &quot;number_of_replicas&quot;: &quot;2&quot;,</span><br><span class="line">              &quot;number_of_shards&quot;: &quot;5&quot;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  &#x27;</span><br></pre></td></tr></table></figure>
+<img src="/posts/1859133978/5.jpg" class="post-image">
+<br>
+</li>
+</ul>
+<h3 id="Griffin编译准备">Griffin编译准备</h3>
+<ul>
+<li>
+<p>1、软件解压缩</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/software</span><br><span class="line"></span><br><span class="line">unzip griffin-griffin-0.5.0.zip</span><br><span class="line"></span><br><span class="line">mv griffin-griffin-0.5.0/ ../servers/griffin-0.5.0/</span><br><span class="line"></span><br><span class="line">cd griffin-0.5.0</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>2、在MySQL中创建数据库quartz，并初始化</p>
+<p>使用/opt/lagou/servers/griffin-0.5.0/service/src/main/resources/Init_quartz_mysql_innodb.sql</p>
+<p>备注：要做简单的修改，主要是增加 use quartz；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@Linux122 ~]#cd /opt/lagou/servers/griffin-0.5.0/service/src/main/resources</span><br><span class="line"></span><br><span class="line">[root@Linux122 resources]# scp Init_quartz_mysql_innodb.sql Linux123:/root</span><br><span class="line"></span><br><span class="line"># 进入Linux123环境</span><br><span class="line">[root@Linux123 ~]# vi Init_quartz_mysql_innodb.sql</span><br><span class="line"></span><br><span class="line">use quartz;</span><br></pre></td></tr></table></figure>
+<img src="/posts/1859133978/5.jpg" class="post-image">
+<br>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@Linux123 ~]# mysql -uroot -p12345678</span><br><span class="line">mysql&gt; create database quartz;</span><br><span class="line"></span><br><span class="line">[root@Linux123 ~]# mysql -uhive -p12345678 &lt; Init_quartz_mysql_innodb.sql</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>3、Hadoop和Hive</p>
+<p>在HDFS上创建/spark/spark_conf目录，并将Hive的配置文件hive-site.xml上传到该目录下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -mkdir -p /spark/spark_conf</span><br><span class="line"></span><br><span class="line">hdfs dfs -put $HIVE_HOME/conf/hive-site.xml /spark/spark_conf/</span><br></pre></td></tr></table></figure>
+<p>备注：将安装 griffin 所在节点上的 hive-site.xml 文件，上传到 HDFS 对应目录中；</p>
+</li>
+<li>
+<p>4、确保设置以下环境变量(/etc/profile)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/opt/lagou/servers/hadoop-2.9.2</span><br><span class="line">export SPARK_HOME=/opt/lagou/servers/spark-2.2.1/</span><br><span class="line">export LIVY_HOME=/opt/lagou/servers/livy-0.5.0</span><br><span class="line">export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Griffin编译">Griffin编译</h3>
+<ul>
+<li>
+<p>1、service/pom.xml文件配置</p>
+<p>编辑 service/pom.xml（约113-117行），增加MySQL JDBC 依赖（即删除注释）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/griffin-0.5.0/service/pom.xml</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;$&#123;mysql.java.version&#125;&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>2、修改配置文件 service/src/main/resources/application.properties</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/griffin-0.5.0/service/src/main/resources/application.properties</span><br><span class="line"></span><br><span class="line">server.port = 9876</span><br><span class="line"></span><br><span class="line">spring.application.name=griffin_service</span><br><span class="line">spring.datasource.url=jdbc:mysql://Linux123:3306/quartz?autoReconnect=true&amp;useSSL=false</span><br><span class="line">spring.datasource.username=hive</span><br><span class="line">spring.datasource.password=12345678</span><br><span class="line">spring.jpa.generate-ddl=true</span><br><span class="line">spring.datasource.driver-class-name=com.mysql.jdbc.Driver</span><br><span class="line">spring.jpa.show-sql=true</span><br><span class="line"></span><br><span class="line"># Hive metastore</span><br><span class="line">hive.metastore.uris=thrift://Linux123:9083</span><br><span class="line">hive.metastore.dbname=hivemetadata</span><br><span class="line">hive.hmshandler.retry.attempts=15</span><br><span class="line">hive.hmshandler.retry.interval=2000ms</span><br><span class="line"></span><br><span class="line"># Hive cache time</span><br><span class="line">cache.evict.hive.fixedRate.in.milliseconds=900000</span><br><span class="line"></span><br><span class="line"># Kafka schema registry</span><br><span class="line">kafka.schema.registry.url=http://localhost:8081</span><br><span class="line"></span><br><span class="line"># Update job instance state at regular intervals</span><br><span class="line">jobInstance.fixedDelay.in.milliseconds=60000</span><br><span class="line"></span><br><span class="line"># Expired time of job instance which is 7 days that is 604800000 milliseconds.Time unit only supports milliseconds</span><br><span class="line">jobInstance.expired.milliseconds=604800000</span><br><span class="line"></span><br><span class="line"># schedule predicate job every 5 minutes and repeat 12 times at most</span><br><span class="line">#interval time unit s:second m:minute h:hour d:day,only support these four units</span><br><span class="line">predicate.job.interval=5m</span><br><span class="line">predicate.job.repeat.count=12</span><br><span class="line"></span><br><span class="line"># external properties directory location</span><br><span class="line">external.config.location=</span><br><span class="line"></span><br><span class="line"># external BATCH or STREAMING env</span><br><span class="line">external.env.location=</span><br><span class="line"></span><br><span class="line"># login strategy (&quot;default&quot; or &quot;ldap&quot;)</span><br><span class="line">login.strategy=default</span><br><span class="line"></span><br><span class="line"># ldap</span><br><span class="line">ldap.url=ldap://hostname:port</span><br><span class="line">ldap.email=@example.com</span><br><span class="line">ldap.searchBase=DC=org,DC=example</span><br><span class="line">ldap.searchPattern=(sAMAccountName=&#123;0&#125;)</span><br><span class="line"></span><br><span class="line"># hdfs default name</span><br><span class="line">fs.defaultFS=</span><br><span class="line"></span><br><span class="line"># elasticsearch</span><br><span class="line">elasticsearch.host=Linux122</span><br><span class="line">elasticsearch.port=9200</span><br><span class="line">elasticsearch.scheme=http</span><br><span class="line"># elasticsearch.user = user</span><br><span class="line"># elasticsearch.password = password</span><br><span class="line"></span><br><span class="line"># livy</span><br><span class="line">livy.uri=http://localhost:8998/batches</span><br><span class="line">livy.need.queue=false</span><br><span class="line">livy.task.max.concurrent.count=20</span><br><span class="line">livy.task.submit.interval.second=3</span><br><span class="line">livy.task.appId.retry.count=3</span><br><span class="line"></span><br><span class="line"># yarn url</span><br><span class="line">yarn.uri=http://linux123:8088</span><br><span class="line"></span><br><span class="line"># griffin event listener</span><br><span class="line">internal.event.listeners=GriffinJobEventHook</span><br></pre></td></tr></table></figure>
+<p>备注：</p>
+<ul>
+<li>
+<p>默认端口是8080，为避免和spark端口冲突，这里端口修改为9876</p>
+</li>
+<li>
+<p>需要启动Hive的 metastore 服务</p>
+</li>
+<li>
+<p>如果Griffin、MySQL没有安装在同一节点，请确认用户有权限能够远程登录</p>
+</li>
+</ul>
+</li>
+<li>
+<p>3、修改配置文件 service/src/main/resources/quartz.properties</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/griffin-0.5.0/service/src/main/resources/quartz.properties</span><br><span class="line"></span><br><span class="line"># 将第26行修改为以下内容：</span><br><span class="line">org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjob store.StdJDBCDelegate</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>4、修改配置文件 service/src/main/resources/sparkProperties.json</p>
+<p>sparkProperties.json 在测试环境下使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/griffin-0.5.0/service/src/main/resources/sparkProperties.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;file&quot;:&quot;hdfs:///griffin/griffin-measure.jar&quot;,</span><br><span class="line">    &quot;className&quot;:&quot;org.apache.griffin.measure.Application&quot;,</span><br><span class="line">    &quot;name&quot;:&quot;griffin&quot;,</span><br><span class="line">    &quot;queue&quot;:&quot;default&quot;,</span><br><span class="line">    &quot;numExecutors&quot;:2,</span><br><span class="line">    &quot;executorCores&quot;:1,</span><br><span class="line">    &quot;driverMemory&quot;:&quot;1g&quot;,</span><br><span class="line">    &quot;executorMemory&quot;:&quot;1g&quot;,</span><br><span class="line">    &quot;conf&quot;:&#123;</span><br><span class="line">        &quot;spark.yarn.dist.files&quot;:&quot;hdfs:///spark/spark_conf/hive-site.xml&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;files&quot;:[</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>备注：修改第11行：“spark.yarn.dist.files”: “hdfs:///spark/spark_conf/hive-site.xml”</p>
+<p>sparkProperties.json 在生产环境中根据实际资源配置进行修改</p>
+</li>
+<li>
+<p>5、修改配置文件 service/src/main/resources/env/env_batch.json</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/griffin-0.5.0/service/src/main/resources/env/env_batch.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    &quot;spark&quot;:&#123;</span><br><span class="line">        &quot;log.level&quot;:&quot;WARN&quot;</span><br><span class="line">    &#125;,</span><br><span class="line">    &quot;sinks&quot;:[</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;type&quot;:&quot;CONSOLE&quot;,</span><br><span class="line">            &quot;config&quot;:&#123;</span><br><span class="line">                &quot;max.log.lines&quot;:10</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;type&quot;:&quot;HDFS&quot;,</span><br><span class="line">            &quot;config&quot;:&#123;</span><br><span class="line">                &quot;path&quot;:&quot;hdfs:///griffin/persist&quot;,</span><br><span class="line">                &quot;max.persist.lines&quot;:10000,</span><br><span class="line">                &quot;max.lines.per.file&quot;:10000</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;type&quot;:&quot;ELASTICSEARCH&quot;,</span><br><span class="line">            &quot;config&quot;:&#123;</span><br><span class="line">                &quot;method&quot;:&quot;post&quot;,</span><br><span class="line">                &quot;api&quot;:&quot;http://liunx122:9200/griffin/accuracy&quot;,</span><br><span class="line">                &quot;connection.timeout&quot;:&quot;1m&quot;,</span><br><span class="line">                &quot;retry&quot;:10</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;griffin.checkpoint&quot;:[</span><br><span class="line"></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>备注：仅修改第24行</p>
+</li>
+<li>
+<p>6、编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers/griffin-0.5.0</span><br><span class="line"></span><br><span class="line">mvn -Dmaven.test.skip=true clean install</span><br></pre></td></tr></table></figure>
+<p>编译报错：</p>
+<p>[ERROR] ERROR in /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts (1784,30): Cannot find name ‘SVGElementTagNameMap’.<br>
+[ERROR] ERROR in /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts (1784,73): Cannot find name ‘SVGElementTagNameMap’.<br>
+[ERROR] ERROR in /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts (4139,26): Cannot find name ‘SVGElementTagNameMap’.<br>
+[ERROR] ERROR in /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts (4139,89): Cannot find name ‘SVGElementTagNameMap’.<br>
+[ERROR] ERROR in /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts (8707,29): Cannot find name ‘SVGElementTagNameMap’.<br>
+[ERROR] ERROR in /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts (8707,84): Cannot find name ‘SVGElementTagNameMap’.</p>
+<p>这个文件在编译之前是没有的 /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vim /opt/lagou/servers/griffin-0.5.0/ui/angular/node_modules/@types/jquery/JQuery.d.ts</span><br><span class="line"></span><br><span class="line">删除 1784，4139，8707 行</span><br><span class="line">find&lt;K extends keyof SVGElementTagNameMap&gt;(selector_element: K | JQuery&lt;K&gt;): JQuery&lt;SVGElementTagNameMap[K]&gt;;</span><br></pre></td></tr></table></figure>
+<p>再次编译: mvn -Dmaven.test.skip=true clean install</p>
+<p>备注：</p>
+<ul>
+<li>
+<p>编译过程中需要下载500M+左右的jar，要将Maven的源设置到阿里</p>
+</li>
+<li>
+<p>如果修改了前面的配置文件，需要重新编译</p>
+</li>
+</ul>
+</li>
+<li>
+<p>8、jar拷贝</p>
+<p>编译完成后，会在service和measure模块的target目录下分别看到 service-0.5.0.jar 和 measure-0.5.0.jar 两个jar，将这两个jar分别拷贝到服务器目录下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 将 service-0.5.0.jar 拷贝到 /opt/lagou/servers/griffin-0.5.0/</span><br><span class="line">cd /opt/lagou/servers/griffin-0.5.0/service/target</span><br><span class="line">cp service-0.5.0.jar /opt/lagou/servers/griffin-0.5.0/</span><br><span class="line"></span><br><span class="line"># 将 measure-0.5.0.jar 拷贝到 /opt/lagou/servers/griffin- 0.5.0/，并改名</span><br><span class="line">cd /opt/lagou/servers/griffin-0.5.0/measure/target</span><br><span class="line">cp measure-0.5.0.jar /opt/lagou/servers/griffin-0.5.0/griffin-measure.jar</span><br><span class="line"></span><br><span class="line"># 将 griffin-measure.jar 上传到 hdfs:///griffin 中</span><br><span class="line">cd /opt/lagou/servers/griffin-0.5.0</span><br><span class="line">hdfs dfs -mkdir /griffin</span><br><span class="line">hdfs dfs -put griffin-measure.jar /griffin</span><br></pre></td></tr></table></figure>
+<p>备注：spark在yarn集群上执行任务时，需要到HDFS的/griffin目录下加载griffin-measure.jar，避免发生类org.apache.griffin.measure.Application找不到的错误。</p>
+</li>
+</ul>
+<h3 id="启动Griffin服务">启动Griffin服务</h3>
+<p>启动Griffin管理后台：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /opt/lagou/servers/griffin-0.5.0</span><br><span class="line">nohup java -jar service-0.5.0.jar&gt;service.out 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure>
+<p>Apache Griffin的UI：<a target="_blank" rel="noopener" href="http://linux122:9876">http://linux122:9876</a></p>
+<p>用户名口令：admin / admin</p>
+<h2 id="与电商业务集成">与电商业务集成</h2>
+<h3 id="数据资产">数据资产</h3>
+<p>单击右上角的 DataAssets 来检查数据资产</p>
+  <img src="/posts/1859133978/8.jpg" class="post-image">
+  <br>
+<p>备注：这里的数据数据资产主要是保存在Hive上的表，要求 Hive Metastore 服务正常</p>
+<h3 id="创建-measure">创建 measure</h3>
+  <img src="/posts/1859133978/9.jpg" class="post-image">
+  <br>  
+  <img src="/posts/1859133978/10.jpg" class="post-image">
+  <br>  
+<ul>
+<li>
+<p>如果要测量源和目标之间的匹配率，请选择 Accuracy（精确度验证）</p>
+</li>
+<li>
+<p>如果要检查数据的特定值（例如：空列计数），请选择 Data Profiling（数据统计分析）</p>
+<ul>
+<li>
+<p>统计表的特定列里面值为空、唯一或是重复的数量</p>
+</li>
+<li>
+<p>统计最大值、最小值、平均数、中值等</p>
+</li>
+<li>
+<p>用正则表达式来对数据的频率和模式进行分析</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>核心交易分析中有两张表：</p>
+<p>dws_trade_orders（订单明细）</p>
+<p>dws_trade_orders_w（订单明细宽表）</p>
+<p>这两张表的数据量应该是相等的（Accuracy）</p>
+  <img src="/posts/1859133978/11.jpg" class="post-image">
+  <br>  
+  <img src="/posts/1859133978/12.jpg" class="post-image">
+  <br>  
+  <img src="/posts/1859133978/13.jpg" class="post-image">
+  <br>  
+  <img src="/posts/1859133978/14.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/15.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/16.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/17.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/18.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/19.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/20.jpg" class="post-image">
+  <br>
+<p>计算ODS层</p>
+<p>ods_trade_orders(订单表)</p>
+<p>订单表的数据量(Data Profiling)</p>
+  <img src="/posts/1859133978/21.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/22.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/23.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/24.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/25.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/26.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/27.jpg" class="post-image">
+  <br>
+  <img src="/posts/1859133978/28.jpg" class="post-image">
+  <br>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/1859133978/">https://raoweijiapng.gitee.io/posts/1859133978/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/4146301843/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Atlas简介与安装部署</div></div></a></div><div class="next-post pull-right"><a href="/posts/1957530858/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">数据仓库数据可视化</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">360</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">41</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%81%9A%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E7%9B%91%E6%8E%A7"><span class="toc-number">1.</span> <span class="toc-text">为什么要做数据质量监控</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%B4%A8%E9%87%8F%E7%9B%91%E6%8E%A7%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">数据质量监控方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Griffin%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">Griffin架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85"><span class="toc-number">4.</span> <span class="toc-text">编译安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E4%BE%9D%E8%B5%96"><span class="toc-number">4.1.</span> <span class="toc-text">相关依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spark%E5%AE%89%E8%A3%85"><span class="toc-number">4.2.</span> <span class="toc-text">Spark安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Livy%E5%AE%89%E8%A3%85"><span class="toc-number">4.3.</span> <span class="toc-text">Livy安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ES%E5%AE%89%E8%A3%85"><span class="toc-number">4.4.</span> <span class="toc-text">ES安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Griffin%E7%BC%96%E8%AF%91%E5%87%86%E5%A4%87"><span class="toc-number">4.5.</span> <span class="toc-text">Griffin编译准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Griffin%E7%BC%96%E8%AF%91"><span class="toc-number">4.6.</span> <span class="toc-text">Griffin编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8Griffin%E6%9C%8D%E5%8A%A1"><span class="toc-number">4.7.</span> <span class="toc-text">启动Griffin服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8E%E7%94%B5%E5%95%86%E4%B8%9A%E5%8A%A1%E9%9B%86%E6%88%90"><span class="toc-number">5.</span> <span class="toc-text">与电商业务集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E8%B5%84%E4%BA%A7"><span class="toc-number">5.1.</span> <span class="toc-text">数据资产</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-measure"><span class="toc-number">5.2.</span> <span class="toc-text">创建 measure</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1957530858/" title="数据仓库数据可视化">数据仓库数据可视化</a><time datetime="2022-08-18T12:00:10.000Z" title="发表于 2022-08-18 20:00:10">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1859133978/" title="Griffin简介与安装部署">Griffin简介与安装部署</a><time datetime="2022-08-18T08:21:44.000Z" title="发表于 2022-08-18 16:21:44">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4146301843/" title="Atlas简介与安装部署">Atlas简介与安装部署</a><time datetime="2022-08-17T14:43:16.000Z" title="发表于 2022-08-17 22:43:16">2022-08-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3296979016/" title="Airflow任务集成部署">Airflow任务集成部署</a><time datetime="2022-08-14T13:23:05.000Z" title="发表于 2022-08-14 21:23:05">2022-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2822925631/" title="Airflow简介与安装部署">Airflow简介与安装部署</a><time datetime="2022-08-14T10:29:52.000Z" title="发表于 2022-08-14 18:29:52">2022-08-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
