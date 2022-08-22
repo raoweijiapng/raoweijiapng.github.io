@@ -1,0 +1,327 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Scala函数及抽象化 | WeiJia_Rao</title><meta name="keywords" content="Java Hadoop"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="函数字面量及函数的定义 Scala中函数为头等公民，不仅可以定义一个函数然后调用它，还可以写一个未命名的函数字面量，然后可以把它当成一个值传递到其它函数或是赋值给其它变量。 函数字面量体现了函数式编程的核心理念。字面量包括整数字面量、浮点数字面量、布尔型字面量、字符字面量、字符串字面量、符号字面量、函数字面量等。什么是函数字面量呢？ 在函数式编程中，函数是“头等公民”，可以像任何其他数据类型一样被">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala函数及抽象化">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/2957767394/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="函数字面量及函数的定义 Scala中函数为头等公民，不仅可以定义一个函数然后调用它，还可以写一个未命名的函数字面量，然后可以把它当成一个值传递到其它函数或是赋值给其它变量。 函数字面量体现了函数式编程的核心理念。字面量包括整数字面量、浮点数字面量、布尔型字面量、字符字面量、字符串字面量、符号字面量、函数字面量等。什么是函数字面量呢？ 在函数式编程中，函数是“头等公民”，可以像任何其他数据类型一样被">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-08-21T09:20:22.000Z">
+<meta property="article:modified_time" content="2022-08-21T11:06:06.350Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Java Hadoop">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/2957767394/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Scala函数及抽象化',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-21 19:06:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">372</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">42</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Scala函数及抽象化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-21T09:20:22.000Z" title="发表于 2022-08-21 17:20:22">2022-08-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-08-21T11:06:06.350Z" title="更新于 2022-08-21 19:06:06">2022-08-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Scala/">Scala</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Scala函数及抽象化"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="函数字面量及函数的定义">函数字面量及函数的定义</h2>
+<p>Scala中函数为头等公民，不仅可以定义一个函数然后调用它，还可以写一个未命名的函数字面量，然后可以把它当成一个值传递到其它函数或是赋值给其它变量。</p>
+<p>函数字面量体现了函数式编程的核心理念。字面量包括整数字面量、浮点数字面量、布尔型字面量、字符字面量、字符串字面量、符号字面量、函数字面量等。什么是函数字面量呢？</p>
+<p>在函数式编程中，函数是“头等公民”，可以像任何其他数据类型一样被传递和操作。函数的使用方式和其他数据类型的使用方式完全一致，可以像定义变量那样去定义一个函数，函数也会和其他变量一样，有类型有值；</p>
+<p>就像变量的“类型”和“值”是分开的两个概念一样，函数的“类型”和“值”也成为两个分开的概念；</p>
+<p>函数的“值”，就是“函数字面量”。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; def add1(x: Int): Int = &#123; x + 1 &#125;</span><br><span class="line">add1: (x: Int)Int</span><br><span class="line">// 函数的类型为: (Int) =&gt; Int</span><br><span class="line">// 输入参数列表只有一个括号，可以简写为: Int =&gt; Int</span><br><span class="line"></span><br><span class="line">scala&gt; def add2(x: Int, y: Int): Int = &#123; x + y &#125;</span><br><span class="line">add2: (x: Int, y: Int)Int</span><br><span class="line">// 函数的类型为: (Int, Int) =&gt; Int</span><br><span class="line"></span><br><span class="line">scala&gt; def add3(x: Int, y: Int, z: Int): Int = &#123; x + y + z &#125;</span><br><span class="line">add3: (x: Int, y: Int, z: Int)Int</span><br><span class="line">// 函数的类型为: (Int, Int, Int) =&gt; Int</span><br><span class="line"></span><br><span class="line">scala&gt; def add4(x: Int, y: Int, z: Int): (Int, Int) = &#123; (x + y, y + z) &#125;</span><br><span class="line">add4: (x: Int, y: Int, z: Int)(Int, Int)</span><br><span class="line">// 函数的类型为: (Int, Int, Int) =&gt; (Int, Int)</span><br></pre></td></tr></table></figure>
+<p>函数类型：(输入参数类型列表) =&gt; (输出参数类型列表)</p>
+<p>只有一个参数时，小括号可省略；函数体中只有1行语句时，大括号可以省略；</p>
+<p>把函数定义中的类型声明部分去除，剩下的就是函数的“值”，即函数字面量：</p>
+  <img src="/posts/2957767394/1.png" class="post-image">
+  <br>
+<p>对 add1 而言函数的值为：(x) =&gt; x+1</p>
+<p>对 add2 而言函数的值为：(x, y) =&gt; x+y</p>
+<p>对 add3 而言函数的值为：(x, y, z) =&gt; x+y+z</p>
+<p>对 add4 而言函数的值为：(x, y, z) =&gt; (x+y, y+z)</p>
+<p>在Scala中我们这样<strong>定义变量： val 变量名: 类型 = 值</strong> ;</p>
+<p>我们可以用完全相同的方式<strong>定义函数： val 函数名: 函数类型 = 函数字面量</strong></p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> add1: <span class="type">Int</span> =&gt; <span class="type">Int</span> = (x) =&gt; x+<span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> add2: (<span class="type">Int</span>, <span class="type">Int</span>) =&gt; <span class="type">Int</span> = (x, y) =&gt; x + y</span><br><span class="line"><span class="keyword">val</span> add3: (<span class="type">Int</span>, <span class="type">Int</span>, <span class="type">Int</span>) =&gt; <span class="type">Int</span> = (x, y, z) =&gt; x + y + z</span><br><span class="line"><span class="keyword">val</span> add4: (<span class="type">Int</span>, <span class="type">Int</span>, <span class="type">Int</span>) =&gt; (<span class="type">Int</span>, <span class="type">Int</span>) = (x, y, z) =&gt; (x + y, y + z)</span><br></pre></td></tr></table></figure>
+<p>在Scala中有自动类型推断，所以可以<strong>省略变量的类型 val 变量名 = 值</strong> 。</p>
+<p>同样<strong>函数也可以这样： val 函数名 = 函数字面量</strong></p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> add1 = (x: <span class="type">Int</span>) =&gt; x + <span class="number">1</span></span><br><span class="line"><span class="keyword">val</span> add2 = (x: <span class="type">Int</span>, y: <span class="type">Int</span>) =&gt; x + y</span><br><span class="line"><span class="keyword">val</span> add3 = (x: <span class="type">Int</span>, y: <span class="type">Int</span>, z: <span class="type">Int</span>) =&gt; x + y + z</span><br><span class="line"><span class="keyword">val</span> add4 = (x: <span class="type">Int</span>, y: <span class="type">Int</span>, z: <span class="type">Int</span>) =&gt; (x + y, y + z)</span><br></pre></td></tr></table></figure>
+<p><strong>备注：要让编译器进行自动类型推断，要告诉编译器足够的信息，所以添加了 x 的类型信息。</strong></p>
+<p>函数的定义：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val 函数名: (参数类型1，参数类型2) =&gt; (返回类型) = 函数字面量</span><br><span class="line">val 函数名 = 函数字面量 函数字面量:(参数1：类型1，参数2：类型2) =&gt; 函数体</span><br><span class="line">val 函数名 = (参数1：类型1，参数2：类型2) =&gt; 函数体</span><br></pre></td></tr></table></figure>
+<h2 id="函数与方法的区别">函数与方法的区别</h2>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; def addm(x: Int, y: Int): Int = x + y</span><br><span class="line">addm: (x: Int, y: Int)Int</span><br><span class="line"></span><br><span class="line">scala&gt; val addf = (x: Int, y: Int) =&gt; x + y</span><br><span class="line">addf: (Int, Int) =&gt; Int = &lt;function2&gt;</span><br></pre></td></tr></table></figure>
+<p>严格的说：使用 val 定义的是函数(function)，使用 def 定义的是方法(method)。二者在语义上的区别很小，在绝大多数情况下都可以不去理会它们之间的区别，但是有时候有必要了解它们之间的不同。</p>
+<p>Scala中的方法与函数有以下区别：</p>
+<ul>
+<li>
+<p>Scala 中的方法与 Java 的类似，方法是组成类的一部分</p>
+</li>
+<li>
+<p>Scala 中的函数则是一个完整的对象。Scala 中用 22 个特质(从 Function1 到 Function22)抽象出了函数的概念</p>
+</li>
+<li>
+<p>Scala 中用 val 语句定义函数，def 语句定义方法</p>
+</li>
+</ul>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 下面用三种方式定义了函数，其中第二种方式最常见</span><br><span class="line">val adder1: (Int, Int) =&gt; Int = (x, y) =&gt; x+y</span><br><span class="line">val adder2 = (x: Int, y: Int) =&gt; x+y</span><br><span class="line"></span><br><span class="line">// Function2是特质，不能直接new</span><br><span class="line">// new Function2[Int,Int,Int]&#123; ... &#125; 其实是定义并实例化一个实现了 Function2 特质的类的对象</span><br><span class="line">val adder3 = new Function2[Int, Int, Int]&#123;</span><br><span class="line">  def apply(x: Int, y: Int): Int = &#123;</span><br><span class="line">    x + y</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>
+<p>方法不能作为单独的表达式而存在，而函数可以；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 方法不能作为单独的表达式而存在，而函数可以</span><br><span class="line">scala&gt; def addm(x: Int, y: Int): Int = x + y</span><br><span class="line">addm: (x: Int, y: Int)Int</span><br><span class="line"></span><br><span class="line">scala&gt; val addf = (x: Int, y: Int) =&gt; x + y</span><br><span class="line">addf: (Int, Int) =&gt; Int = &lt;function2&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; addm</span><br><span class="line">&lt;console&gt;:13: error: missing argument list for method addm</span><br><span class="line"></span><br><span class="line">scala&gt; addf</span><br><span class="line">res8: (Int, Int) =&gt; Int = &lt;function2&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>函数必须要有参数列表，而方法可以没有参数列表；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 函数必须要有参数列表，而方法可以没有参数列表</span><br><span class="line">scala&gt; def m1 = &quot;This is lagou edu&quot;</span><br><span class="line">m1: String</span><br><span class="line"></span><br><span class="line">// 函数必须有参数列表</span><br><span class="line">scala&gt; val f1 = () =&gt; &quot;This is lagou edu&quot;</span><br><span class="line">f1: () =&gt; String = &lt;function0&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>方法名是方法调用，而函数名只是代表函数对象本身；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 方法名是方法调用</span><br><span class="line">scala&gt; m1</span><br><span class="line">res16: String = This is lagou edu</span><br><span class="line"></span><br><span class="line">// 函数名代表函数对象</span><br><span class="line">scala&gt; f1</span><br><span class="line">res17: () =&gt; String = &lt;function0&gt;</span><br><span class="line"></span><br><span class="line">// 这才代表函数调用</span><br><span class="line">scala&gt; f1()</span><br><span class="line">res18: String = This is lagou edu</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>在需要函数的地方，如果传递一个方法，会自动把方法转换为函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 需要函数的地方，可以传递一个方法</span><br><span class="line">scala&gt; val list = (1 to 10).toList</span><br><span class="line">lst: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)</span><br><span class="line"></span><br><span class="line">scala&gt; def double(x: Int) = x*x</span><br><span class="line">double: (x: Int)Int</span><br><span class="line"></span><br><span class="line">scala&gt; list.map(double(_))</span><br><span class="line">res20: List[Int] = List(1, 4, 9, 16, 25, 36, 49, 64, 81, 100)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>将方法转换为函数：</strong></p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; def f1 = double _ //注意：方法名与下划线之间有一个空格</span><br><span class="line">f1: Int =&gt; Int</span><br><span class="line"></span><br><span class="line">scala&gt; f1</span><br><span class="line">res21: Int =&gt; Int = &lt;function1&gt;</span><br></pre></td></tr></table></figure>
+<p>写程序的时候是定义方法、还是定义函数？</p>
+<p><strong>一般情况下，不对二者做区分，认为都是函数，更多的时候使用def定义函数。</strong></p>
+<h2 id="匿名函数与占位符">匿名函数与占位符</h2>
+<p>函数没有名字就是匿名函数；</p>
+<p>匿名函数，又被称为 Lambda 表达式。 Lambda表达式的形式如下：</p>
+<p>(参数名1: 类型1, 参数名2: 类型2, … …) =&gt; 函数体</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">// 定义匿名函数</span><br><span class="line">scala&gt; (x: Int) =&gt; x + 1</span><br><span class="line">res0: Int =&gt; Int = &lt;function1&gt;</span><br><span class="line"></span><br><span class="line">// 函数没有名字，在集成开发环境中是无法被调用的</span><br><span class="line">scala&gt; res0(10)</span><br><span class="line">res1: Int = 11</span><br><span class="line"></span><br><span class="line">scala&gt; val list = (1 to 10).toList</span><br><span class="line">lst: List[Int] = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)</span><br><span class="line"></span><br><span class="line">// 将匿名函数作为参数传递给另一个函数</span><br><span class="line">scala&gt; list.map((x: Int) =&gt; x + 1)</span><br><span class="line">res2: List[Int] = List(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)</span><br><span class="line"></span><br><span class="line">// x一定是Int类型，这里可以省略</span><br><span class="line">scala&gt; list.map((x) =&gt; x + 1)</span><br><span class="line">res3: List[Int] = List(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)</span><br><span class="line"></span><br><span class="line">// 只有一个参数，小括号可以省略</span><br><span class="line">scala&gt; list.map(x =&gt; x + 1)</span><br><span class="line">res4: List[Int] = List(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)</span><br><span class="line"></span><br><span class="line">// 使用占位符简化函数字面量</span><br><span class="line">scala&gt; list.map(_ + 1)</span><br><span class="line">res5: List[Int] = List(2, 3, 4, 5, 6, 7, 8, 9, 10, 11)</span><br><span class="line"></span><br><span class="line">// 实现将List中的每个元素*2 + 1，但是出错了</span><br><span class="line">scala&gt; list.map(_ + _ + 1)</span><br><span class="line">&lt;console&gt;:13: error: missing parameter type for expanded function ((x$1, x$2) =&gt; x$1.$plus(x$2).$plus(1))</span><br><span class="line"></span><br><span class="line">// 这样是可行的</span><br><span class="line">scala&gt; list.map(2 * _ + 1)</span><br><span class="line"></span><br><span class="line">// 通过reduce这个高阶函数，将list列表中的元素相加求和</span><br><span class="line">scala&gt; list.reduce((x,y) =&gt; x + y)</span><br><span class="line">res0: Int = 55</span><br><span class="line"></span><br><span class="line">// 使用占位符简化函数字面量</span><br><span class="line">// 第一个下划线代表第一个参数，第二个下划线代表第二个参数</span><br><span class="line">scala&gt; list.reduce(_ + _)</span><br><span class="line">res1: Int = 55</span><br></pre></td></tr></table></figure>
+<p><strong>多个下划线指代多个参数，而不是单个参数的重复运用</strong></p>
+<ul>
+<li>
+<p>第一个下划线代表第一个参数</p>
+</li>
+<li>
+<p>第二个下划线代表第二个参数</p>
+</li>
+<li>
+<p>第三个……，如此类推</p>
+</li>
+</ul>
+<h2 id="高阶函数">高阶函数</h2>
+<p><strong>高阶函数：接收一个或多个函数作为输入 或 输出一个函数。</strong></p>
+<p>函数的参数可以是变量，而函数又可以赋值给变量，由于函数和变量地位一样，所以函数参数也可以是函数；</p>
+<p>常用的高阶函数：map、reduce、flatMap、foreach、filter、count … … (接收函数作为参数)</p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> lagou.cn.part08</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">HighFunction</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="comment">//接收一个或多个函数作为输入的高阶函数</span></span><br><span class="line">    <span class="keyword">val</span> func = (n) =&gt; <span class="string">&quot;*&quot;</span> * n</span><br><span class="line">    (<span class="number">1</span> to <span class="number">5</span>).map(func(_)).foreach(println)</span><br><span class="line"></span><br><span class="line">    <span class="comment">//输出一个函数的高阶函数</span></span><br><span class="line">    <span class="keyword">val</span> <span class="type">URLBuilder</span> = (ssl: <span class="type">Boolean</span>, domainName: <span class="type">String</span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">val</span> schema = <span class="keyword">if</span> (ssl) <span class="string">&quot;https://&quot;</span> <span class="keyword">else</span> <span class="string">&quot;http://&quot;</span></span><br><span class="line">      <span class="comment">//输出一个匿名函数</span></span><br><span class="line">      (endpoint: <span class="type">String</span>, query: <span class="type">String</span>) =&gt; <span class="string">s&quot;<span class="subst">$schema</span><span class="subst">$domainName</span>/<span class="subst">$endpoint</span>?<span class="subst">$query</span>&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">val</span> domainName = <span class="string">&quot;www.lagou.com&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">getURl</span> </span>= <span class="type">URLBuilder</span>(<span class="literal">true</span>, domainName)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> endpoint = <span class="string">&quot;show&quot;</span></span><br><span class="line">    <span class="keyword">val</span> query = <span class="string">&quot;id=1&quot;</span></span><br><span class="line">    <span class="keyword">val</span> url = getURl(endpoint, query)</span><br><span class="line">    println(url)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="闭包">闭包</h2>
+<p>闭包是一种函数，一种比较特殊的函数，它和普通的函数有很大区别：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">// 普通的函数</span><br><span class="line">val addMore1 = (x: Int) =&gt; x + 10</span><br><span class="line"></span><br><span class="line">// 外部变量，也称为自由变量</span><br><span class="line">var more = 10</span><br><span class="line"></span><br><span class="line">// 闭包</span><br><span class="line">val addMore2 = (x: Int) =&gt; x + more</span><br><span class="line"></span><br><span class="line">// 调用addMore1函数</span><br><span class="line">println(addMore1(5))</span><br><span class="line"></span><br><span class="line">// 每次addMore2函数被调用时，都会去捕获外部的自由变量</span><br><span class="line">println(addMore2(10))</span><br><span class="line"></span><br><span class="line">more = 100</span><br><span class="line">println(addMore2(10))</span><br><span class="line"></span><br><span class="line">more = 1000</span><br><span class="line">println(addMore2(10))</span><br></pre></td></tr></table></figure>
+<p><strong>闭包是在其上下文中引用了自由变量的函数；</strong></p>
+<p>闭包引用到函数外面定义的变量，定义这个函数的过程就是将这个自由变量捕获而构成的一个封闭的函数，也可理解为”把函数外部的一个自由变量关闭进来“。</p>
+<p>何为闭包？需满足下面三个条件：</p>
+<p>1、闭包是一个函数</p>
+<p>2、函数必须要有返回值</p>
+<p>3、返回值依赖声明在函数外部的一个或多个变量，用Java的话说，就是返回值和定义的全局变量有关</p>
+<h2 id="柯里化">柯里化</h2>
+<p><strong>函数编程中，接收多个参数的函数都可以转化为接收单个参数的函数</strong>，这个转化过程就叫柯里化(Currying)</p>
+<p>Scala中，柯里化函数的定义形式和普通函数类似，区别在于柯里化函数拥有多组参数列表，每组参数用小括号括起来。</p>
+<p>Scala API中很多函数都是柯里化的形式。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">// 使用普通的方式</span><br><span class="line">def add1(x: Int, y: Int) = x + y</span><br><span class="line"></span><br><span class="line">// 使用闭包的方式，将其中一个函数作为返回值</span><br><span class="line">def add2(x: Int) = (y:Int) =&gt; x + y</span><br><span class="line"></span><br><span class="line">// 使用柯里化的方式</span><br><span class="line">def add(x: Int)(y: Int) = x + y</span><br><span class="line"></span><br><span class="line">//调用柯里化函数add</span><br><span class="line">scala&gt; add(1)(2) res1: Int = 3</span><br><span class="line"></span><br><span class="line">//add(1)(2)实际上第一次调用使用参数x，返回一个函数类型的值，第二次使用参数y调用这个函数类型的值。</span><br><span class="line">//实际上最先演变成这样的函数：def add(x: Int) = (y:Int) =&gt; x + y</span><br><span class="line">//在这个函数中，接收一个x为参数，返回一个匿名函数，这个匿名函数的定义是：接收一个Int型参数y，函 数体是x+y。</span><br><span class="line">//调用过程如下：</span><br><span class="line">scala&gt; val result=add(1)</span><br><span class="line">result: Int =&gt; Int = &lt;function1&gt;</span><br><span class="line"></span><br><span class="line">scala&gt; val sum=result(2)</span><br><span class="line">sum: Int = 3</span><br><span class="line"></span><br><span class="line">scala&gt; sum</span><br><span class="line">res0: Int = 3</span><br></pre></td></tr></table></figure>
+  <img src="/posts/2957767394/2.jpg" class="post-image">
+  <br>
+<h2 id="部分应用函数">部分应用函数</h2>
+<p>部分应用函数（Partial Applied Function）也叫偏应用函数，与偏函数从名称上看非常接近，但二者之间却有天壤之别。</p>
+<p><strong>部分应用函数是指缺少部分（甚至全部）参数的函数。</strong></p>
+<p>如果一个函数有n个参数, 而为其提供少于n个参数, 那就得到了一个部分应用函数。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">// 定义一个函数</span><br><span class="line">def add(x:Int, y:Int, z:Int) = x+y+z</span><br><span class="line"></span><br><span class="line">// Int不能省略</span><br><span class="line">def addX = add(1, _:Int, _:Int)   </span><br><span class="line">addX(2,3)</span><br><span class="line">addX(3,4)</span><br><span class="line"></span><br><span class="line">def addXAndY = add(10, 100, _:Int)</span><br><span class="line">addXAndY(1)</span><br><span class="line"></span><br><span class="line">def addZ = add(_:Int, _:Int, 10)</span><br><span class="line">addZ(1,2)</span><br><span class="line"></span><br><span class="line">// 省略了全部的参数，下面两个等价。第二个更常用</span><br><span class="line">def add1 = add(_: Int, _: Int, _: Int)</span><br><span class="line">def add2 = add _</span><br></pre></td></tr></table></figure>
+<h2 id="偏函数">偏函数</h2>
+<p>偏函数（Partial Function）之所以“偏”，原因在于它们并不处理所有可能的输入，而只处理那些能与至少一个 case 语句匹配的输入；</p>
+<p><strong>在偏函数中只能使用 case 语句，整个函数必须用大括号包围</strong>。这与普通的函数字面量不同，普通的函数字面量可以使用大括号，也可以用小括号；</p>
+<p><strong>被包裹在大括号中的一组case语句是一个偏函数</strong>，是一个并非对所有输入值都有定义的函数；</p>
+<p>Scala中的Partial Function是一个trait，其类型为PartialFunction[A,B]，表示：接收一个类型为A的参数，返回一个类型为B的结果。</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 1、2、3有对应的输出值，其它输入打印 Other</span><br><span class="line">val pf: PartialFunction[Int, String] = &#123;</span><br><span class="line">  case 1 =&gt; &quot;One&quot;</span><br><span class="line">  case 2 =&gt; &quot;Two&quot;</span><br><span class="line">  case 3 =&gt; &quot;Three&quot;</span><br><span class="line">  case _=&gt; &quot;Other&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">pf(1) // 返回: One</span><br><span class="line">pf(2) // 返回: Two</span><br><span class="line">pf(5) // 返回: Other</span><br></pre></td></tr></table></figure>
+<p>需求：过滤List中的String类型的元素，并将Int类型的元素加1。</p>
+  <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> lagou.cn.part08</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">PartialFunctionDemo</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="comment">//[Any,Int]，偏函数接收的数据类型是Any，返回的数据类型是Int</span></span><br><span class="line">    <span class="keyword">val</span> partialFunction = <span class="keyword">new</span> <span class="type">PartialFunction</span>[<span class="type">Any</span>, <span class="type">Int</span>] &#123;</span><br><span class="line">      <span class="comment">//如果返回true，那么就调用apply方法；如果返回的是false，就过滤掉</span></span><br><span class="line">      <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">isDefinedAt</span></span>(x: <span class="type">Any</span>): <span class="type">Boolean</span> = &#123;</span><br><span class="line">        println(x.toString)</span><br><span class="line">        x.isInstanceOf[<span class="type">Int</span>]</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">//对传入的整数值+1，并将其返回</span></span><br><span class="line">      <span class="keyword">override</span> <span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>(v1: <span class="type">Any</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">        println(v1.toString)</span><br><span class="line">        v1.asInstanceOf[<span class="type">Int</span>] + <span class="number">1</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">val</span> list=<span class="type">List</span>(<span class="number">10</span>,<span class="string">&quot;hadoop&quot;</span>,<span class="number">20</span>,<span class="string">&quot;spark&quot;</span>,<span class="number">30</span>,<span class="string">&quot;flink&quot;</span>)</span><br><span class="line">    list.collect(partialFunction).foreach(println(_))</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/2957767394/">https://raoweijiapng.gitee.io/posts/2957767394/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/2153879792/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Scala模式匹配和样例类</div></div></a></div><div class="next-post pull-right"><a href="/posts/858977304/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Scala集合</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">372</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">42</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%AD%97%E9%9D%A2%E9%87%8F%E5%8F%8A%E5%87%BD%E6%95%B0%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">函数字面量及函数的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E4%B8%8E%E6%96%B9%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">2.</span> <span class="toc-text">函数与方法的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0%E4%B8%8E%E5%8D%A0%E4%BD%8D%E7%AC%A6"><span class="toc-number">3.</span> <span class="toc-text">匿名函数与占位符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">高阶函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AD%E5%8C%85"><span class="toc-number">5.</span> <span class="toc-text">闭包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="toc-number">6.</span> <span class="toc-text">柯里化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E5%88%86%E5%BA%94%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">7.</span> <span class="toc-text">部分应用函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E5%87%BD%E6%95%B0"><span class="toc-number">8.</span> <span class="toc-text">偏函数</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1885191393/" title="Scala扩展部分">Scala扩展部分</a><time datetime="2022-08-22T09:49:40.000Z" title="发表于 2022-08-22 17:49:40">2022-08-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/918545352/" title="Scala隐式机制">Scala隐式机制</a><time datetime="2022-08-22T03:16:56.000Z" title="发表于 2022-08-22 11:16:56">2022-08-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/858977304/" title="Scala集合">Scala集合</a><time datetime="2022-08-21T11:06:23.000Z" title="发表于 2022-08-21 19:06:23">2022-08-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2957767394/" title="Scala函数及抽象化">Scala函数及抽象化</a><time datetime="2022-08-21T09:20:22.000Z" title="发表于 2022-08-21 17:20:22">2022-08-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2153879792/" title="Scala模式匹配和样例类">Scala模式匹配和样例类</a><time datetime="2022-08-21T08:28:55.000Z" title="发表于 2022-08-21 16:28:55">2022-08-21</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

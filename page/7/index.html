@@ -58,7 +58,7 @@
   isHome: true,
   isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2022-08-19 10:45:53'
+  postUpdate: '2022-08-22 18:59:51'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -147,168 +147,137 @@
       }
     }
     detectApple()
-    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">360</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">41</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171222%2F859f6d0ab8164b36a17ab087c358e815.jpeg&amp;refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1658982738&amp;t=ffb53ac40317f6710dcccb39599ca231')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">WeiJia_Rao</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1305015450/" title="Kafka特性之消费者">Kafka特性之消费者</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-22T11:30:57.000Z" title="发表于 2022-07-22 19:30:57">2022-07-22</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">概念
-消费者和消费组
-消费者从订阅的主题消费消息，消费消息的偏移量保存在Kafka的名字是 __consumer_offsets 的主题中。
-消费者还可以将⾃⼰的偏移量存储到Zookeeper，需要设置offset.storage=zookeeper。
-推荐使⽤Kafka存储消费者的偏移量。因为Zookeeper不适合⾼并发。
-多个从同⼀个主题消费的消费者可以加⼊到⼀个消费组中。
-消费组中的消费者共享group_id。
-group_id通过消费者的配置指定：configs.put(“group.id”, “xxx”);
-group_id⼀般设置为应⽤的逻辑名称。⽐如多个订单处理程序组成⼀个消费 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/4173367824/" title="Kafka特性之⽣产者">Kafka特性之⽣产者</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-21T09:10:12.000Z" title="发表于 2022-07-21 17:10:12">2022-07-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">消息发送
-数据⽣产流程解析
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">372</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">42</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171222%2F859f6d0ab8164b36a17ab087c358e815.jpeg&amp;refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1658982738&amp;t=ffb53ac40317f6710dcccb39599ca231')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">WeiJia_Rao</h1><div id="site-subtitle"><span id="subtitle"></span></div><div id="site_social_icons"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1285857781/" title="Kafka源码之Broker启动流程">Kafka源码之Broker启动流程</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-08-01T06:58:19.000Z" title="发表于 2022-08-01 14:58:19">2022-08-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">启动kafka
+kafka-server-start.sh内容如下：
+  
+    
+  12345678910111213141516171819202122232425262728if [ $# -lt 1 ];then	echo &quot;USAGE: $0 [-daemon] server.properties [--override property=value]*&quot;	exit 1fibase_dir=$(dirname $0)if [ &quot;x$KAFKA_LOG4J_OPTS&quot; = &quot;x&quot; ]; then    export KAF ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3833488258/" title="Kafka源码阅读环境搭建">Kafka源码阅读环境搭建</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-08-01T02:26:42.000Z" title="发表于 2022-08-01 10:26:42">2022-08-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">下载Kafka源码
+官方下载源码地址：http://archive.apache.org/dist/kafka/1.0.2/kafka-1.0.2-src.tgz
+安装配置Gradle
+官方gradle-4.8.1下载地址：https://services.gradle.org/distributions/gradle-4.8.1-bin.zip
+解压gradle-4.8.1-bin.zip到⼀个⽬录，如下图：
+  
+    
+配置环境变量，其中GRADLE_HOME指向gradle解压到的根⽬录，GRADLE_USER_HOME指向gradle的本地仓库位置。
+  
+    
+  
+     ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3290875849/" title="Kafka集群监控">Kafka集群监控</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-29T15:17:33.000Z" title="发表于 2022-07-29 23:17:33">2022-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">监控度量指标
+Kafka使⽤Yammer Metrics在服务器和Scala客户端中报告指标。Java客户端使⽤Kafka Metrics，它是⼀个内置的度量标准注册表，可最⼤程度地减少拉⼊客户端应⽤程序的传递依赖项。两者都通过JMX公开指标，并且可以配置为使⽤可插拔的统计报告器报告统计信息，以连接到您的监视系统。
+具体的监控指标可以查看官⽅⽂档: https://kafka.apache.org/10/documentation.html#monitoring。
+JMX
+Kafka开启Jmx端⼝
+  1[root@node4 bin]# vim /opt/lagou/servers/kafk ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3875673842/" title="Kafka集群应用与搭建">Kafka集群应用与搭建</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-29T09:44:12.000Z" title="发表于 2022-07-29 17:44:12">2022-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">集群应⽤场景
+
+
+
+消息传递
+
+Kafka可以很好地替代传统邮件代理。消息代理的使⽤有多种原因（将处理与数据⽣产者分离，缓冲未处理的消息等）。与⼤多数邮件系统相⽐，Kafka具有更好的吞吐量，内置的分区，复制和容错功能，这使其成为⼤规模邮件处理应⽤程序的理想解决⽅案。
+根据我们的经验，消息传递的使⽤通常吞吐量较低，但是可能需要较低的端到端延迟，并且通常取决于Kafka提供的强⼤的持久性保证。
+在这个领域，Kafka与ActiveMQ或 RabbitMQ等传统消息传递系统相当。
+
+
+
+⽹站活动路由
+
+Kafka最初的⽤例是能够将⽤户活动跟踪管道重建为⼀组实时的发布-订阅。这意味着将⽹站活动（⻚⾯ ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/215764336/" title="Kafka特性之延时队列与重试队列">Kafka特性之延时队列与重试队列</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-29T08:48:50.000Z" title="发表于 2022-07-29 16:48:50">2022-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">延时队列
+两个follower副本都已经拉取到了leader副本的最新位置，此时⼜向leader副本发送拉取请求，⽽leader副本并没有新的消息写⼊，那么此时leader副本该如何处理呢？可以直接返回空的拉取结果给follower副本，不过在leader副本⼀直没有新消息写⼊的情况下，follower副本会⼀直发送拉取请求，并且总收到空的拉取结果，消耗资源。
+  
+    
+Kafka在处理拉取请求时，会先读取⼀次⽇志⽂件，如果收集不到⾜够多（fetchMinBytes，由参数 fetch.min.bytes配置，默认值为1）的消息，那么就会创建⼀个延时拉取操作（DelayedFetch）以 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1714705542/" title="Kafka特性之消息重复解决和consumer-offsets">Kafka特性之消息重复解决和consumer-offsets</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-29T03:34:24.000Z" title="发表于 2022-07-29 11:34:24">2022-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">消息重复解决方案
+消息重复和丢失是kafka中很常⻅的问题，主要发⽣在以下三个阶段：
+
+
+⽣产者阶段
+
+
+broke阶段
+
+
+消费者阶段
+
+
+⽣产者阶段重复场景
+
+
+根本原因
+⽣产发送的消息没有收到正确的broke响应，导致⽣产者重试。
+⽣产者发出⼀条消息，broke落盘以后因为⽹络等种种原因发送端得到⼀个发送失败的响应或者⽹络中断，然后⽣产者收到⼀个可恢复的Exception重试消息导致消息重复。
+
+
+重试过程
+
+
+
+
+new KafkaProducer()后创建⼀个后台线程KafkaThread扫描RecordAccumulator中是否有消息；
+
+
+调⽤KafkaProducer.sen ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3523327287/" title="Kafka特性之一致性保证">Kafka特性之一致性保证</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-29T03:32:29.000Z" title="发表于 2022-07-29 11:32:29">2022-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">概念
+
+
+
+⽔位标记
+
+⽔位或⽔印（watermark）⼀词，表示位置信息，即位移（offset）。Kafka源码中使⽤的名字是⾼⽔位，HW（high watermark）。
+
+
+
+副本⻆⾊
+
+Kafka分区使⽤多个副本(replica)提供⾼可⽤。
+
+
+
+LEO和HW
+
+每个分区副本对象都有两个重要的属性：LEO和HW。
+
+
+LEO：即⽇志末端位移(log end offset)，记录了该副本⽇志中下⼀条消息的位移值。如果LEO=10，那么表示该副本保存了10条消息，位移值范围是[0, 9]。另外，Leader LEO和Follower LEO的更新是有区别的。
+
+
+HW：即上⾯提到的⽔位值 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1649525419/" title="Kafka特性之控制器和可靠性保证">Kafka特性之控制器和可靠性保证</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-29T02:26:35.000Z" title="发表于 2022-07-29 10:26:35">2022-07-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">控制器
+Kafka集群包含若⼲个broker，broker.id指定broker的编号，编号不要重复。
+Kafka集群上创建的主题，包含若⼲个分区。
+每个分区包含若⼲个副本，副本因⼦包括了Follower副本和Leader副本。
+副本⼜分为ISR（同步副本分区）和OSR（⾮同步副本分区）。
+  
+    
+控制器就是⼀个broker。
+控制器除了⼀般broker的功能，还负责Leader分区的选举。
+broker选举
+集群⾥第⼀个启动的broker在Zookeeper中创建临时节点 /controller 。
+其他broker在该控制器节点创建Zookeeper watch对象，使⽤Zooke ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1649525420/" title="Kafka特性之事务">Kafka特性之事务</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-27T09:42:16.000Z" title="发表于 2022-07-27 17:42:16">2022-07-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">事务
+事务场景
+
+
+
+如producer发的多条消息组成⼀个事务这些消息需要对consumer同时可⻅或者同时不可⻅ 。
+
+
+
+
+producer可能会给多个topic，多个partition发消息，这些消息也需要能放在⼀个事务⾥⾯，这就形成了⼀个典型的分布式事务。
+
+
+
+
+kafka的应⽤场景经常是应⽤先消费⼀个topic，然后做处理再发到另⼀个topic，这个consume-transform-produce过程需要放到⼀个事务⾥⾯，⽐如在消息处理或者发送的过程中如果失败了，消费偏移量也不能提交。
+
+
+
+
+producer或者producer所在的应⽤可能会挂掉，新的producer启动以 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3481392046/" title="Kafka特性之物理存储">Kafka特性之物理存储</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-27T02:17:46.000Z" title="发表于 2022-07-27 10:17:46">2022-07-27</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">⽇志存储
+概述
+Kafka 消息是以主题为单位进⾏归类，各个主题之间是彼此独⽴的，互不影响。
+每个主题⼜可以分为⼀个或多个分区。
+每个分区各⾃存在⼀个记录消息数据的⽇志⽂件。
   
   
-
-
-Producer创建时，会创建⼀个Sender线程并设置为守护线程。
-
-
-⽣产消息时，内部其实是异步流程；⽣产的消息先经过拦截器-&gt;序列化器-&gt;分区器，然后将消息缓存在缓冲区（该缓冲区也是在Producer创建时创建）。
-
-
-批次发送的条件为：缓冲区数据⼤⼩达到batch.size或者linger.ms达到上限，哪个先达到就算哪个。
-
-
-批次发送后，发往指定分区，然后落盘到broker；如果⽣产者配置了retrires参数⼤于0并且失败原因允许重试，那么客户端内部会对该消息进⾏重试。
-
-
-落盘到broker成功，返回⽣产元数据给⽣产者。
- ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1567804722/" title="Kafka服务端参数配置">Kafka服务端参数配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-21T08:36:11.000Z" title="发表于 2022-07-21 16:36:11">2022-07-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">配置参数
-$KAFKA_HOME/config/server.properties⽂件中的配置参数。
-zookeeper.connect
-该参数⽤于配置Kafka要连接的Zookeeper/集群的地址。
-它的值是⼀个字符串，使⽤逗号分隔Zookeeper的多个地址。Zookeeper的单个地址是 host:port 形式的，可以在最后添加Kafka在Zookeeper中的根节点路径。如：
-  1zookeeper.connect=node2:2181,node3:2181,node4:2181/myKafka
-  
-  
-内外⽹隔离配置
-  
-  
-listeners
-⽤于指定当前Broker ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/1644797404/" title="Kafka开发实战">Kafka开发实战</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-21T02:56:39.000Z" title="发表于 2022-07-21 10:56:39">2022-07-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">消息的发送与接收
-  
-  
-⽣产者主要的对象有： KafkaProducer ， ProducerRecord 。
-其中 KafkaProducer 是⽤于发送消息的类， ProducerRecord 类⽤于封装Kafka的消息。
-KafkaProducer 的创建需要指定的参数和含义：
-
-
-
-参数
-说明
-
-
-
-
-bootstrap.servers
-配置⽣产者如何与broker建⽴连接。该参数设置的是初始化参数。如果⽣产者需要连接的是Kafka集群，则这⾥配置集群中⼏个broker的地址，⽽不是全部，当⽣产者连接上此处指定的broker之后，在通过该连接发现集群中的其他节点。
-
-
-key.s ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/2526090232/" title="Kafka安装与配置">Kafka安装与配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-21T02:18:59.000Z" title="发表于 2022-07-21 10:18:59">2022-07-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">Java环境为前提
-
-
-
-上传jdk-8u261-linux-x64.rpm到服务器并安装：
-
-1rpm -ivh jdk-8u261-linux-x64.rpm
-
-
-
-配置环境变量并⽣效
-
-12345678910vim /etc/profile#JAVA_HOMEexport JAVA_HOME=/opt/lagou/servers/jdk1.8.0_231export PATH=$PATH:$JAVA_HOME/bin# ⽣效source /etc/profile# 验证java -version
-
-
-Zookeeper的安装配置
-
-
-
-上传zookeeper-3.4.14.tar.gz到 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/541412432/" title="Kafka概念和基本架构">Kafka概念和基本架构</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-21T01:19:20.000Z" title="发表于 2022-07-21 09:19:20">2022-07-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Kafka/">Kafka</a></span></div><div class="content">Kafka介绍
-Kafka是最初由Linkedin公司开发，是⼀个分布式、分区的、多副本的、多⽣产者、多订阅者，基于zookeeper协调的分布式⽇志系统（也可以当做MQ系统），常⻅可以⽤于web/nginx⽇志、访问⽇志，消息服务等等，Linkedin于2010年贡献给了Apache基⾦会并成为顶级开源项⽬。
-主要应⽤场景是：⽇志收集系统和消息系统。
-
-
-Kafka主要设计⽬标如下：
-
-
-以时间复杂度为O(1)的⽅式提供消息持久化能⼒，即使对TB级以上数据也能保证常数时间的访问性能。
-
-
-⾼吞吐率。即使在⾮常廉价的商⽤机器上也能做到单机⽀持每秒100K条消息的传输。
-
-
-⽀持Kafka Se ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/4201212584/" title="Redis高可用集群与分区">Redis高可用集群与分区</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-18T08:29:16.000Z" title="发表于 2022-07-18 16:29:16">2022-07-18</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Redis/">Redis</a></span></div><div class="content">分区是将数据分布在多个Redis实例（Redis主机）上，以至于每个实例只包含一部分数据。
-分区的意义
-
-
-性能的提升
-单机Redis的网络I/O能力和计算资源是有限的，将请求分散到多台机器，充分利用多台机器的计算能力可网络带宽，有助于提高Redis总体的服务能力。
-
-
-存储能力的横向扩展
-即使Redis的服务能力能够满足应用需求，但是随着存储数据的增加，单台机器受限于机器本身的存储容量，将数据分散到多台机器上存储使得Redis服务可以横向扩展。
-
-
-分区的方式
-根据分区键（id）进行分区
-范围分区
-根据id数字的范围比如1–10000、100001–20000…90001-100000，每个 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3163887720/" title="Redis高可用哨兵模式">Redis高可用哨兵模式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-18T02:34:50.000Z" title="发表于 2022-07-18 10:34:50">2022-07-18</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Redis/">Redis</a></span></div><div class="content">哨兵（sentinel）是Redis的高可用性(High Availability)的解决方案：
-由一个或多个sentinel实例组成sentinel集群可以监视一个或多个主服务器和多个从服务器。
-当主服务器进入下线状态时，sentinel可以将该主服务器下的某一从服务器升级为主服务器继续提供服务，从而保证redis的高可用性。
-部署方案
-  
-  
-搭建配置
-在一台机器上采用伪分布式的方式部署。（生产环境应该是多台机器）
-根据上面的部署方案搭建如下：
-
-
-Redis-Master ：127.0.0.1 6379
-123456789101112131415161718mkdir /opt/la ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/786642445/" title="Redis高可用主从复制">Redis高可用主从复制</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-17T10:56:28.000Z" title="发表于 2022-07-17 18:56:28">2022-07-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Redis/">Redis</a></span></div><div class="content">Redis支持主从复制功能，可以通过执行slaveof（Redis5以后改成replicaof）或者在配置文件中设置slaveof(Redis5以后改成replicaof)来开启复制功能。
-
-
-
-
-
-
-主对外从对内，主可写从不可写
-主挂了，从不可为主
-主从配置
-主Redis配置
-无需特殊配置
-从Redis配置
-修改从服务器上的 redis.conf 文件：
-  123# slaveof &lt;masterip&gt; &lt;masterport&gt;# 表示当前【从服务器】对应的【主服务器】的IP是192.168.10.135，端口是6379。replicaof 192.168.10.1 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/posts/3084363309/" title="阿里Redis使用手册">阿里Redis使用手册</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-17T09:21:04.000Z" title="发表于 2022-07-17 17:21:04">2022-07-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Redis/">Redis</a></span></div><div class="content">本文主要介绍在使用阿里云Redis的开发规范，从下面几个方面进行说明。
-
-
-键值设计
-
-
-命令使用
-
-
-客户端使用
-
-
-相关工具
-
-
-键值设计
-
-
-1、key名设计
-
-
-可读性和可管理性
-以业务名(或数据库名)为前缀(防止key冲突)，用冒号分隔，比如业务名:表名:id
-1ugc:video:1
-
-
-简洁性
-保证语义的前提下，控制key的长度，当key较多时，内存占用也不容忽视，例如：
-1user:&#123;uid&#125;:friends:messages:&#123;mid&#125; 简化为 u:&#123;uid&#125;:fr:m:&#123;mid&#125;
-不要包含特殊字 ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/#content-inner">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/#content-inner">36</a><a class="extend next" rel="next" href="/page/8/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">360</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">41</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1957530858/" title="数据仓库数据可视化">数据仓库数据可视化</a><time datetime="2022-08-18T12:00:10.000Z" title="发表于 2022-08-18 20:00:10">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1859133978/" title="Griffin简介与安装部署">Griffin简介与安装部署</a><time datetime="2022-08-18T08:21:44.000Z" title="发表于 2022-08-18 16:21:44">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/4146301843/" title="Atlas简介与安装部署">Atlas简介与安装部署</a><time datetime="2022-08-17T14:43:16.000Z" title="发表于 2022-08-17 22:43:16">2022-08-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3296979016/" title="Airflow任务集成部署">Airflow任务集成部署</a><time datetime="2022-08-14T13:23:05.000Z" title="发表于 2022-08-14 21:23:05">2022-08-14</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2822925631/" title="Airflow简介与安装部署">Airflow简介与安装部署</a><time datetime="2022-08-14T10:29:52.000Z" title="发表于 2022-08-14 18:29:52">2022-08-14</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+图中，创建了⼀个 tp_demo_01 主题，其存在6个 Parition，对应的每个Parition下存在⼀个 [Topic-Parition] 命名的消息⽇志⽂件。在理想情况下，数据流量分摊到各个 Parition 中，实现了负载均衡的效果。在分区⽇志⽂件中，你会发现很多类型的⽂件，⽐如： .index、.timestamp、.log、.snapshot 等。
+其中，⽂件名⼀致的⽂件集合就称为 LogSe ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/6/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/#content-inner">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/#content-inner">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/#content-inner">38</a><a class="extend next" rel="next" href="/page/8/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">372</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">57</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">42</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1885191393/" title="Scala扩展部分">Scala扩展部分</a><time datetime="2022-08-22T09:49:40.000Z" title="发表于 2022-08-22 17:49:40">2022-08-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/918545352/" title="Scala隐式机制">Scala隐式机制</a><time datetime="2022-08-22T03:16:56.000Z" title="发表于 2022-08-22 11:16:56">2022-08-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/858977304/" title="Scala集合">Scala集合</a><time datetime="2022-08-21T11:06:23.000Z" title="发表于 2022-08-21 19:06:23">2022-08-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2957767394/" title="Scala函数及抽象化">Scala函数及抽象化</a><time datetime="2022-08-21T09:20:22.000Z" title="发表于 2022-08-21 17:20:22">2022-08-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2153879792/" title="Scala模式匹配和样例类">Scala模式匹配和样例类</a><time datetime="2022-08-21T08:28:55.000Z" title="发表于 2022-08-21 16:28:55">2022-08-21</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>分类</span>
             <a class="card-more-btn" href="/categories/" title="查看更多">
@@ -316,8 +285,8 @@ Redis-Master ：127.0.0.1 6379
             </div>
             <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Airflow/"><span class="card-category-list-name">Airflow</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Atlas/"><span class="card-category-list-name">Atlas</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Azkaban/"><span class="card-category-list-name">Azkaban</span><span class="card-category-list-count">3</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/BootStrap4/"><span class="card-category-list-name">BootStrap4</span><span class="card-category-list-count">6</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/CSS/"><span class="card-category-list-name">CSS</span><span class="card-category-list-count">4</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/DataX/"><span class="card-category-list-name">DataX</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/Django/"><span class="card-category-list-name">Django</span><span class="card-category-list-count">21</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/ECMAScript5/"><span class="card-category-list-name">ECMAScript5</span><span class="card-category-list-count">1</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/HDFS/" style="font-size: 1.28em; color: rgb(121, 170, 146)">HDFS</a><a href="/tags/MapReduce/" style="font-size: 1.42em; color: rgb(66, 45, 145)">MapReduce</a><a href="/tags/YARN/" style="font-size: 1.18em; color: rgb(56, 89, 42)">YARN</a><a href="/tags/VMware-Workstation/" style="font-size: 1.15em; color: rgb(69, 71, 176)">VMware-Workstation</a><a href="/tags/CentOS/" style="font-size: 1.15em; color: rgb(147, 95, 95)">CentOS</a><a href="/tags/Java/" style="font-size: 1.15em; color: rgb(140, 24, 60)">Java</a><a href="/tags/Common/" style="font-size: 1.15em; color: rgb(102, 53, 164)">Common</a><a href="/tags/Shell/" style="font-size: 1.15em; color: rgb(31, 64, 151)">Shell</a><a href="/tags/Hexo/" style="font-size: 1.15em; color: rgb(34, 109, 44)">Hexo</a><a href="/tags/Gitee/" style="font-size: 1.15em; color: rgb(193, 150, 117)">Gitee</a><a href="/tags/Kaze/" style="font-size: 1.15em; color: rgb(126, 63, 133)">Kaze</a><a href="/tags/SVN/" style="font-size: 1.15em; color: rgb(3, 13, 185)">SVN</a><a href="/tags/Mybatis/" style="font-size: 1.25em; color: rgb(196, 96, 139)">Mybatis</a><a href="/tags/Lombok/" style="font-size: 1.18em; color: rgb(59, 133, 121)">Lombok</a><a href="/tags/Java%E5%9F%BA%E7%A1%80/" style="font-size: 1.35em; color: rgb(180, 194, 150)">Java基础</a><a href="/tags/Java%E6%A0%B8%E5%BF%83/" style="font-size: 1.38em; color: rgb(35, 109, 90)">Java核心</a><a href="/tags/JavaWeb/" style="font-size: 1.32em; color: rgb(118, 158, 100)">JavaWeb</a><a href="/tags/JDBC/" style="font-size: 1.18em; color: rgb(56, 33, 174)">JDBC</a><a href="/tags/DBCP/" style="font-size: 1.15em; color: rgb(184, 88, 31)">DBCP</a><a href="/tags/C3P0/" style="font-size: 1.15em; color: rgb(193, 160, 70)">C3P0</a><a href="/tags/Druid/" style="font-size: 1.15em; color: rgb(0, 95, 160)">Druid</a><a href="/tags/IOC/" style="font-size: 1.15em; color: rgb(68, 151, 13)">IOC</a><a href="/tags/DAO/" style="font-size: 1.18em; color: rgb(142, 1, 0)">DAO</a><a href="/tags/DI/" style="font-size: 1.15em; color: rgb(14, 135, 58)">DI</a><a href="/tags/SpringMVC/" style="font-size: 1.22em; color: rgb(65, 12, 99)">SpringMVC</a><a href="/tags/Rest/" style="font-size: 1.15em; color: rgb(134, 67, 98)">Rest</a><a href="/tags/AOP/" style="font-size: 1.15em; color: rgb(159, 10, 35)">AOP</a><a href="/tags/JPA/" style="font-size: 1.15em; color: rgb(152, 34, 83)">JPA</a><a href="/tags/SpringBootMVC/" style="font-size: 1.22em; color: rgb(132, 180, 155)">SpringBootMVC</a><a href="/tags/Github/" style="font-size: 1.15em; color: rgb(183, 186, 116)">Github</a><a href="/tags/Ubuntu/" style="font-size: 1.18em; color: rgb(44, 90, 153)">Ubuntu</a><a href="/tags/RTL8821CE/" style="font-size: 1.15em; color: rgb(53, 95, 176)">RTL8821CE</a><a href="/tags/Socket/" style="font-size: 1.15em; color: rgb(69, 67, 174)">Socket</a><a href="/tags/rdesktop/" style="font-size: 1.15em; color: rgb(118, 108, 118)">rdesktop</a><a href="/tags/jdk/" style="font-size: 1.15em; color: rgb(34, 45, 157)">jdk</a><a href="/tags/Docker/" style="font-size: 1.15em; color: rgb(74, 153, 29)">Docker</a><a href="/tags/Oracle/" style="font-size: 1.15em; color: rgb(10, 22, 44)">Oracle</a><a href="/tags/Python%E6%A0%B8%E5%BF%83/" style="font-size: 1.45em; color: rgb(60, 115, 57)">Python核心</a><a href="/tags/%E5%88%9D%E7%BA%A7%E7%88%AC%E8%99%AB/" style="font-size: 1.25em; color: rgb(40, 100, 105)">初级爬虫</a><a href="/tags/Alipay/" style="font-size: 1.15em; color: rgb(180, 103, 27)">Alipay</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
-    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/08/"><span class="card-archive-list-date">八月 2022</span><span class="card-archive-list-count">50</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/07/"><span class="card-archive-list-date">七月 2022</span><span class="card-archive-list-count">48</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/06/"><span class="card-archive-list-date">六月 2022</span><span class="card-archive-list-count">47</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/02/"><span class="card-archive-list-date">二月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/12/"><span class="card-archive-list-date">十二月 2021</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">12</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">13</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">360</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2019-06-06T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">702.7k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-08-19T02:45:49.326Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Java%E5%9F%BA%E7%A1%80/" style="font-size: 1.36em; color: rgb(70, 105, 158)">Java基础</a><a href="/tags/Java%E6%A0%B8%E5%BF%83/" style="font-size: 1.39em; color: rgb(155, 47, 156)">Java核心</a><a href="/tags/Mybatis/" style="font-size: 1.24em; color: rgb(160, 114, 123)">Mybatis</a><a href="/tags/IOC/" style="font-size: 1.15em; color: rgb(187, 30, 18)">IOC</a><a href="/tags/DI/" style="font-size: 1.15em; color: rgb(92, 98, 85)">DI</a><a href="/tags/DAO/" style="font-size: 1.18em; color: rgb(79, 65, 82)">DAO</a><a href="/tags/SpringMVC/" style="font-size: 1.21em; color: rgb(180, 111, 180)">SpringMVC</a><a href="/tags/Rest/" style="font-size: 1.15em; color: rgb(110, 123, 192)">Rest</a><a href="/tags/AOP/" style="font-size: 1.15em; color: rgb(193, 54, 123)">AOP</a><a href="/tags/JPA/" style="font-size: 1.15em; color: rgb(142, 175, 58)">JPA</a><a href="/tags/SpringBootMVC/" style="font-size: 1.21em; color: rgb(28, 168, 94)">SpringBootMVC</a><a href="/tags/Github/" style="font-size: 1.15em; color: rgb(150, 112, 9)">Github</a><a href="/tags/Ubuntu/" style="font-size: 1.18em; color: rgb(131, 132, 104)">Ubuntu</a><a href="/tags/RTL8821CE/" style="font-size: 1.15em; color: rgb(45, 98, 1)">RTL8821CE</a><a href="/tags/JavaWeb/" style="font-size: 1.33em; color: rgb(128, 110, 140)">JavaWeb</a><a href="/tags/JDBC/" style="font-size: 1.18em; color: rgb(199, 184, 21)">JDBC</a><a href="/tags/DBCP/" style="font-size: 1.15em; color: rgb(101, 73, 119)">DBCP</a><a href="/tags/C3P0/" style="font-size: 1.15em; color: rgb(181, 18, 189)">C3P0</a><a href="/tags/Druid/" style="font-size: 1.15em; color: rgb(57, 54, 150)">Druid</a><a href="/tags/Socket/" style="font-size: 1.15em; color: rgb(161, 125, 79)">Socket</a><a href="/tags/rdesktop/" style="font-size: 1.15em; color: rgb(199, 173, 166)">rdesktop</a><a href="/tags/jdk/" style="font-size: 1.15em; color: rgb(16, 49, 60)">jdk</a><a href="/tags/Docker/" style="font-size: 1.15em; color: rgb(148, 3, 26)">Docker</a><a href="/tags/Oracle/" style="font-size: 1.15em; color: rgb(118, 162, 145)">Oracle</a><a href="/tags/Python%E5%9F%BA%E7%A1%80/" style="font-size: 1.33em; color: rgb(51, 164, 164)">Python基础</a><a href="/tags/Python%E6%A0%B8%E5%BF%83/" style="font-size: 1.45em; color: rgb(149, 56, 151)">Python核心</a><a href="/tags/Python%E9%AB%98%E7%BA%A7/" style="font-size: 1.27em; color: rgb(40, 62, 69)">Python高级</a><a href="/tags/tkinter/" style="font-size: 1.21em; color: rgb(194, 143, 103)">tkinter</a><a href="/tags/Flask/" style="font-size: 1.21em; color: rgb(41, 63, 158)">Flask</a><a href="/tags/%E5%88%9D%E7%BA%A7%E7%88%AC%E8%99%AB/" style="font-size: 1.24em; color: rgb(167, 179, 138)">初级爬虫</a><a href="/tags/Alipay/" style="font-size: 1.15em; color: rgb(115, 58, 133)">Alipay</a><a href="/tags/Lombok/" style="font-size: 1.18em; color: rgb(23, 55, 18)">Lombok</a><a href="/tags/SVN/" style="font-size: 1.15em; color: rgb(114, 28, 6)">SVN</a><a href="/tags/HDFS/" style="font-size: 1.3em; color: rgb(11, 182, 132)">HDFS</a><a href="/tags/MapReduce/" style="font-size: 1.42em; color: rgb(170, 152, 165)">MapReduce</a><a href="/tags/YARN/" style="font-size: 1.18em; color: rgb(72, 98, 120)">YARN</a><a href="/tags/VMware-Workstation/" style="font-size: 1.15em; color: rgb(48, 40, 95)">VMware-Workstation</a><a href="/tags/CentOS/" style="font-size: 1.15em; color: rgb(27, 73, 91)">CentOS</a><a href="/tags/Common/" style="font-size: 1.15em; color: rgb(142, 153, 191)">Common</a><a href="/tags/Java/" style="font-size: 1.15em; color: rgb(129, 199, 11)">Java</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span><a class="card-more-btn" href="/archives/" title="查看更多">
+    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/08/"><span class="card-archive-list-date">八月 2022</span><span class="card-archive-list-count">62</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/07/"><span class="card-archive-list-date">七月 2022</span><span class="card-archive-list-count">48</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/06/"><span class="card-archive-list-date">六月 2022</span><span class="card-archive-list-count">47</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/02/"><span class="card-archive-list-date">二月 2022</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2022/01/"><span class="card-archive-list-date">一月 2022</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2021/12/"><span class="card-archive-list-date">十二月 2021</span><span class="card-archive-list-count">9</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/05/"><span class="card-archive-list-date">五月 2020</span><span class="card-archive-list-count">12</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/04/"><span class="card-archive-list-date">四月 2020</span><span class="card-archive-list-count">13</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">372</div></div><div class="webinfo-item"><div class="item-name">已运行时间 :</div><div class="item-count" id="runtimeshow" data-publishDate="2019-06-06T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">726.6k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2022-08-22T10:59:47.480Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
   if (typeof pangu === 'object') pangu.autoSpacingPage()
   else {
     getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
