@@ -1,0 +1,495 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Spark概述 | WeiJia_Rao</title><meta name="keywords" content="Spark Core"><meta name="author" content="WeiJia Rao"><meta name="copyright" content="WeiJia Rao"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="什么是Spark Spark是当今大数据领域最活跃、最热门、最高效的大数据通用计算引擎。       Spark 成功构建起了一体化、多元化的大数据处理体系。在任何规模的数据计算中，Spark 在性能和扩展性上都更具优势。       Spark 是一个快速、通用的计算引擎。Spark的特点：   速度快。与 MapReduce 相比，Spark基于内存的运算要快100倍以上，基于硬盘的运算也要快">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark概述">
+<meta property="og:url" content="https://raoweijiapng.gitee.io/posts/665450687/index.html">
+<meta property="og:site_name" content="WeiJia_Rao">
+<meta property="og:description" content="什么是Spark Spark是当今大数据领域最活跃、最热门、最高效的大数据通用计算引擎。       Spark 成功构建起了一体化、多元化的大数据处理体系。在任何规模的数据计算中，Spark 在性能和扩展性上都更具优势。       Spark 是一个快速、通用的计算引擎。Spark的特点：   速度快。与 MapReduce 相比，Spark基于内存的运算要快100倍以上，基于硬盘的运算也要快">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42">
+<meta property="article:published_time" content="2022-08-23T06:25:15.000Z">
+<meta property="article:modified_time" content="2022-09-03T03:13:55.873Z">
+<meta property="article:author" content="WeiJia Rao">
+<meta property="article:tag" content="Spark Core">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42"><link rel="shortcut icon" href="https://raoweijiapng.gitee.io/posts/4116117381/networkPhoto.jpg"><link rel="canonical" href="https://raoweijiapng.gitee.io/posts/665450687/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9e49a68498fd088e63e2fe8907ca570";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":1,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Spark概述',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-09-03 11:13:55'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.2.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">398</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">43</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WeiJia_Rao</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Spark概述</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-23T06:25:15.000Z" title="发表于 2022-08-23 14:25:15">2022-08-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-09-03T03:13:55.873Z" title="更新于 2022-09-03 11:13:55">2022-09-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Spark/">Spark</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Spark概述"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="什么是Spark">什么是Spark</h2>
+<p>Spark是当今大数据领域最活跃、最热门、最高效的大数据通用计算引擎。</p>
+  <img src="/posts/665450687/1.jpg" class="post-image">
+  <br>
+<p>Spark 成功构建起了一体化、多元化的大数据处理体系。在任何规模的数据计算中，Spark 在性能和扩展性上都更具优势。</p>
+  <img src="/posts/665450687/2.jpg" class="post-image">
+  <br>
+<p>Spark 是一个快速、通用的计算引擎。Spark的特点：</p>
+<ul>
+<li>
+<p>速度快。与 MapReduce 相比，Spark基于内存的运算要快100倍以上，基于硬盘的运算也要快10倍以上。Spark实现了高效的DAG执行引擎，可以通过基于内存来高效处理数据流；</p>
+</li>
+<li>
+<p>使用简单。Spark支持 Scala、Java、Python、R的API，还支持超过80种高级算法，使用户可以快速构建不同的应用。而且Spark支持交互式的Python和Scala的shell，可以非常方便地在这些shell中使用Spark集群来验证解决问题的方法；</p>
+</li>
+<li>
+<p>通用。Spark提供了统一的解决方案。Spark可以用于批处理、交互式查询(Spark SQL)、实时流处理(Spark Streaming)、机器学习(Spark MLlib)和图计算(GraphX)。这些不同类型的处理都可以在同一个应用中无缝使用。Spark统一的解决方案非常具有吸引力，企业想用统一的平台去处理遇到的问题，减少开发和维护的人力成本和部署平台的物力成本；</p>
+</li>
+<li>
+<p>兼容好。Spark可以非常方便地与其他的开源产品进行融合。Spark可以使用YARN、Mesos作为它的资源管理和调度器；可以处理所有Hadoop支持的数据，包括HDFS、HBase和Cassandra等。这对于已经部署Hadoop集群的用户特别重要，因为不需要做任何数据迁移就可以使用Spark的强大处理能力。Spark也可以不依赖于第三方的资源管理和调度器，它实现了Standalone作为其内置的资源管理和调度框架，这样进一步降低了Spark的使用门槛，使得所有人都可以非常容易地部署和使用Spark。此外，Spark还提供了在EC2上部署Standalone的Spark集群的工具。</p>
+</li>
+</ul>
+<h2 id="Spark-与-Hadoop">Spark 与 Hadoop</h2>
+<p>从狭义的角度上看：Hadoop是一个分布式框架，由存储、资源调度、计算三部分组成；</p>
+<p>Spark是一个分布式计算引擎，由 Scala 语言编写的计算框架，基于内存的快速、通用、可扩展的大数据分析引擎；</p>
+<p>从广义的角度上看，Spark是Hadoop生态中不可或缺的一部分；</p>
+<p>MapReduce的不足：</p>
+<ul>
+<li>
+<p>表达能力有限</p>
+</li>
+<li>
+<p>磁盘IO开销大</p>
+</li>
+<li>
+<p>延迟高</p>
+<ul>
+<li>
+<p>任务之间的衔接有IO开销</p>
+</li>
+<li>
+<p>在前一个任务执行完成之前，后一个任务无法开始。难以胜任复杂的、多阶段计算任务</p>
+</li>
+</ul>
+</li>
+</ul>
+  <img src="/posts/665450687/3.jpg" class="post-image">
+  <br>  
+<p>Spark在借鉴MapReduce优点的同时，很好地解决了MapReduce所面临的问题。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">MapReduce</th>
+<th style="text-align:left">Spark</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">数据存储结构：磁盘HDFS文件系统的split</td>
+<td style="text-align:left">使用内存构建弹性分布式数据集RDD对数据进行运算和cache</td>
+</tr>
+<tr>
+<td style="text-align:left">编程范式：Map + Reduce 仅提供两个操作，表达力欠缺</td>
+<td style="text-align:left">提供了丰富的操作，使数据处理逻辑的代码非常简短</td>
+</tr>
+<tr>
+<td style="text-align:left">计算中间结果落到磁盘，IO及序列化、反序列化代价大</td>
+<td style="text-align:left">计算中间结果在内存中，维护存取速度比磁盘高几个数量级</td>
+</tr>
+<tr>
+<td style="text-align:left">Task以进程的方式维护，需要数秒时间才能启动任务</td>
+<td style="text-align:left">Task以线程的方式维护对于小数据集读取能够达到亚秒级的延迟</td>
+</tr>
+</tbody>
+</table>
+<p><strong>备注：Spark的计算模式也属于MapReduce；Spark框架是对MR框架的优化；</strong></p>
+<p>在实际应用中，大数据应用主要包括以下三种类型：</p>
+<ul>
+<li>
+<p>批量处理（离线处理）：通常时间跨度在数十分钟到数小时之间</p>
+</li>
+<li>
+<p>交互式查询：通常时间跨度在数十秒到数分钟之间</p>
+</li>
+<li>
+<p>流处理（实时处理）：通常时间跨度在数百毫秒到数秒之间</p>
+</li>
+</ul>
+<p>当同时存在以上三种场景时，传统的Hadoop框架需要同时部署三种不同的软件。如：</p>
+<ul>
+<li>MapReduce / Hive 或 Impala / Storm</li>
+</ul>
+<p>这样做难免会带来一些问题：</p>
+<ul>
+<li>
+<p>不同场景之间输入输出数据无法做到无缝共享，通常需要进行数据格式的转换</p>
+</li>
+<li>
+<p>不同的软件需要不同的开发和维护团队，带来了较高的使用成本</p>
+</li>
+<li>
+<p>比较难以对同一个集群中的各个系统进行统一的资源协调和分配</p>
+</li>
+</ul>
+<p>Spark所提供的生态系统足以应对上述三种场景，即同时支持批处理、交互式查询和流数据处理：</p>
+<ul>
+<li>
+<p>Spark的设计遵循“一个软件栈满足不同应用场景”的理念（all in one），逐渐形成了一套完整的生态系统</p>
+</li>
+<li>
+<p>既能够提供内存计算框架，也可以支持SQL即席查询、实时流式计算、机器学习和图计算等</p>
+</li>
+<li>
+<p>Spark可以部署在资源管理器YARN之上，提供一站式的大数据解决方案</p>
+</li>
+</ul>
+<p><strong>Spark 为什么比 MapReduce 快?</strong></p>
+<ul>
+<li>
+<p><strong>1、Spark积极使用内存。</strong></p>
+<p>MR框架中一个Job 包括一个 map 阶段（一个或多个map task） 和一个 reduce 阶段（一个或多个 reduce Task）。如果业务处理逻辑复杂，此时需要将多个 job 组合起来；然而前一个job的计算结果必须写到HDFS，才能交给后一个job。这样一个复杂的运算，在MR框架中会发生很多次写入、读取操作；</p>
+<p>Spark框架可以把多个map reduce task组合在一起连续执行，中间的计算结果不需要落地；</p>
+<p>复杂的MR任务：mr + mr + mr + mr +mr …</p>
+<p>复杂的Spark任务：mr -&gt; mr -&gt; mr …</p>
+</li>
+<li>
+<p><strong>2、多进程模型(MR) vs 多线程模型(Spark)。</strong></p>
+<p>MR框架中的的Map Task和Reduce Task是进程级别的，而Spark Task是基于线程模型的。MR框架中的 map task、reduce task都是 jvm 进程，每次启动都需要重新申请资源，消耗了不必要的时间。</p>
+<p>Spark则是通过复用线程池中的线程来减少启动、关闭task所需要的系统开销。</p>
+</li>
+</ul>
+<h2 id="系统架构">系统架构</h2>
+<p>Spark运行架构包括：</p>
+<ul>
+<li>
+<p>Cluster Manager</p>
+<p>Cluster Manager 是集群资源的管理者。Spark支持3种集群部署模式：Standalone、Yarn、Mesos;；</p>
+</li>
+<li>
+<p>Worker Node</p>
+<p>Worker Node 工作节点，管理本地资源；</p>
+</li>
+<li>
+<p>Driver</p>
+<p>Driver Program。运行应用的 main() 方法并且创建了 SparkContext。由Cluster Manager分配资源，SparkContext 发送 Task 到 Executor 上执行；</p>
+</li>
+<li>
+<p>Executor</p>
+<p>Executor：在工作节点上运行，执行 Driver 发送的 Task，并向 Driver 汇报计算结果；</p>
+</li>
+</ul>
+  <img src="/posts/665450687/4.jpg" class="post-image">
+  <br>
+<h2 id="Spark集群部署模式">Spark集群部署模式</h2>
+<p>Spark支持3种集群部署模式：Standalone、Yarn、Mesos；</p>
+<ul>
+<li>
+<p><strong>1、Standalone模式</strong></p>
+<ul>
+<li>
+<p>独立模式，自带完整的服务，可单独部署到一个集群中，无需依赖任何其他资源管理系统。从一定程度上说，该模式是其他两种的基础</p>
+</li>
+<li>
+<p>Cluster Manager：Master</p>
+</li>
+<li>
+<p>Worker Node：Worker</p>
+</li>
+<li>
+<p>仅支持粗粒度的资源分配方式</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>2、Spark On Yarn模式</strong></p>
+<ul>
+<li>
+<p>Yarn拥有强大的社区支持，且逐步已经成为大数据集群资源管理系统的标准</p>
+</li>
+<li>
+<p>在国内生产环境中运用最广泛的部署模式</p>
+</li>
+<li>
+<p>Spark on yarn 的支持两种模式：</p>
+<ul>
+<li>
+<p>yarn-cluster：适用于生产环境</p>
+</li>
+<li>
+<p>yarn-client：适用于交互、调试，希望立即看到app的输出</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Cluster Manager：ResourceManager</p>
+</li>
+<li>
+<p>Worker Node：NodeManager</p>
+</li>
+<li>
+<p>仅支持粗粒度的资源分配方式</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>3、Spark On Mesos模式</strong></p>
+<ul>
+<li>
+<p>官方推荐的模式。Spark开发之初就考虑到支持Mesos</p>
+</li>
+<li>
+<p>Spark运行在Mesos上会比运行在YARN上更加灵活，更加自然</p>
+</li>
+<li>
+<p>Cluster Manager：Mesos Master</p>
+</li>
+<li>
+<p>Worker Node：Mesos Slave</p>
+</li>
+<li>
+<p>支持粗粒度、细粒度的资源分配方式</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>粗粒度模式（Coarse-grained Mode）</strong>：每个应用程序的运行环境由一个Dirver和  若干个Executor组成，其中，每个Executor占用若干资源，内部可运行多个Task。应用程序的各个任务正式运行之前，需要将运行环境中的资源全部申请好，且运行过程中要一直占用这些资源，即使不用，最后程序运行结束后，回收这些资源。</p>
+<p><strong>细粒度模式（Fine-grained Mode）</strong>：鉴于粗粒度模式会造成大量资源浪费，Spark On Mesos还提供了另外一种调度模式：细粒度模式，这种模式类似于现在的云计算，核心思想是按需分配。</p>
+<p>三种集群部署模式如何选择：</p>
+<ul>
+<li>
+<p>生产环境中选择Yarn，国内使用最广的模式</p>
+</li>
+<li>
+<p>Spark的初学者：Standalone，简单</p>
+</li>
+<li>
+<p>开发测试环境，可选择Standalone</p>
+</li>
+<li>
+<p>数据量不太大、应用不是太复杂，建议可以从Standalone模式开始</p>
+</li>
+<li>
+<p>mesos不会涉及到</p>
+</li>
+</ul>
+<h2 id="相关术语">相关术语</h2>
+<p>官方文档：<a target="_blank" rel="noopener" href="http://spark.apache.org/docs/latest/cluster-overview.html">http://spark.apache.org/docs/latest/cluster-overview.html</a></p>
+<ul>
+<li>
+<p>Application 用户提交的spark应用程序，由集群中的一个driver和许多 executor 组成</p>
+</li>
+<li>
+<p>Application jar 一个包含spark应用程序的jar，jar不应该包含 Spark 或 Hadoop 的 jar，这些jar应该在运行时添加</p>
+</li>
+<li>
+<p>Driver program 运行应用程序的main()，并创建SparkContext（Spark应用程序）</p>
+</li>
+<li>
+<p>Cluster manager 管理集群资源的服务，如standalone，Mesos，Yarn</p>
+</li>
+<li>
+<p>Deploy mode 区分 driver 进程在何处运行。在 Cluster 模式下，在集群内部运行 Driver。 在 Client 模式下，Driver 在集群外部运行</p>
+</li>
+<li>
+<p>Worker node 运行应用程序的工作节点</p>
+</li>
+<li>
+<p>Executor 运行应用程序 Task 和保存数据，每个应用程序都有自己的executors，并且各个executor相互独立</p>
+</li>
+<li>
+<p>Task</p>
+<p>executors应用程序的最小运行单元</p>
+</li>
+<li>
+<p>Job</p>
+<p>在用户程序中，每次调用Action函数都会产生一个新的job，也就是说每个Action 生成一个job</p>
+</li>
+<li>
+<p>Stage</p>
+<p>一个 job 被分解为多个 stage，每个 stage 是一系列 Task 的集合</p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io">WeiJia Rao</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://raoweijiapng.gitee.io/posts/665450687/">https://raoweijiapng.gitee.io/posts/665450687/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://raoweijiapng.gitee.io" target="_blank">WeiJia_Rao</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Spark-Core/">Spark Core</a></div><div class="post_share"><div class="social-share" data-image="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="https://raoweijiapng.gitee.io/posts/4116117381/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/1885191393/"><img class="prev-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Scala扩展部分</div></div></a></div><div class="next-post pull-right"><a href="/posts/2600676211/"><img class="next-cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659003618&amp;t=9dfb3daa8330be689f9185b29583fd42" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Spark安装配置</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/667651910/" title="RDD算子综合应用案例"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-26</div><div class="title">RDD算子综合应用案例</div></div></a></div><div><a href="/posts/1276889862/" title="RDD编程之Key-Value操作与输入与输出"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-26</div><div class="title">RDD编程之Key-Value操作与输入与输出</div></div></a></div><div><a href="/posts/3379543885/" title="RDD编程之分区与分区器"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-30</div><div class="title">RDD编程之分区与分区器</div></div></a></div><div><a href="/posts/4167654689/" title="RDD编程之基本概念"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-25</div><div class="title">RDD编程之基本概念</div></div></a></div><div><a href="/posts/3590682603/" title="RDD编程之基本使用"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-25</div><div class="title">RDD编程之基本使用</div></div></a></div><div><a href="/posts/141009478/" title="RDD编程之广播变量和累加器以及TopN的优化"><img class="cover" src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091209%2Ftlbjoudrdi1tlbjoudrdi1.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1659003618&t=9dfb3daa8330be689f9185b29583fd42" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-30</div><div class="title">RDD编程之广播变量和累加器以及TopN的优化</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://raoweijiapng.gitee.io/posts/4116117381/authorPhoto.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">WeiJia Rao</div><div class="author-info__description">饶唯甲的个人博客网站,用于记录平时的学习笔记并展示。努力学习吧,少年!</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">398</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">62</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">43</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/raoweijiapng"><i class="fab fa-github"></i><span>My GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:raoweijia@outlook.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/217971296?spm_id_from=333.1007.0.0" target="_blank" title="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a><a class="social-icon" href="https://weibo.com/p/1005057628848053" target="_blank" title="微博"><i class="fa-brands fa-weibo"></i></a><a class="social-icon" href="https://www.zhihu.com/people/kan-kan-ni-66-95" target="_blank" title="知乎"><i class="fa-brands fa-zhihu"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFSpark"><span class="toc-number">1.</span> <span class="toc-text">什么是Spark</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark-%E4%B8%8E-Hadoop"><span class="toc-number">2.</span> <span class="toc-text">Spark 与 Hadoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">系统架构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spark%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.</span> <span class="toc-text">Spark集群部署模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%9C%AF%E8%AF%AD"><span class="toc-number">5.</span> <span class="toc-text">相关术语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/2127661717/" title="Spark-GraphX计算">Spark-GraphX计算</a><time datetime="2022-09-08T09:04:25.000Z" title="发表于 2022-09-08 17:04:25">2022-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/3713876459/" title="Spark-GraphX基础">Spark-GraphX基础</a><time datetime="2022-09-08T08:33:48.000Z" title="发表于 2022-09-08 16:33:48">2022-09-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1000567218/" title="Spark-GraphX概述">Spark-GraphX概述</a><time datetime="2022-09-06T10:38:33.000Z" title="发表于 2022-09-06 18:38:33">2022-09-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/843555171/" title="Spark-Streaming之与Kafka整合">Spark-Streaming之与Kafka整合</a><time datetime="2022-09-06T03:06:08.000Z" title="发表于 2022-09-06 11:06:08">2022-09-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/1349938570/" title="Spark-Streaming之DStream转换与输出">Spark-Streaming之DStream转换与输出</a><time datetime="2022-09-04T10:30:34.000Z" title="发表于 2022-09-04 18:30:34">2022-09-04</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091218%2Fujvdlogkaabujvdlogkaab.png&amp;refer=http%3A%2F%2Fimg9.51tietu.net&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=auto?sec=1659001108&amp;t=5825978f05b76d834da348a3ae797053')"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2022 By WeiJia Rao</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://raoweijiapng.gitee.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">简</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script>function panguFn () {
+  if (typeof pangu === 'object') pangu.autoSpacingPage()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/pangu/dist/browser/pangu.min.js')
+      .then(() => {
+        pangu.autoSpacingPage()
+      })
+  }
+}
+
+function panguInit () {
+  if (false){
+    GLOBAL_CONFIG_SITE.isPost && panguFn()
+  } else {
+    panguFn()
+  }
+}
+
+document.addEventListener('DOMContentLoaded', panguInit)</script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="60198" data-server="netease" data-type="playlist" data-fixed="true" data-autoplay="false"> </div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="fluttering_ribbon" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-fluttering-ribbon.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script>(function(d, w, c) {
+    w.ChatraID = '5QYmoz7m5kBKqo6Hi';
+    var s = d.createElement('script');
+    w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+    };
+    s.async = true;
+    s.src = 'https://call.chatra.io/chatra.js';
+    if (d.head) d.head.appendChild(s);
+})(document, window, 'Chatra');
+
+if (false) {
+  var chatBtnFn = () => {
+    var chatBtn = document.getElementById("chat_btn")
+    chatBtn.addEventListener("click", function(){
+      Chatra('openChat')
+    });
+  }
+  chatBtnFn()
+} else {
+  if (false) {
+    function chatBtnHide () {
+      Chatra('hide')
+    }
+    function chatBtnShow () {
+      Chatra('show')
+    }
+  }
+}</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
